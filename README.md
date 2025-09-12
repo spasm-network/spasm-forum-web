@@ -31,7 +31,7 @@ nvm use 20
 npm install -g npm
 
 # install packages
-npm install
+npm ci
 ```
 
 ---
