@@ -131,8 +131,9 @@
       </nuxt-link>
     </div>
 
+    <!-- Broadcast to other networks (Nostr) -->
     <div
-      v-if="spasm.extractSignedNostrEvent(event) && spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr))"
+      v-if="spasm.extractSignedNostrEvent(event) && spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr.toLowerCase()))"
     >
       <div
         class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
@@ -176,6 +177,57 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <!-- Broadcast to other Spasm instances -->
+    <div
+      v-if="
+      (spasm.getVerifiedSigners(event).includes(connectedAddress.toLowerCase())) ||
+      (spasm.getVerifiedEthereumSigners(event).includes(connectedAddressEthereum.toLowerCase())) ||
+      (spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr.toLowerCase())))
+      "
+    >
+      <div
+        class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
+        @click="toggleBroadcastToOtherInstances()"
+      >
+        <span>
+          Broadcast to other instances (Spasm)
+        </span>
+        <svg
+          :class="{ 'rotate-180': broadcastToOtherInstancesDropDownShown }"
+          class="inline w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </div>
+      <div
+        class="mb-8"
+        v-if="broadcastToOtherInstancesDropDownShown"
+      >
+        <input
+          v-model="customApiUrl"
+          :placeholder="'Enter URL of another instance'"
+          class="inline p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[80%] max-w-[320px] focus:outline-none border-2 mr-4"
+          :class="errorCustomApiUrl ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''"
+        >
+        <button
+          class="inline my-4 px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark"
+          @click="sendEventToAnotherInstance()"
+        >
+          Send
+        </button>
+        <div
+          v-if="sendToAnotherInstanceResponse"
+          class="text-colorNotImportant-light dark:text-colorNotImportant-dark"
+        >
+          Status: {{ sendToAnotherInstanceResponse }}
+        </div>
+      </div>
     </div>
 
     <!--
@@ -251,9 +303,12 @@ import {useAppConfigStore} from '@/stores/useAppConfigStore'
 const appConfig = useAppConfigStore()?.getAppConfig
 const profilesStore = useProfilesStore()
 const {
+  connectedAddress,
   connectedAddressNostr,
+  connectedAddressEthereum,
   extractParentIdForDisplay,
-  extractParentIdForLink
+  extractParentIdForLink,
+  sendEventV2ToSpasm
 } = useWeb3()
 const {
   toBeHex,
@@ -275,7 +330,8 @@ const {
   toBeDate,
   isArrayWithValues,
   extractTextForDisplay,
-  standardizeTextForDisplay
+  standardizeTextForDisplay,
+  isValidUrl
 } = useUtils()
 
 const props = defineProps<{
@@ -332,6 +388,45 @@ const toggleBroadcastToOtherNetworks = () => {
 const hideBroadcastToOtherNetworks = () => {
   broadcastToOtherNetworksDropDownShown.value = false
 }
+
+const broadcastToOtherInstancesDropDownShown = ref(false)
+const toggleBroadcastToOtherInstances = () => {
+  broadcastToOtherInstancesDropDownShown.value =
+    !broadcastToOtherInstancesDropDownShown.value
+}
+const hideBroadcastToOtherInstances = () => {
+  broadcastToOtherInstancesDropDownShown.value = false
+}
+
+const customApiUrl = ref<string>('')
+const errorCustomApiUrl = ref<boolean>(false)
+const sendToAnotherInstanceResponse = ref<string>('')
+
+const sendEventToAnotherInstance = async () => {
+  if (!customApiUrl.value || !isValidUrl(customApiUrl.value)) {
+    errorCustomApiUrl.value = true
+    return
+  }
+  sendToAnotherInstanceResponse.value = "pending"
+  const res = await sendEventV2ToSpasm(props.event, customApiUrl.value)
+  console.log("res:", res)
+  if (!res) {
+    sendToAnotherInstanceResponse.value = "something went wrong"
+  } else {
+    sendToAnotherInstanceResponse.value = res
+  }
+}
+
+watch(
+  customApiUrl, async (newApiUrl: string) => {
+    if (newApiUrl) {
+      errorCustomApiUrl.value = false
+      sendToAnotherInstanceResponse.value = ''
+    } else {
+      /* errorCustomApiUrl.value = true */
+    }
+  }
+)
 </script>
 
 <style scoped>
