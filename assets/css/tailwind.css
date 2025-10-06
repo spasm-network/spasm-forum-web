@@ -93,6 +93,18 @@
   br {
     @apply mb-2;
   }
+
+  table {
+    @apply w-full border-collapse border;
+  }
+
+  th {
+    @apply px-4 py-2 border text-left;
+  }
+
+  td {
+    @apply px-4 py-2 border text-left;
+  }
 }
 
 @layer components {
