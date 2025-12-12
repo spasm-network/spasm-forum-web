@@ -63,10 +63,13 @@ cp .env.example .env
 
 ## Test locally
 
+*Note: this is an optional step intended for developers.
+You can skip this step if you want to run a Spasm forum.*
+
 Install npm packages in the frontend folder.
 
 ```
-npm install
+npm ci
 ```
 
 Start the app.
@@ -148,7 +151,7 @@ Note: customized files like `components/custom/CustomIntro.vue`, `components/cus
 ## Build
 
 ```
-npm install
+npm ci
 ```
 
 Build the frontend for running in production.
@@ -160,7 +163,7 @@ npm run build
 ## Run production
 
 ```
-npm install
+npm ci
 ```
 
 Run with pm2 (after build):
@@ -182,10 +185,6 @@ pm2 save
 pm2 list
 ```
 
-## Troubleshooting
-
-Send a message to `degenrocket` on [Session](https://getsession.org) if you need any help.
-
 ## For developers
 
 #### Use mock data
@@ -201,3 +200,7 @@ USE_MOCKED_DATA_IF_BACKEND_IS_DOWN=true
 ```
 
 Don't forget to restart the app with `npm run dev`.
+
+## Contact
+
+Send a message to `degenrocket` on [Session](https://getsession.org) if you need any help.
