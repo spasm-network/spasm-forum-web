@@ -32,6 +32,7 @@ const {
   removeDuplicatesFromArray,
   pushToArrayIfValueIsUnique,
   isArrayOfNumbers,
+  splitIntoArray,
   copyOf
 } = useUtils()
 const {
@@ -42,6 +43,7 @@ const {
 const {
   assembleNostrNetworkFilter,
   getNostrRelays,
+  standardizeIds,
   toBeHex,
   isHex
 } = useNostr()
@@ -53,6 +55,7 @@ export interface PostsState {
   feedFiltersActivityRising: any
   enableShortUrlsForWeb3Actions: any
   shortUrlsLengthOfWeb3Ids: any
+  pinnedIds: string[]
   allPosts: SpasmEventV2[]
   // TODO delete after testing
   eventComments: SpasmEventV2[]
@@ -76,6 +79,9 @@ export const useEventsStore = defineStore('postsStore', {
     enableShortUrlsForWeb3Actions: useRuntimeConfig()?.public?.enableShortUrlsForWeb3Actions === "true" ? true : false,
     shortUrlsLengthOfWeb3Ids: Number(useRuntimeConfig()?.public?.shortUrlsLengthOfWeb3Ids) || 30,
 
+    // Pinned IDs
+    pinnedIds: splitIntoArray(useRuntimeConfig()?.public?.pinnedIds),
+
     // appPosts contains all posts fetched from the server,
     // sorted by date and cleaned from duplicates.
     allPosts: [],
@@ -97,6 +103,12 @@ export const useEventsStore = defineStore('postsStore', {
   }),
 
   getters: {
+    getPinnedPosts(): SpasmEventV2[] {
+      if (isArrayWithValues(this.pinnedIds)) {
+        return spasm.getEventsByIds(this.allPosts, standardizeIds(this.pinnedIds))
+      } else { return [] } 
+    },
+
     getPosts(): SpasmEventV2[] {
       const filteredEvents = this.filterEvents(this.displayFilters)
       if (filteredEvents && isArrayWithValues(filteredEvents)) {
@@ -152,6 +164,7 @@ export const useEventsStore = defineStore('postsStore', {
           Number(appConfig?.feedFiltersActivityHot) || 5
         this.feedFiltersActivityRising =
           Number(appConfig?.feedFiltersActivityRising) || 3
+        this.pinnedIds = appConfig?.pinnedIds
         return "SUCCESS: appConfig state in eventsStore updated"
       } catch (err) {
         console.error(err);
@@ -161,6 +174,13 @@ export const useEventsStore = defineStore('postsStore', {
     async fetchPostsByFilters(
       customFilters?: FeedFilters
     ): Promise<void> {
+
+      if (standardizeIds(this.pinnedIds)) {
+        await this.fetchAndSaveEventsByIds(
+          standardizeIds(this.pinnedIds)
+        )
+      }
+
       if (!this.apiUrl) { return }
 
       this.fetchingPostsByFilters = true
@@ -645,6 +665,12 @@ export const useEventsStore = defineStore('postsStore', {
           const spasmEvent: SpasmEventV2 | null =
             spasm.convertToSpasm(fetchedResult.value)
           if (spasmEvent) {
+            const id: string | number | null =
+              spasm.extractSpasmId01(spasmEvent)
+            if (
+              id && !this.selectedIds?.[0]
+            ) { this.setSelectedIds(id) }
+
             return spasmEvent
           } else { return null }
         }
@@ -896,6 +922,19 @@ export const useEventsStore = defineStore('postsStore', {
       //   filteredEvents.splice(numberOfPostsToDisplay)
       // }
 
+      if (
+        feedFilters && 'limit' in feedFilters &&
+        feedFilters.limit && typeof(feedFilters.limit) === 'number'
+      ) {
+        let limit: number = feedFilters.limit
+        // Decreasing limit by 5 events to prevent a blinking
+        // effect when a 'load more' button is pressed, but new
+        // events that satisfy a filter have not been fetched yet,
+        // so other events which don't satisfy a filter are shown.
+        if (limit > 10) { limit = limit - 5 }
+        filteredEvents = filteredEvents.slice(0,limit)
+      }
+
       // Prepend selected posts to be shown on top of the feed,
       // if such posts are not shown anywhere else in the feed.
       // For example, when a user opens a website with a link to
@@ -931,22 +970,28 @@ export const useEventsStore = defineStore('postsStore', {
         if (foundEvents) { stickyPosts = foundEvents }
       }
 
-      if (
-        feedFilters && 'limit' in feedFilters &&
-        feedFilters.limit && typeof(feedFilters.limit) === 'number'
-      ) {
-        let limit: number = feedFilters.limit
-        // Decreasing limit by 5 events to prevent a blinking
-        // effect when a 'load more' button is pressed, but new
-        // events that satisfy a filter have not been fetched yet,
-        // so other events which don't satisfy a filter are shown.
-        if (limit > 10) { limit = limit - 5 }
-        filteredEvents = filteredEvents.slice(0,limit)
-      }
-
       // Step 3.
       // Prepend sticky posts to filtered posts.
-      return stickyPosts.concat(filteredEvents)
+      let stickyAndFilteredEvents: SpasmEventV2[] = 
+        stickyPosts.concat(filteredEvents)
+
+      // Step 4.
+      // Remove pinned events because they are shown separately
+      if (isArrayWithValues(standardizeIds(this.pinnedIds))) {
+        standardizeIds(this.pinnedIds).forEach(pinnedId => {
+          stickyAndFilteredEvents = 
+            stickyAndFilteredEvents.filter(event => {
+            return !spasm.checkIfEventHasThisId(event, pinnedId)
+          })
+        })
+      }
+
+      return stickyAndFilteredEvents
+
+      // const event = await this.fetchEventWithCommentsById(
+      //   id, commentsDepth
+      // )
+      // if (event) { fetchedEvents.push(event) }
     },
 
     setSelectedIds(

@@ -7,6 +7,17 @@
     <client-only>
       <ExtraSpinner v-show="showSpinner" />
       <span id="feed-top-anchor"></span>
+      <div v-show="eventsStore.getPinnedPosts && eventsStore.getPinnedPosts[0]">
+        <div v-show="areValidSpasmEventsV2(eventsStore.getPinnedPosts)">
+          <FeedEventsCard
+            v-for="post in eventsStore.getPinnedPosts"
+            :key="post?.ids?.[0]?.value || randomNumber()"
+            :post="post"
+            :showPinnedIcon=true
+            :showTimeAgo=false
+          />
+        </div>
+      </div>
       <div v-show="eventsStore.getPosts && eventsStore.getPosts[0]">
         <div v-show="areValidSpasmEventsV2(eventsStore.getPosts)">
           <FeedEventsCard

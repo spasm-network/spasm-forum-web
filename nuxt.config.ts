@@ -227,6 +227,9 @@ export default defineNuxtConfig({
       // Feed filters
       feedFiltersActivityHot: process.env.FEED_FILTERS_ACTIVITY_HOT,
       feedFiltersActivityRising: process.env.FEED_FILTERS_ACTIVITY_RISING,
+
+      // Pinned events
+      pinnedIds: process.env.PINNED_IDS,
     }
   },
 

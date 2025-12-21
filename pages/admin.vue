@@ -88,6 +88,18 @@
         </div>
       </div>
       <div class="mt-4 pl-4">
+        Pinned events at the top of the news feed:
+        <div>
+          List of Spasm IDs of pinned events
+          ({{ count(pinnedIds) }})
+            <textarea
+              v-model="pinnedIds"
+              placeholder="0x123456789"
+              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+            />
+        </div>
+      </div>
+      <div class="mt-4 pl-4">
         Enable new actions:
         <div class="pl-4">
           <div>
@@ -280,6 +292,8 @@ const whitelistedForActionReply =
   ref<string[]>(appConfig?.whitelistedForActionReply)
 const whitelistedForActionReact =
   ref<string[]>(appConfig?.whitelistedForActionReact)
+const pinnedIds =
+  ref<string[]>(appConfig?.pinnedIds)
 
 // Strings
 const anotherWebsiteLink = ref<string>(appConfig?.anotherWebsiteLink)
@@ -399,6 +413,13 @@ const saveAppConfig = async () => {
     } else if (Array.isArray(whitelistedForActionReact.value)) {
       newAppConfig.whitelistedForActionReact =
         whitelistedForActionReact.value
+    }
+    if (typeof(pinnedIds.value) === "string") {
+      newAppConfig.pinnedIds =
+        splitIntoArray(pinnedIds.value)
+    } else if (Array.isArray(pinnedIds.value)) {
+      newAppConfig.pinnedIds =
+        pinnedIds.value
     }
 
     // Strings

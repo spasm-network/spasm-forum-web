@@ -107,6 +107,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     whitelistedForActionPost: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionPost),
     whitelistedForActionReply: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionReply),
     whitelistedForActionReact: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionReact),
+    pinnedIds: splitIntoArray(useRuntimeConfig()?.public?.pinnedIds),
 
     // Numbers
     shortUrlsLengthOfWeb3Ids: Number(useRuntimeConfig()?.public?.shortUrlsLengthOfWeb3Ids) || 30,
@@ -177,6 +178,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.whitelistedForActionReply,
         whitelistedForActionReact:
           this.whitelistedForActionReact,
+        pinnedIds:
+          this.pinnedIds,
         // Numbers
         shortUrlsLengthOfWeb3Ids:
           this.shortUrlsLengthOfWeb3Ids,
@@ -308,6 +311,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateArray("whitelistedForActionPost")
       updateArray("whitelistedForActionReply")
       updateArray("whitelistedForActionReact")
+      updateArray("pinnedIds")
 
       // Numbers
       const updateNumber = (key: AppConfigKeyNumber) => {
