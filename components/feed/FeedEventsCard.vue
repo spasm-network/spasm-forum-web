@@ -19,7 +19,7 @@
         class=""
       >
         <nuxt-link
-          :to="`/authors/${post.authors?.[0].addresses?.[0].value}`"
+          :to="`/news/${extractIdForDisplay(post)}`"
           @click="hideFeed()"
           class="nuxt-link text-colorNotImportant-light dark:text-colorNotImportant-dark"
         >
