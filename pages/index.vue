@@ -32,6 +32,14 @@
       SHOW FEED
     </button>
 
+    <ExtraRssBlock
+      class="mt-2 ml-2"
+      :enablePosts="true"
+      :enableComments="true"
+      :activity="'rising'"
+      :showActivityFilter="true"
+    />
+
     <div v-if="ifShowHomeLatestComments" class="mt-2">
       <client-only fallback-tag="span">
         <div v-if="isError">

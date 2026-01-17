@@ -230,6 +230,18 @@
       </div>
     </div>
 
+    <!-- Broadcast to other Spasm instances -->
+    <div class="mb-4">
+      <ExtraRssBlock
+        :event="event"
+        :key="event?.ids?.[0]?.value.toString() || event?.signatures?.[0]?.value.toString() || randomNumber()"
+        :activity="'all'"
+        :showActivityFilter="true"
+        :showSignerFilter="true"
+        :showCategoryFilter="true"
+      />
+    </div>
+
     <!--
     <div v-if="event.content" class="whitespace-pre-line my-1">
       {{event.content}}
@@ -394,9 +406,9 @@ const toggleBroadcastToOtherInstances = () => {
   broadcastToOtherInstancesDropDownShown.value =
     !broadcastToOtherInstancesDropDownShown.value
 }
-const hideBroadcastToOtherInstances = () => {
-  broadcastToOtherInstancesDropDownShown.value = false
-}
+// const hideBroadcastToOtherInstances = () => {
+//   broadcastToOtherInstancesDropDownShown.value = false
+// }
 
 const customApiUrl = ref<string>('')
 const errorCustomApiUrl = ref<boolean>(false)
