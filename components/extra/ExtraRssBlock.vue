@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="overflow-auto overflow-wrap break-words" >
     <div
       class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
       @click="toggleRss()"
@@ -235,7 +235,10 @@ const calculateFinalUrl = (): void => {
       tempUrl += "&signer=" + props?.signer
     } else {
       const signers: (string | number)[] =
-        spasm.getVerifiedSigners(props?.event)
+        // For nostr addresses use npubs instead of hex
+        // because signer's pubkey is added to channel title.
+        spasm.getVerifiedSigners(props?.event, "npub")
+        // spasm.getVerifiedSigners(props?.event)
       if (signers && isArrayWithValues(signers)) {
         signers.forEach(signer => {
           tempUrl += "&signer=" + signer

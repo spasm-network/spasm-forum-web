@@ -165,7 +165,7 @@
     <ExtraRssBlock
       class="my-2"
       :key="author || randomNumber()"
-      :signer="author"
+      :signer="npub || author"
       :activity="'all'"
       :showActivityFilter="true"
       :showSignerFilter="true"
