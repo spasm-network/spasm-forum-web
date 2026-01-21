@@ -503,17 +503,56 @@ export const useUtils = () => {
   const toBeStandardTimestamp = toBeShortTimestamp
   const toBeNostrTimestamp = toBeShortTimestamp
 
-  const toBeDate = (value: string | number): string => {
+  // const toBeDate = (value: string | number): string => {
+  //   if (!value || !isStringOrNumber) return ""
+  //   let timestamp = toBeLongTimestamp(value)
+  //   if (!timestamp) return ""
+  //   const date = new Date(Number(timestamp)).toDateString()
+  //   if (date && typeof(date) === "string") {
+  //     return date
+  //   } else {
+  //     return ""
+  //   }
+  // }
+
+  const toBeDate = (
+    value: string | number,
+    format: "full" | "long" | "short" = "full"
+  ): string => {
     if (!value || !isStringOrNumber) return ""
-    let timestamp = toBeLongTimestamp(value)
-    if (!timestamp) return ""
-    const date = new Date(Number(timestamp)).toDateString()
-    if (date && typeof(date) === "string") {
-      return date
-    } else {
-      return ""
+    let fullTimestamp = toBeFullTimestamp(value)
+    if (fullTimestamp && isStringOrNumber(fullTimestamp)) {
+      const date = new Date(fullTimestamp).toUTCString()
+      if (date && typeof(date) === "string") {
+        if (format === "full") {
+          return date
+        } else if (format === "long") {
+          return date.slice(5,25)
+        } else if (format === "short") {
+          return date.slice(5,16)
+        }
+      }
     }
+    return ""
   }
+
+  const toBeDateFull = (val: string | number) => {
+    return toBeDate(val, "full")
+  }
+
+  const toBeFullDate = toBeDateFull
+
+  const toBeDateLong = (val: string | number) => {
+    return toBeDate(val, "long")
+  }
+
+  const toBeLongDate = toBeDateLong
+
+  const toBeDateShort = (val: string | number) => {
+    return toBeDate(val, "short")
+  }
+
+  const toBeShortDate = toBeDateShort
 
   const isValidUrl = (value?: any): boolean => {
     if (!value) return false
@@ -1436,6 +1475,12 @@ export const useUtils = () => {
     toBeNostrTimestamp,
     isValidDate,
     toBeDate,
+    toBeShortDate,
+    toBeDateShort,
+    toBeLongDate,
+    toBeDateLong,
+    toBeFullDate,
+    toBeDateFull,
     isValidUrl,
     copyToClipboard,
     removeDuplicatesFromArray,

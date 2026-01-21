@@ -46,7 +46,7 @@
     "nostr-tools-v2": "npm:nostr-tools@2.10.4",
     "pinia": "2.1.6",
     "qrcode.vue": "3.4.1",
-    "spasm.js": "2.0.0-rc.19",
+    "spasm.js": "2.0.0-rc.20",
     "vue-dompurify-html": "4.1.4"
   }
 }
