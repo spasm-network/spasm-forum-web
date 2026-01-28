@@ -72,7 +72,7 @@
           :to="`/news/${extractIdForDisplay(comment)}`"
           class="nuxt-link text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark">
           <span v-if="comment.timestamp">
-            ({{toBeDate(comment.timestamp)}})
+            ({{toBeDate(comment.timestamp, "short")}})
           </span>
         </nuxt-link>
       </div>

@@ -517,7 +517,7 @@ export const useUtils = () => {
 
   const toBeDate = (
     value: string | number,
-    format: "full" | "long" | "short" = "full"
+    format: "full" | "long" | "medium" | "short" = "full"
   ): string => {
     if (!value || !isStringOrNumber) return ""
     let fullTimestamp = toBeFullTimestamp(value)
@@ -528,6 +528,8 @@ export const useUtils = () => {
           return date
         } else if (format === "long") {
           return date.slice(5,25)
+        } else if (format === "medium") {
+          return date.slice(5,22)
         } else if (format === "short") {
           return date.slice(5,16)
         }

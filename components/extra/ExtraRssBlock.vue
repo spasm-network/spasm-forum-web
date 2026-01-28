@@ -123,10 +123,10 @@
           in this category only
         </span>
       </div>
-     <div
-       @click="copyToClipboardClicked(finalUrl)"
-       class="mt-4 mb-4 text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-     >
+      <div
+        @click="copyToClipboardClicked(finalUrl)"
+        class="mt-4 mb-4 text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
+      >
         <div class="font-bold">
           Click here to copy your final RSS feed link
           <button @click="copyToClipboardClicked(finalUrl)" :title="copyToClipboardTitle" class="ml-1">
@@ -148,6 +148,26 @@
             class="custom-icons-large lg:custom-icons pb-1"
           />
         </a>
+      </div>
+
+      <div class="mt-4 text-colorNotImportant-light dark:text-colorNotImportant-dark">
+        <div>
+          Best viewed on these RSS apps:
+        </div>
+        <div>
+          Android:
+          <a href="https://capyreader.com/" target="_blank">
+            Capy Reader
+            <IconsExternalWebsite class="custom-icons w-4 pb-1" />
+          </a>
+        </div>
+        <div>
+          Podcasts:
+          <a href="https://antennapod.org/" target="_blank">
+            AntennaPod
+            <IconsExternalWebsite class="custom-icons w-4 pb-1" />
+          </a>
+        </div>
       </div>
     </div>
   </div>

@@ -17,14 +17,14 @@
     <!-- database timestamp -->
     <div class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
       <span v-if="event.db?.addedTimestamp" class="mr-1">
-        Added time: {{toBeDate(event.db?.addedTimestamp)}}
+        Added: {{toBeDate(event.db?.addedTimestamp, "short")}}
       </span>
     </div>
 
     <!-- signed timestamp -->
     <div>
       <span v-if="event.timestamp" class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
-        Signed time: {{toBeDate(event.timestamp)}}
+        Signed: {{toBeDate(event.timestamp, "short")}}
       </span>
       <div v-if="enableShortUrlsForWeb3Actions && event.ids?.[0].value" class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
         Link:
