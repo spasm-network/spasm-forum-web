@@ -18,7 +18,7 @@ export const useNotificationStore = () => {
 
   const showNotification = async (
     message: string,
-    originalType: 'success' | 'error',
+    originalType: 'success' | 'error' | 'warning' | 'note',
     originalDuration: number = 3000
   ) => {
     if (!message || typeof(message) !== "string") return
@@ -28,7 +28,7 @@ export const useNotificationStore = () => {
     if (originalType && typeof(originalType) === "string") {
       if (
         originalType === 'success' || originalType === 'error' ||
-        originalType === 'warning' || originalType === 'normal'
+        originalType === 'warning' || originalType === 'note'
       ) { type = originalType }
     } else if (message.toLowerCase().startsWith('success')) {
       type = 'success'

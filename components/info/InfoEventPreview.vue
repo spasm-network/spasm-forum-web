@@ -139,7 +139,7 @@
         class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
         @click="toggleBroadcastToOtherNetworks()"
       >
-        <span>
+        <span class="hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark">
           Broadcast to other networks (Nostr)
         </span>
         <svg
@@ -191,7 +191,7 @@
         class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
         @click="toggleBroadcastToOtherInstances()"
       >
-        <span>
+        <span class="hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark">
           Broadcast to other instances (Spasm)
         </span>
         <svg
