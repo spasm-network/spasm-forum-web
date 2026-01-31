@@ -14,10 +14,10 @@
       <span v-if="post.source?.name" class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
         {{post.source?.name}}
       </span>
-      <span
-        v-if="post.authors?.[0].addresses?.[0].value && post.authors?.[0].addresses?.[0].verified"
-        class=""
-      >
+      <!--
+      <span v-if="post.authors?.[0].addresses?.[0].value && post.authors?.[0].addresses?.[0].verified" >
+      -->
+      <span v-if="spasm.getVerifiedSigners(post, 'npub')?.includes(addressValue)" >
         <nuxt-link
           :to="`/news/${extractIdForDisplay(post)}`"
           @click="hideFeed()"
