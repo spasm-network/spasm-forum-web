@@ -130,6 +130,12 @@
 
     </div>
 
+    <ExtraTipsBlock
+      class="mb-2"
+      :event="comment"
+      :key="spasm.extractSpasmId01(comment) || randomNumber()"
+    />
+
     <div>
       <InfoEventCommentsCardReactionsBar :comment="comment" class="mr-1"/>
 

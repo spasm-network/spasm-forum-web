@@ -25,18 +25,7 @@
                 {{ userInputCategoryMain }}
               </span>
             </span>
-            <svg
-              :class="{ 'rotate-180': categoriesDropDownShown }"
-              class="inline w-5 h-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              />
-            </svg>
+            <IconsTriangle :rotateIf="categoriesDropDownShown" />
           </div>
 
           <!-- Dropdown menu -->
@@ -63,7 +52,7 @@
         </div>
       </div>
 
-      <!-- Title -->
+      <!-- TITLE -->
       <div v-if="formAction === 'post'">
         <div class="mt-2 text-colorNotImportant-light dark:text-colorNotImportant-dark">Title:</div>
         <input
@@ -74,43 +63,200 @@
         >
       </div>
 
-      <!-- Content -->
+      <!-- CONTENT -->
       <div
         v-if="formAction === 'post'"
-        class="mt-2 text-colorNotImportant-light dark:text-colorNotImportant-dark">Body:</div>
+        class="mt-2 text-colorNotImportant-light dark:text-colorNotImportant-dark">Body:
+      </div>
       <textarea
         v-model="userInput"
         :placeholder="bodyPlaceholder"
         class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-48 focus:outline-none rounded-b-lg border-2"
         :class="errorBody ? 'border-red-400 dark:border-red-400 placeholder:text-red-400' : ''"
       />
-      <button
-        v-if="!showAdvanced"
-        type="submit"
-        class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark">
-        Sign message
-      </button>
 
-      <span
-        v-if="idNostrNote"
-        class="block mt-4 ml-2 mb-2 cursor-pointer">
-        <a :href="`nostr:${idNostrNote}`" target="_blank" class="text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark">
-        Reply with your Nostr app
-          <IconsExternalWebsite
-            class="custom-icons-large lg:custom-icons pb-1"
-          />
-        </a>
-      </span>
+      <!-- MORE OPTIONS -->
+      <div v-if="enableMoreOptions" class="my-2">
+        <div
+          class="ml-2 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+          @click="toggleMoreOptionsShown"
+        >
+          More options
+          <IconsTriangle :rotateIf="moreOptionsShown" />
+        </div>
 
-      <span class="block mt-2 ml-2 mb-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
-        @click="toggleShowAdvanced()">
-        {{showAdvancedText}} advanced options (multi-signing)
-      </span>
+        <div v-if="moreOptionsShown" class="ml-2">
+          <!-- TIPS -->
+          <div class="ml-2 my-2">
+            <div
+              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+              @click="toggleTipsInputFieldsShown"
+            >
+              Add addresses for tips
+              <IconsTriangle :rotateIf="tipsInputFieldsShown" />
+            </div>
 
-      <!-- Networks -->
+            <div v-if="tipsInputFieldsShown">
+            <!-- Monero (XMR) -->
+              <div v-if="tipsAllowedTickers?.includes('xmr')">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  XMR:
+                </span>
+                <input
+                  v-model="userInputTipsMonero"
+                  placeholder="Monero address"
+                  class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                >
+              </div>
+
+              <!-- Zcash (ZEC) -->
+              <div v-if="tipsAllowedTickers?.includes('zec')">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  ZEC:
+                </span>
+                <input
+                  v-model="userInputTipsZcash"
+                  placeholder="Zcash address"
+                  class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                >
+              </div>
+
+              <!-- Ethereum (ETH) -->
+              <div v-if="tipsAllowedTickers?.includes('eth')">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  ETH:
+                </span>
+                <input
+                  v-model="userInputTipsEthereum"
+                  placeholder="Ethereum address"
+                  class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                >
+              </div>
+
+              <!-- Bitcoin (BTC) -->
+              <div v-if="tipsAllowedTickers?.includes('btc')">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  BTC:
+                </span>
+                <input
+                  v-model="userInputTipsBitcoin"
+                  placeholder="Bitcoin address"
+                  class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                >
+              </div>
+
+              <!-- Solana (SOL) -->
+              <div v-if="tipsAllowedTickers?.includes('sol')">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  SOL:
+                </span>
+                <input
+                  v-model="userInputTipsSolana"
+                  placeholder="Solana address"
+                  class="p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[550px] focus:outline-none border-2"
+                >
+              </div>
+            </div>
+          </div>
+
+          <span class="block mt-2 ml-2 mb-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+            @click="toggleShowAdvanced()">
+            {{showAdvancedText}} multi-signing options 
+            <IconsTriangle :rotateIf="showAdvanced" />
+          </span>
+
+          <!-- Advanced (multi-signing) -->
+          <div v-if="showAdvanced" class="mt-1 ml-2">
+            Sign with multiple private keys:
+            <div v-if="connectedAddressEthereum">
+              Ethereum: {{ sliceAddress(connectedAddressEthereum, 8, 6) }}
+              <span
+                @click="showWeb3Modal"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              > change </span> /
+              <span
+                @click="removeAddressEthereum"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              > remove </span>
+            </div>
+            <div v-else>
+              <span
+                @click="showWeb3Modal"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              >
+                Click to connect Ethereum
+              </span>
+            </div>
+            <div v-if="connectedAddressNostr">
+              Nostr: {{ sliceAddress(connectedAddressNostr, 8) }}
+              <span
+                @click="showWeb3Modal"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              >
+                change
+              </span>
+                /
+              <span
+                @click="removeAddressNostr"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              >
+                remove
+              </span>
+            </div>
+            <div v-else>
+              <span
+                @click="showWeb3Modal"
+                class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+              >
+                Click to connect Nostr
+              </span>
+            </div>
+            <div v-if="connectedAddressEthereum && connectedAddressNostr">
+              <div
+                v-if="!spasmEventSignedWithEthereum"
+                class="block hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+                @click="signWithEthereum()"
+              >
+                Sign with Ethereum
+              </div>
+              <div v-if="spasmEventSignedWithEthereum">
+                Ethereum: signed
+              </div>
+              <div
+                v-if="!spasmEventSignedWithNostr && spasmEventSignedWithEthereum"
+                class="block hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
+                @click="signWithNostr()"
+              >
+                Sign with Nostr
+              </div>
+              <div v-if="spasmEventSignedWithNostr">
+                Nostr: signed
+              </div>
+            </div>
+            <div
+              v-if="errorMessageMultiSign"
+              class="text-colorRed-light dark:text-colorRed-dark"
+            > ERROR: {{ errorMessageMultiSign }}
+            </div>
+            <button
+              v-if="spasmEventSignedWithEthereum && spasmEventSignedWithNostr"
+              class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark">
+              Submit to
+              <span v-if="isNetworkSpasmSelected">Spasm</span>
+              <span
+                v-if="isNetworkSpasmSelected && isNetworkNostrSelected"
+              > and
+              </span>
+              <span v-if="isNetworkNostrSelected">Nostr</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NETWORKS -->
       <div
         v-if="(connectedKeyType === 'nostr' && !isMultiSign) || (connectedAddressNostr && isMultiSign)"
-        class="my-1 mt-2"
+        class="ml-2 my-2 mt-2"
       >
         Submit to networks:
         <span class="ml-2">
@@ -136,97 +282,31 @@
         </span>
       </div>
 
-      <!-- Advanced (multi-signing) -->
-      <div v-if="showAdvanced" class="mt-1 ml-2">
-        Sign with multiple private keys:
-        <div v-if="connectedAddressEthereum">
-          Ethereum: {{ sliceAddress(connectedAddressEthereum, 8, 6) }}
-          <span
-            @click="showWeb3Modal"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          > change </span> /
-          <span
-            @click="removeAddressEthereum"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          > remove </span>
-        </div>
-        <div v-else>
-          <span
-            @click="showWeb3Modal"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          >
-            Click to connect Ethereum
-          </span>
-        </div>
-        <div v-if="connectedAddressNostr">
-          Nostr: {{ sliceAddress(connectedAddressNostr, 8) }}
-          <span
-            @click="showWeb3Modal"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          >
-            change
-          </span>
-            /
-          <span
-            @click="removeAddressNostr"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          >
-            remove
-          </span>
-        </div>
-        <div v-else>
-          <span
-            @click="showWeb3Modal"
-            class="hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-          >
-            Click to connect Nostr
-          </span>
-        </div>
-        <div v-if="connectedAddressEthereum && connectedAddressNostr">
-          <div
-            v-if="!spasmEventSignedWithEthereum"
-            class="block hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-            @click="signWithEthereum()"
-          >
-            Sign with Ethereum
-          </div>
-          <div v-if="spasmEventSignedWithEthereum">
-            Ethereum: signed
-          </div>
-          <div
-            v-if="!spasmEventSignedWithNostr && spasmEventSignedWithEthereum"
-            class="block hover:underline cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark"
-            @click="signWithNostr()"
-          >
-            Sign with Nostr
-          </div>
-          <div v-if="spasmEventSignedWithNostr">
-            Nostr: signed
-          </div>
-        </div>
-        <div
-          v-if="errorMessageMultiSign"
-          class="text-colorRed-light dark:text-colorRed-dark"
-        > ERROR: {{ errorMessageMultiSign }}
-        </div>
-        <button
-          v-if="spasmEventSignedWithEthereum && spasmEventSignedWithNostr"
-          class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark">
-          Submit to
-          <span v-if="isNetworkSpasmSelected">Spasm</span>
-          <span
-            v-if="isNetworkSpasmSelected && isNetworkNostrSelected"
-          > and
-          </span>
-          <span v-if="isNetworkNostrSelected">Nostr</span>
-        </button>
-      </div>
+      <!-- SUBMIT BUTTON -->
+      <button
+        v-if="!showAdvanced"
+        type="submit"
+        class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark">
+        Sign message
+      </button>
+
+      <!-- REPLY WITH NOSTR APP -->
+      <span
+        v-if="idNostrNote"
+        class="block mt-4 ml-2 mb-2 cursor-pointer">
+        <a :href="`nostr:${idNostrNote}`" target="_blank" class="text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark">
+        Reply with your Nostr app
+          <IconsExternalWebsite
+            class="custom-icons-large lg:custom-icons pb-1"
+          />
+        </a>
+      </span>
 
       <!-- relays -->
       <div v-if="isNetworkNostrSelected">
         <div
           v-if="getNostrRelays() && isArrayWithValues(getNostrRelays())"
-          class="text-colorNotImportant-light dark:text-colorNotImportant-dark"
+          class="ml-2 text-colorNotImportant-light dark:text-colorNotImportant-dark"
         >
           Submitting to these Nostr relays:
           <div v-for="relay in getNostrRelays()">
@@ -265,6 +345,7 @@
 <script setup lang="ts">
 import {
   FiltersCategory,
+  SpasmEventBodyTipsV2,
   SpasmEventCategoryV2,
   SpasmEventV2,
   SubmitEventV2Return
@@ -311,10 +392,18 @@ const {
 const env = useRuntimeConfig()?.public
 const postPlaceholder = env?.postPlaceholder
 
-const props = defineProps<{
-  formAction?: "post" | "reply"
-  parentEvent?: SpasmEventV2 | null
-}>()
+const props = withDefaults(
+  defineProps<{
+    formAction?: "post" | "reply"
+    parentEvent?: SpasmEventV2 | null
+    enableMoreOptions?: boolean
+    tipsAllowedTickers?: string[]
+  }>(),
+  {
+    enableMoreOptions: true,
+    tipsAllowedTickers: ["xmr", "zec", "eth", "btc", "sol"]
+  }
+)
 
 const emit = defineEmits<{(
   e: 'reply-submitted',
@@ -329,6 +418,11 @@ const userInputTitle = ref<string>('')
 const userInput = ref<string>('')
 const userInputCategoryMain = ref<string>('')
 const userInputCategorySub = ref<string>('')
+const userInputTipsMonero = ref<string>('')
+const userInputTipsZcash = ref<string>('')
+const userInputTipsEthereum = ref<string>('')
+const userInputTipsBitcoin = ref<string>('')
+const userInputTipsSolana = ref<string>('')
 
 const errorTitle = ref<boolean>(false)
 const errorBody = ref<boolean>(false)
@@ -336,9 +430,12 @@ const errorBody = ref<boolean>(false)
 const errorMessage = ref<string>('')
 const errorMessageMultiSign = ref<string>('')
 
-const categoriesDropDownShown = ref(false)
-const showAdvanced = ref(false)
-const showAdvancedText = ref('Show')
+const categoriesDropDownShown = ref<boolean>(false)
+
+const moreOptionsShown = ref<boolean>(false)
+const tipsInputFieldsShown = ref<boolean>(false)
+const showAdvanced = ref<boolean>(false)
+const showAdvancedText = ref<string>('Show')
 
 const idNostrNote = ref('')
 
@@ -363,7 +460,7 @@ watch(
       errorTitle.value = false
       resetMultiSigning()
     } else {
-      /* errorTitle.value = true */
+      resetMultiSigning()
     }
   }
 )
@@ -374,13 +471,44 @@ watch(
       errorBody.value = false
       resetMultiSigning()
     } else {
-      /* errorBody.value = true */
+      resetMultiSigning()
     }
   }
 )
 
+watch(
+  () => [
+    userInputTipsMonero.value, userInputTipsZcash.value,
+    userInputTipsEthereum.value, userInputTipsBitcoin.value,
+    userInputTipsSolana.value
+  ], async () => {
+    resetMultiSigning()
+  }
+)
+
+
 const toggleCategoriesDropDown = () => {
   categoriesDropDownShown.value = !categoriesDropDownShown.value
+}
+
+const toggleTipsInputFieldsShown = () => {
+  tipsInputFieldsShown.value = !tipsInputFieldsShown.value
+}
+
+const hideTipsInputFieldsShown = (): void => {
+  tipsInputFieldsShown.value = false
+}
+
+const toggleMoreOptionsShown = () => {
+  moreOptionsShown.value = !moreOptionsShown.value
+  if (moreOptionsShown.value === false) {
+    hideTipsInputFieldsShown()
+    hideShowAdvanced()
+  }
+}
+
+const hideMoreOptionsShown = (): void => {
+  moreOptionsShown.value = false
 }
 
 const toggleShowAdvanced = (): void => {
@@ -419,6 +547,10 @@ const submitMessage = async (e: any):Promise<void> => {
       errorMessageMultiSign.value =
         "Something went wrong. Try signing with Ethereum and Nostr again."
     }
+    notificationStore.showNotification(
+      "Submitting",
+      "note", 3000
+    )
     response = await submitMultiSignedEventV2()
 
   // Single signed message
@@ -470,6 +602,62 @@ const submitMessage = async (e: any):Promise<void> => {
         }]
       }
     }
+
+    const inputTips: SpasmEventBodyTipsV2[] = []
+    let finalTips: SpasmEventBodyTipsV2[] | null = null
+    // Monero (XMR)
+    if (
+      userInputTipsMonero.value &&
+      typeof(userInputTipsMonero.value) === "string"
+    ) {
+      inputTips.push({
+        address: userInputTipsMonero.value,
+        currency: { name: "monero", ticker: "xmr" }
+      })
+    }
+    // Zcash (XMR)
+    if (
+      userInputTipsZcash.value &&
+      typeof(userInputTipsZcash.value) === "string"
+    ) {
+      inputTips.push({
+        address: userInputTipsZcash.value,
+        currency: { name: "zcash", ticker: "zec" }
+      })
+    }
+    // Ethereum (ETH)
+    if (
+      userInputTipsEthereum.value &&
+      typeof(userInputTipsEthereum.value) === "string"
+    ) {
+      inputTips.push({
+        address: userInputTipsEthereum.value,
+        currency: { name: "ethereum", ticker: "eth" }
+      })
+    }
+    // Bitcoin (BTC)
+    if (
+      userInputTipsBitcoin.value &&
+      typeof(userInputTipsBitcoin.value) === "string"
+    ) {
+      inputTips.push({
+        address: userInputTipsBitcoin.value,
+        currency: { name: "bitcoin", ticker: "btc" }
+      })
+    }
+    // Solana (SOL)
+    if (
+      userInputTipsSolana.value &&
+      typeof(userInputTipsSolana.value) === "string"
+    ) {
+      inputTips.push({
+        address: userInputTipsSolana.value,
+        currency: { name: "solana", ticker: "sol" }
+      })
+    }
+    if (inputTips && isArrayWithValues(inputTips)) {
+      finalTips = inputTips
+    }
     
     // It's a comment if there is a target (action = 'reply'). 
     if (
@@ -484,16 +672,20 @@ const submitMessage = async (e: any):Promise<void> => {
           isStringOrNumber(id.value)
         ) { parentIds.push(id.value) }
       })
+      notificationStore.showNotification(
+        "Submitting",
+        "note", 3000
+      )
       response = await submitSingleSignedEventV2(
         'reply', userInput.value, parentIds, '',
-        categories, parentEvent
+        categories, parentEvent, finalTips
       )
 
     // It's a new post if there is no target (action = 'post').
     } else if (props?.formAction === 'post') {
       response = await submitSingleSignedEventV2(
         'post', userInput.value, '', userInputTitle.value,
-        categories, parentEvent
+        categories, parentEvent, finalTips
       )
     }
   }
@@ -520,13 +712,26 @@ const submitMessage = async (e: any):Promise<void> => {
         setTimeout(() => {
           userInput.value = ''
           userInputTitle.value = ''
+          userInputTipsMonero.value = ''
+          userInputTipsZcash.value = ''
+          userInputTipsEthereum.value = ''
+          userInputTipsBitcoin.value = ''
+          userInputTipsSolana.value = ''
           errorBody.value = false
           errorTitle.value = false
           hideShowAdvanced()
+          hideMoreOptionsShown()
+          hideTipsInputFieldsShown()
+          resetMultiSigning()
         }, 2000)
       }
     } else if (props?.formAction === 'reply') {
       userInput.value = ''
+      userInputTipsMonero.value = ''
+      userInputTipsZcash.value = ''
+      userInputTipsEthereum.value = ''
+      userInputTipsBitcoin.value = ''
+      userInputTipsSolana.value = ''
       errorMessage.value = ''
       const targets: (string | number)[] = []
       if (
@@ -538,6 +743,9 @@ const submitMessage = async (e: any):Promise<void> => {
         })
       }
       hideShowAdvanced()
+      hideMoreOptionsShown()
+      hideTipsInputFieldsShown()
+      resetMultiSigning()
       emit('reply-submitted', targets, response)
     }
   }
@@ -610,6 +818,62 @@ const signWithEthereum = async ():Promise<void> => {
     }
   }
 
+  const inputTips: SpasmEventBodyTipsV2[] = []
+  let finalTips: SpasmEventBodyTipsV2[] | null = null
+  // Monero (XMR)
+  if (
+    userInputTipsMonero.value &&
+    typeof(userInputTipsMonero.value) === "string"
+  ) {
+    inputTips.push({
+      address: userInputTipsMonero.value.trim(),
+      currency: { name: "monero", ticker: "xmr" }
+    })
+  }
+  // Zcash (XMR)
+  if (
+    userInputTipsZcash.value &&
+    typeof(userInputTipsZcash.value) === "string"
+  ) {
+    inputTips.push({
+      address: userInputTipsZcash.value.trim(),
+      currency: { name: "zcash", ticker: "zec" }
+    })
+  }
+  // Ethereum (ETH)
+  if (
+    userInputTipsEthereum.value &&
+    typeof(userInputTipsEthereum.value) === "string"
+  ) {
+    inputTips.push({
+      address: userInputTipsEthereum.value.trim(),
+      currency: { name: "ethereum", ticker: "eth" }
+    })
+  }
+  // Bitcoin (BTC)
+  if (
+    userInputTipsBitcoin.value &&
+    typeof(userInputTipsBitcoin.value) === "string"
+  ) {
+    inputTips.push({
+      address: userInputTipsBitcoin.value.trim(),
+      currency: { name: "bitcoin", ticker: "btc" }
+    })
+  }
+  // Solana (SOL)
+  if (
+    userInputTipsSolana.value &&
+    typeof(userInputTipsSolana.value) === "string"
+  ) {
+    inputTips.push({
+      address: userInputTipsSolana.value.trim(),
+      currency: { name: "solana", ticker: "sol" }
+    })
+  }
+  if (inputTips && isArrayWithValues(inputTips)) {
+    finalTips = inputTips
+  }
+
   let response = null
   // It's a comment if there is a target (action = 'reply'). 
   if (
@@ -627,14 +891,14 @@ const signWithEthereum = async ():Promise<void> => {
 
     response = await signMessageWithEthereum(
       'reply', userInput.value, parentIds, '',
-      categories, parentEvent
+      categories, parentEvent, finalTips
     )
 
   // It's a new post if there is no target (action = 'post').
   } else if (props?.formAction === 'post') {
     response = await signMessageWithEthereum(
       'post', userInput.value, '', userInputTitle.value,
-      categories, parentEvent
+      categories, parentEvent, finalTips
     )
   }
 }

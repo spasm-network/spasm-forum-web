@@ -8,7 +8,13 @@
       <InfoEventPreview
         :event="eventsStore.getPost"
         :key="eventsStore?.getPost.ids?.[0]?.value || randomNumber()"
-        class="mb-1"
+        class="mb-0"
+      />
+
+      <ExtraTipsBlock
+        class="mb-2"
+        :event="eventsStore.getPost"
+        :key="spasm.extractSpasmId01(eventsStore?.getPost) || randomNumber()"
       />
 
       <InfoEventReactionsBar

@@ -1241,8 +1241,8 @@ export interface SpasmEventBodyTipsV2 {
     ticker?: string
   }
   network?: {
-    name?: string | number
-    id?: string | number
+    name?: string
+    id?: string
   }
 }
 

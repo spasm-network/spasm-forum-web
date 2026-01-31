@@ -129,6 +129,14 @@
     @apply w-6 inline-block;
   }
 
+  .custom-icons-xl {
+    @apply w-7 inline-block;
+  }
+
+  .custom-icons-xxl {
+    @apply w-8 inline-block;
+  }
+
   .custom-admin-input-socials {
     @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[50%] max-w-[700px] focus:outline-none border-2
   }

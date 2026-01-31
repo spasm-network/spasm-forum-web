@@ -1,25 +1,23 @@
 <template>
   <div class="overflow-auto overflow-wrap break-words" >
     <div
-      class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
-      @click="toggleRss()"
+      class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
     >
-      <span v-if="showRssIcon">
-        <IconsRss />
+      <span v-if="showSubscribeButton">
+        Subscribe:
       </span>
-      <span>
-        RSS
-      </span>
-      <svg
-        :class="{ 'rotate-180': rssShown }"
-        class="inline w-5 h-5" viewBox="0 0 20 20" fill="currentColor"
+      <span
+        @click="toggleRss()"
+        class="cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
       >
-        <path
-          fill-rule="evenodd"
-          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"
-        />
-      </svg>
+        <span v-if="showRssIcon">
+          <IconsRss />
+        </span>
+        <span class="font-bold">
+          RSS
+        </span>
+        <IconsTriangle :rotateIf="rssShown" />
+      </span>
     </div>
 
     <div class="mb-8" v-if="rssShown" >
@@ -34,18 +32,7 @@
           @click="toggleActivityDropDown()"
           class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
         >
-          <svg
-            :class="{ 'rotate-180': activityDropDownShown }"
-            class="inline w-5 h-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <IconsTriangle :rotateIf="activityDropDownShown" />
           <span>
             <span class="ml-2 font-bold text-colorBase-light dark:text-colorBase-dark">
               {{ activity }}
@@ -192,6 +179,7 @@ const props = withDefaults(
     event?: SpasmEventV2
     activity?: string
     signer?: string
+    showSubscribeButton?: boolean
     showRssIcon?: boolean
     showActivityFilter?: boolean
     showCopyToClipboard?: boolean
@@ -202,6 +190,7 @@ const props = withDefaults(
   }>(),
   {
     activity: "all",
+    showSubscribeButton: true,
     showRssIcon: true,
     showActivityFilter: true,
     showCopyToClipboard: true,

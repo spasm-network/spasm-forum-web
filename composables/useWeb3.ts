@@ -15,7 +15,8 @@ import {
   SpasmEventCategoryV2,
   SpasmEventAddressV2,
   // NostrEventSignedOpened
-  SubmitEventV2Return
+  SubmitEventV2Return,
+  SpasmEventBodyTipsV2
 } from "./../helpers/interfaces";
 import { bech32 } from 'bech32'
 import {
@@ -43,7 +44,8 @@ const {
   sliceAddress,
   mergeMentions,
   copyOf,
-  isValidUrl
+  isValidUrl,
+  removeDuplicatesFromArray
 } = useUtils()
 const {
   sendEventToNostrNetwork,
@@ -273,7 +275,8 @@ export const useWeb3 = () => {
     dirtyParentIds?: (string | number) | (string | number)[],
     dirtyTitle?: string,
     dirtyCategories?: SpasmEventCategoryV2[] | null,
-    originalParentEvent?: SpasmEventV2 | null
+    originalParentEvent?: SpasmEventV2 | null,
+    dirtyTips?: SpasmEventBodyTipsV2[] | null
   ): SpasmEventBodyV2 | null => {
     savedSpasmEventBodyV2.value = null
     if (!toBeString(dirtyAction)) return null
@@ -296,6 +299,7 @@ export const useWeb3 = () => {
       isArrayWithValues(dirtyParentIds)
     )) {
       parentIds = parentIds.concat(dirtyParentIds)
+      parentIds = removeDuplicatesFromArray(parentIds)
       // spasm.sanitizeEvent() can also sanitize an array
       spasm.sanitizeEvent(parentIds)
     }
@@ -383,6 +387,16 @@ export const useWeb3 = () => {
         spasmEventBodyV2.mentions = mergeMentions(
           spasmEventBodyV2.mentions, parentSpasmEvent.mentions
         )
+      }
+    }
+
+    if (dirtyTips &&  isArrayWithValues(dirtyTips)) {
+      const tips = dirtyTips
+      // spasm.sanitizeEvent() can also sanitize an array
+      spasm.sanitizeEvent(tips)
+      spasm.toLowerCaseAllNestedStrings(tips)
+      if (tips && isArrayWithValues(tips)) {
+        spasmEventBodyV2.tips = tips
       }
     }
 
@@ -645,6 +659,8 @@ export const useWeb3 = () => {
       const envelope: SpasmEventEnvelopeV2 | null =
         spasm.convertToSpasmEventEnvelope(event, "2.0.0")
       if (!envelope) return null
+        console.log("event:", event)
+        console.log("envelope:", envelope)
 
       const path = `${finalApiUrl}/api/submit/`
 
@@ -701,7 +717,8 @@ export const useWeb3 = () => {
     dirtyParentIds?: (string | number) | (string | number)[],
     dirtyTitle?: string,
     dirtyCategories?: SpasmEventCategoryV2[] | null,
-    parentEvent?: SpasmEventV2 | null
+    parentEvent?: SpasmEventV2 | null,
+    dirtyTips?: SpasmEventBodyTipsV2[] | null
   ): Promise<SubmitEventV2Return | null> => {
     // Only try to connect an Ethereum extension.
     // If web3 (Ethereum) is not detected, then the web3
@@ -715,7 +732,7 @@ export const useWeb3 = () => {
     const spasmEventBodyV2: SpasmEventBodyV2 | null =
       assembleSpasmEventBodyV2(
         dirtyAction, dirtyContent, dirtyParentIds,
-        dirtyTitle, dirtyCategories, parentEvent
+        dirtyTitle, dirtyCategories, parentEvent, dirtyTips
     )
     if (!spasmEventBodyV2) return null
 
@@ -753,7 +770,8 @@ export const useWeb3 = () => {
     dirtyParentIds?: (string | number) | (string | number)[],
     dirtyTitle?: string,
     dirtyCategories?: SpasmEventCategoryV2[],
-    parentEvent?: SpasmEventV2 | null
+    parentEvent?: SpasmEventV2 | null,
+    dirtyTips?: SpasmEventBodyTipsV2[] | null
   ): Promise<void | null> => {
     // Only try to connect an Ethereum extension.
     // If web3 (Ethereum) is not detected, then the web3
@@ -767,7 +785,7 @@ export const useWeb3 = () => {
     const spasmEventBodyV2: SpasmEventBodyV2 | null =
       assembleSpasmEventBodyV2(
         dirtyAction, dirtyContent, dirtyParentIds, dirtyTitle,
-        dirtyCategories, parentEvent
+        dirtyCategories, parentEvent, dirtyTips
     )
 
     if (!spasmEventBodyV2) return null
