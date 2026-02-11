@@ -20,7 +20,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     enableAppConfigChanges: useRuntimeConfig()?.public?.enableAppConfigChanges === "false" ? false : true,
     enableAppConfigChangesByAdmin: useRuntimeConfig()?.public?.enableAppConfigChangesByAdmin === "false" ? false : true,
     enableAdmin: useRuntimeConfig()?.public?.enableAdmin === "false" ? false : true,
-    admins: useRuntimeConfig()?.public?.admins,
+    admins: splitIntoArray(useRuntimeConfig()?.public?.admins),
     // TODO backend env vars
     // Not set in frontend .env file:
     allowNewEventsWithoutSignature: undefined,

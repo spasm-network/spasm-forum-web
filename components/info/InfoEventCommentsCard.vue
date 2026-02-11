@@ -38,31 +38,38 @@
           />
         </span>
         <span v-if="showActionDetails">
-          <span class="ml-1">
+          <span
+            class="ml-1"
+            v-if="spasm.getAllSignatures(comment)?.[0]"
+          >
             <span class="signatureLabel">Signature: </span>
+            <!--
             <nuxt-link class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline"
               :to="`/news/${String(comment.signatures?.[0].value)}`">
             {{sliceAddress(String(comment.signatures?.[0].value))}}
             </nuxt-link>
+            -->
+            {{sliceAddress(String(spasm.getAllSignatures(comment)?.[0]))}}
             <ExtraAddressIcons
-              v-if="String(comment.signatures?.[0].value)"
-              :key="String(comment.signatures?.[0].value)"
-              :value="String(comment.signatures?.[0].value)"
+              v-if="String(spasm.getAllSignatures(comment)?.[0])"
+              :key="String(spasm.getAllSignatures(comment)?.[0])"
+              :value="String(spasm.getAllSignatures(comment)?.[0])"
               :showCopyToClipboard="true"
             />
           </span>
-          <span v-if="String(comment.parent?.ids?.[0].value)">
-            <span class="ml-1">Target: </span>
+          <span v-if="extractParentIdForLink(comment) && extractIdForDisplay(comment)">
+            <span class="ml-1">Parent ID: </span>
             <nuxt-link class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline"
-              :to="`/news/?p=${String(comment.parent?.ids?.[0].value)}`">
+              :to="`/news/${extractParentIdForLink(comment)}`"
+            >
               <span>
-                {{sliceAddress(String(comment.parent?.ids?.[0].value))}}
+                {{sliceAddress(extractParentIdForDisplay(comment))}}
               </span>
             </nuxt-link>
             <ExtraAddressIcons
-              v-if="String(comment.parent?.ids?.[0].value)"
-              :key="String(comment.parent?.ids?.[0].value)"
-              :value="String(comment.parent?.ids?.[0].value)"
+              v-if="String(extractParentIdForDisplay(comment))"
+              :key="String(extractParentIdForDisplay(comment))"
+              :value="String(extractParentIdForDisplay(comment))"
               :showCopyToClipboard="true"
             />
           </span>
@@ -200,6 +207,8 @@ const { getMetadataByAddressNostr } = storeToRefs(profilesStore)
 
 const {
   extractIdForDisplay,
+  extractParentIdForLink,
+  extractParentIdForDisplay,
   extractOneAuthorAddressForDisplay
 } = useWeb3()
 const {

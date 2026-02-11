@@ -1287,20 +1287,21 @@ export const useWeb3 = () => {
     const spasmEvent = spasm.toBeSpasmEventV2(event)
     if (!spasmEvent) return ""
     
-    // Nostr ID has higher priority because the Nostr network
-    // can only be queried with Nostr IDs, while Spasm instances
-    // can be queried with both Nostr and Spasm IDs.
-    const nostrId =
-      spasm.extractIdByFormat(event, { name: "nostr-hex" })
-    if (nostrId && typeof(nostrId) === "string") {
-      return toBeNote(nostrId)
-    }
-
     const spasmId = spasm.extractIdByFormat(event, {
       name: "spasmid", version: "01"
     })
     if (spasmId && typeof(spasmId) === "string") {
       return toBeShortId(spasmId)
+    }
+
+    // Nostr ID has higher priority because the Nostr network
+    // can only be queried with Nostr IDs, while Spasm instances
+    // can be queried with both Nostr and Spasm IDs.
+    // EDIT: moved Nostr ID after Spasm ID
+    const nostrId =
+      spasm.extractIdByFormat(event, { name: "nostr-hex" })
+    if (nostrId && typeof(nostrId) === "string") {
+      return toBeNote(nostrId)
     }
 
     const dmpIdEth = spasm.extractIdByFormat(event, {
@@ -1336,15 +1337,6 @@ export const useWeb3 = () => {
     const spasmEvent = spasm.toBeSpasmEventV2(event)
     if (!spasmEvent) return ""
 
-    // Nostr ID has higher priority because the Nostr network
-    // can only be queried with Nostr IDs, while Spasm instances
-    // can be queried with both Nostr and Spasm IDs.
-    const nostrId =
-      spasm.extractParentIdByFormat(event, { name: "nostr-hex" })
-    if (nostrId && typeof(nostrId) === "string") {
-      return toBeNote(nostrId)
-    }
-
     // URL and guid are higher than spasmid because they are
     // consistent while spasmid might be different for unsigned
     // RSS items on different instances if RSS feed is parsed
@@ -1364,6 +1356,16 @@ export const useWeb3 = () => {
     })
     if (spasmId && typeof(spasmId) === "string") {
       return toBeShortId(spasmId)
+    }
+
+    // Nostr ID has higher priority because the Nostr network
+    // can only be queried with Nostr IDs, while Spasm instances
+    // can be queried with both Nostr and Spasm IDs.
+    // EDIT: moved Nostr ID below Spasm ID
+    const nostrId =
+      spasm.extractParentIdByFormat(event, { name: "nostr-hex" })
+    if (nostrId && typeof(nostrId) === "string") {
+      return toBeNote(nostrId)
     }
 
     const dmpIdEth = spasm.extractParentIdByFormat(event, {

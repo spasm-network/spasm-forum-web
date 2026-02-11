@@ -133,7 +133,7 @@
 
     <!-- Broadcast to other networks (Nostr) -->
     <div
-      v-if="spasm.extractSignedNostrEvent(event) && spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr.toLowerCase()))"
+      v-if="spasm.extractSignedNostrEvent(event) && spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr?.toLowerCase()))"
     >
       <div
         class="cursor-pointer text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
@@ -182,9 +182,12 @@
     <!-- Broadcast to other Spasm instances -->
     <div
       v-if="
-      (spasm.getVerifiedSigners(event).includes(connectedAddress.toLowerCase())) ||
-      (spasm.getVerifiedEthereumSigners(event).includes(connectedAddressEthereum.toLowerCase())) ||
-      (spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr.toLowerCase())))
+      (admins?.includes(connectedAddress?.toLowerCase())) ||
+      (admins?.includes(connectedAddressEthereum?.toLowerCase())) ||
+      (admins?.includes(toBeHex(connectedAddressNostr?.toLowerCase()))) ||
+      (spasm.getVerifiedSigners(event).includes(connectedAddress?.toLowerCase())) ||
+      (spasm.getVerifiedEthereumSigners(event).includes(connectedAddressEthereum?.toLowerCase())) ||
+      (spasm.getVerifiedNostrSigners(event).includes(toBeHex(connectedAddressNostr?.toLowerCase())))
       "
     >
       <div
@@ -335,6 +338,7 @@ const enableEmbedIframeTagsInPosts: boolean = env?.enableEmbedIframeTagsInPosts 
 // Short URLs for web3 actions are enabled by default if not disabled in .env
 const enableShortUrlsForWeb3Actions: boolean = appConfig?.enableShortUrlsForWeb3Actions
 const shortUrlsLengthOfWeb3Ids: number = appConfig?.shortUrlsLengthOfWeb3Ids
+const admins: string[] = appConfig?.admins
 const {checkIfSignerAllowedIframe, getArrayOfArraysOfTextAndTagsV2} = useHtmlTags()
 const {
   sliceId,

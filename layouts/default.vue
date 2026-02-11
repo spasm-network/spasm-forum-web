@@ -1,34 +1,36 @@
 <template>
-  <div class="text-base bg-bgBase-light dark:bg-bgBase-dark text-colorBase-light dark:text-colorBase-dark"
-    :key="componentKey"
-    >
-    <!--
-      VitePwaManifest is wrapped with <client-only> tags
-      to prevent hydration mismatches.
-      Another safeguard is a unique componentKey.
-    -->
-    <client-only>
-      <VitePwaManifest />
-    </client-only>
+  <div class="text-base bg-bgBase-light dark:bg-bgBase-dark text-colorBase-light dark:text-colorBase-dark">
+    <div class="max-w-[1920px] m-auto"
+      :key="componentKey"
+      >
+      <!--
+        VitePwaManifest is wrapped with <client-only> tags
+        to prevent hydration mismatches.
+        Another safeguard is a unique componentKey.
+      -->
+      <client-only>
+        <VitePwaManifest />
+      </client-only>
 
-    <div class="Navbar">
-      <Navbar class="fixed bottom-0 w-screen" />
+      <div class="Navbar">
+        <Navbar class="fixed bottom-0 w-screen" />
+      </div>
+
+      <ExtraNotification />
+
+      <div class="grid grid-cols-11">
+        <Feed class="lg:border-r border-borderColor-light dark:border-borderColor-dark h-screen overflow-scroll col-span-11 lg:col-span-4"
+          :class="[isFeedShown ? 'block' : 'hidden lg:block']" />
+        <Info class="w-screen h-screen overflow-scroll col-span-7 lg:w-full"
+          :class="[!isFeedShown ? 'block' : 'hidden lg:block']" >
+          <slot />
+        </Info>
+      </div>
+
+      <ExtraWeb3Modal v-if="isWeb3ModalShown"/>
+      <ExtraQrCodeModal v-if="isQrCodeModalShown"/>
+      <ExtraFollowModal v-if="isFollowModalShown"/>
     </div>
-
-    <ExtraNotification />
-
-    <div class="grid grid-cols-5">
-      <Feed class="lg:border-r border-borderColor-light dark:border-borderColor-dark h-screen overflow-scroll col-span-5 lg:col-span-2"
-        :class="[isFeedShown ? 'block' : 'hidden lg:block']" />
-      <Info class="w-screen h-screen overflow-scroll col-span-3 lg:w-full"
-        :class="[!isFeedShown ? 'block' : 'hidden lg:block']" >
-        <slot />
-      </Info>
-    </div>
-
-    <ExtraWeb3Modal v-if="isWeb3ModalShown"/>
-    <ExtraQrCodeModal v-if="isQrCodeModalShown"/>
-    <ExtraFollowModal v-if="isFollowModalShown"/>
   </div>
 </template>
 
