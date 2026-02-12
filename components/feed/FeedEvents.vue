@@ -33,7 +33,7 @@
           </p>
         <ExtraSpinner />
       </div>
-      <ExtraLoadMoreButton :what-to-load="'feed-posts'" class="mb-16"/>
+      <ExtraLoadMoreButton :what-to-load="'feed-posts'" class="mb-16 ml-1"/>
     </client-only>
   </div>
 </template>

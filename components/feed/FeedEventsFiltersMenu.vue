@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-[3rem] bg-bgSecondary-light dark:bg-bgSecondary-dark">
+  <div class="min-h-[2.6rem] bg-bgSecondary-light dark:bg-bgSecondary-dark">
     <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
       <!-- activities -->
       <span v-if="activities">
