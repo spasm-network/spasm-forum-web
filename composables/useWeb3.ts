@@ -659,8 +659,8 @@ export const useWeb3 = () => {
       const envelope: SpasmEventEnvelopeV2 | null =
         spasm.convertToSpasmEventEnvelope(event, "2.0.0")
       if (!envelope) return null
-        console.log("event:", event)
-        console.log("envelope:", envelope)
+        // console.log("event:", event)
+        // console.log("envelope:", envelope)
 
       const path = `${finalApiUrl}/api/submit/`
 
