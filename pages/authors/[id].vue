@@ -357,7 +357,6 @@ onMounted(async () => {
   // Comments are fetched inside onMounted() because event
   // sanitization with DOMPurify inside convertManyToSpasm()
   // works only in a browser environment (client-side).
-  // const path: string = `${apiURL}/api/authors/${author}`
   const path: string = `${apiURL}/api/events?signer=${author}&action=post&action=reply`
   const {data, error} = await useFetch(path)
   if (error.value) {

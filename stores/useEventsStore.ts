@@ -301,7 +301,7 @@ export const useEventsStore = defineStore('postsStore', {
         if (id && String(id)) { idsArray.push(String(id)) }
       })
       const idsString: string =
-        idsArray.map(id => `id=${encodeURIComponent(id)}`)
+        idsArray.map(id => `parentId=${encodeURIComponent(id)}`)
           .join('&')
 
       const actionsArr: (number | string)[] =
@@ -318,7 +318,7 @@ export const useEventsStore = defineStore('postsStore', {
       ).join('&')
 
       const path = this.apiUrl +
-        '/api/events/children/search?' +
+        '/api/events?' +
         idsString + '&' + actionsString
 
       const {data: fetchedResult, error} = await useFetch(path)
