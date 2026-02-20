@@ -2,7 +2,7 @@
   <div v-if="enableModeration
     && connectedAddress
     && typeof(connectedAddress) === 'string'
-    && moderators.includes(connectedAddress.toLowerCase())
+    && isInList(connectedAddress, moderators)
     && String(event?.ids?.[0]?.value)"
     class="my-2"
   >
@@ -28,6 +28,7 @@ import {useAppConfigStore} from '@/stores/useAppConfigStore'
 import {
   useNotificationStore
 } from '@/stores/useNotificationStore'
+const {isInList} = useNostr()
 const notificationStore = useNotificationStore()
 const appConfig = useAppConfigStore()?.getAppConfig
 const enableModeration: boolean = appConfig?.enableModeration

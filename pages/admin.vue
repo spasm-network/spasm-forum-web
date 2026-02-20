@@ -214,7 +214,7 @@
           class="mb-16"
           v-if="connectedAddress &&
            typeof(connectedAddress) === 'string' &&
-           appConfig?.admins?.includes(connectedAddress.toLowerCase())"
+           isInList(connectedAddress, appConfig?.admins)"
         >
           <button
             @click="saveAppConfig()"
@@ -233,6 +233,7 @@
 <script setup lang="ts">
 import { AppConfig } from '@/helpers/interfaces';
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
+const { isInList } = useNostr()
 const appConfig = useAppConfigStore()?.getAppConfig
 
 // Always show the latest app config when loading the admin page

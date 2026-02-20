@@ -26,7 +26,7 @@
         enableAppConfigChanges &&
         enableAppConfigChangesByAdmin &&
         enableAdmin &&
-        admins?.includes(connectedAddress.toLowerCase())"
+        isInList(connectedAddress, admins)"
     >
       <nuxt-link :to="`/admin`" class="nuxt-link">Admin</nuxt-link>
     </div>
@@ -66,6 +66,7 @@ const enableAppConfigChangesByAdmin =
 const {showFeed, hideFeed, isFeedShown} = useFeed()
 const {showWeb3Modal, pendingAuthentication, connectedAddress } = useWeb3()
 const { sliceAddress} = useUtils()
+const { isInList } = useNostr()
 // New web3 actions are enabled by default if not disabled in .env
 const env = useRuntimeConfig()?.public
 const enableNewWeb3ActionsAll: boolean = env?.enableNewWeb3ActionsAll === 'false'? false : true

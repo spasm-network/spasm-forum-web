@@ -417,15 +417,21 @@ export const useNostr = () => {
   const isNostrAddress = isNostrValue
 
   const standardizeValue = (
-    value: any
+    value: any,
+    ifToLowerCase: boolean = true
   ): string => {
-    if (!value) return ""
-    if (typeof(value) !== "string") return ""
-    // Ethereum addresses start with "0x"
-    if (value.startsWith("0x") && isHex(value)) return value
-    if (isNostrValue(value)) return toBeHex(value)
-    if (isHex(value)) return value
-    return value
+    try {
+      if (!value) return ""
+      if (typeof(value) !== "string") return ""
+      if (ifToLowerCase) { value = value.toLowerCase() }
+      // Ethereum addresses start with "0x"
+      if (value.startsWith("0x") && isHex(value)) return value
+      if (isNostrValue(value)) return toBeHex(value)
+      if (isHex(value)) return value
+      return value
+    } catch (error) {
+      return ""
+    }
   }
 
   // Aliases
@@ -433,40 +439,63 @@ export const useNostr = () => {
   const standardizeAddress = standardizeValue
 
   const standardizeValues = (
-    values: any
+    values: any,
+    ifToLowerCase: boolean = true
   ): string[] => {
-    if (!hasValue(values)) return []
+    try {
+      if (!hasValue(values)) return []
 
-    // Passed value is one ID or address (as a string)
-    if (values && typeof(values) === "string") {
-      if (
-        standardizeValue(values) &&
-        typeof(standardizeValue(values)) === "string"
-      ) {
-        return [standardizeValue(values)]
-      }
-    }
-
-    // Passed value is an array of IDs or addresses
-    const arrayOfStadardizedValues: string[] = []
-    if (Array.isArray(values)) {
-      values.forEach((value: any): void => {
-        if (value && typeof(value) === "string") {
-          if (
-            standardizeValue(value) &&
-            typeof(standardizeValue(value)) === "string"
-          ) {
-            arrayOfStadardizedValues.push(standardizeValue(value))
-          }
+      // Passed value is one ID or address (as a string)
+      if (values && typeof(values) === "string") {
+        if (
+          standardizeValue(values, ifToLowerCase) &&
+          typeof(standardizeValue(values, ifToLowerCase)) === "string"
+        ) {
+          return [standardizeValue(values, ifToLowerCase)]
         }
-      })
+      }
+
+      // Passed value is an array of IDs or addresses
+      const arrayOfStadardizedValues: string[] = []
+      if (Array.isArray(values)) {
+        values.forEach((value: any): void => {
+          if (value && typeof(value) === "string") {
+            if (
+              standardizeValue(value) &&
+              typeof(standardizeValue(value)) === "string"
+            ) {
+              arrayOfStadardizedValues.push(standardizeValue(value))
+            }
+          }
+        })
+      }
+      return arrayOfStadardizedValues
+    } catch (error) {
+      return []
     }
-    return arrayOfStadardizedValues
   }
 
   // Aliases
   const standardizeIds = standardizeValues
   const standardizeAddresses = standardizeValues
+
+  const isInList = (
+    value: any,
+    list: any,
+    ifToLowerCase: boolean = true
+  ): boolean => {
+    const normalizedNeedle = standardizeValue(value, ifToLowerCase);
+    if (!normalizedNeedle) return false;
+
+    const normalizedList = standardizeValues(list, ifToLowerCase);
+    return normalizedList.includes(normalizedNeedle);
+  }
+
+  const isValueInList = isInList;
+  const isStringInList = isInList;
+  const isIdInList = isInList;
+  const isAddressInList = isInList;
+  const doesListContain = isInList;
 
   const extractDataFromNostrEvent = (
     event: NostrEventSignedOpened,
@@ -875,6 +904,12 @@ export const useNostr = () => {
     standardizeValues,
     standardizeIds,
     standardizeAddresses,
+    isInList,
+    isValueInList,
+    isStringInList,
+    isIdInList,
+    isAddressInList,
+    doesListContain,
     extractDataFromNostrEvent,
     getPreferredRelaysFromProfile,
     getHardcodedNostrRelays,
