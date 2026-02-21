@@ -27,6 +27,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
 
     // Set in frontend .env file:
     // Strings
+    // Strings-default-intro
+    defaultHeaderImageLink: useRuntimeConfig()?.public?.defaultHeaderImageLink,
+    defaultButtonPrimaryText: useRuntimeConfig()?.public?.defaultButtonPrimaryText || "Primary button",
+    defaultButtonPrimaryLink: useRuntimeConfig()?.public?.defaultButtonPrimaryLink || "https://spasm.network",
+    defaultButtonSecondaryText: useRuntimeConfig()?.public?.defaultButtonSecondaryText || "Secondary button",
+    defaultButtonSecondaryLink: useRuntimeConfig()?.public?.defaultButtonSecondaryLink || "https://docs.spasm.network",
+    // Strings-socials
     anotherWebsiteLink: useRuntimeConfig()?.public?.anotherWebsiteLink,
     ipfsLink: useRuntimeConfig()?.public?.ipfsLink,
     torLink: useRuntimeConfig()?.public?.torLink,
@@ -81,6 +88,17 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     extraContactInfo: useRuntimeConfig()?.public?.extraContactInfo,
 
     // Booleans
+    // Boolean-default-intro
+    enableDefaultIntro: useRuntimeConfig()?.public?.enableDefaultIntro === "false" ? false : true,
+    enableDefaultContacts: useRuntimeConfig()?.public?.enableDefaultContacts === "false" ? false : true,
+    enableDefaultHeaderImage: useRuntimeConfig()?.public?.enableDefaultIntro === "true" ? true : false,
+    enableDefaultButtonPrimary: useRuntimeConfig()?.public?.enableDefaultButtonPrimary === "true" ? true : false,
+    enableDefaultButtonSecondary: useRuntimeConfig()?.public?.enableDefaultButtonSecondary === "true" ? true : false,
+    // Boolean-custom-intro
+    enableCustomIntro: useRuntimeConfig()?.public?.enableCustomIntro === "false" ? false : true,
+    enableCustomContacts: useRuntimeConfig()?.public?.enableCustomContacts === "false" ? false : true,
+
+    // Boolean-others
     enableNewWeb3ActionsAll: useRuntimeConfig()?.public?.enableNewWeb3ActionsAll === "false" ? false : true,
     enableNewWeb3ActionsPost: useRuntimeConfig()?.public?.enableNewWeb3ActionsPost === "false" ? false : true,
     enableNewWeb3ActionsReply: useRuntimeConfig()?.public?.enableNewWeb3ActionsReply === "false" ? false : true,
@@ -127,6 +145,20 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableAppConfigChangesByAdmin,
         enableAdmin:
           this.enableAdmin,
+        enableDefaultIntro:
+          this.enableDefaultIntro,
+        enableDefaultContacts:
+          this.enableDefaultContacts,
+        enableDefaultHeaderImage:
+          this.enableDefaultHeaderImage,
+        enableDefaultButtonPrimary:
+          this.enableDefaultButtonPrimary,
+        enableDefaultButtonSecondary:
+          this.enableDefaultButtonSecondary,
+        enableCustomIntro:
+          this.enableCustomIntro,
+        enableCustomContacts:
+          this.enableCustomContacts,
         allowNewEventsWithoutSignature:
           this.allowNewEventsWithoutSignature,
         enableNewWeb3ActionsAll:
@@ -188,6 +220,18 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         feedFiltersActivityRising:
           this.feedFiltersActivityRising,
         // Strings
+        // Strings-default-intro
+        defaultHeaderImageLink:
+          this.defaultHeaderImageLink,
+        defaultButtonPrimaryText:
+          this.defaultButtonPrimaryText,
+        defaultButtonPrimaryLink:
+          this.defaultButtonPrimaryLink,
+        defaultButtonSecondaryText:
+          this.defaultButtonSecondaryText,
+        defaultButtonSecondaryLink:
+          this.defaultButtonSecondaryLink,
+        // Strings-socials
         anotherWebsiteLink: this.anotherWebsiteLink,
         ipfsLink: this.ipfsLink,
         torLink: this.torLink,
@@ -278,6 +322,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           key in config && typeof(config[key]) === "boolean"
         ) { this[key] = config[key] }
       }
+      updateBoolean("enableDefaultIntro")
+      updateBoolean("enableDefaultContacts")
+      updateBoolean("enableDefaultHeaderImage")
+      updateBoolean("enableDefaultButtonPrimary")
+      updateBoolean("enableDefaultButtonSecondary")
+      updateBoolean("enableCustomIntro")
+      updateBoolean("enableCustomContacts")
       updateBoolean("allowNewEventsWithoutSignature")
       updateBoolean("enableNewWeb3ActionsAll")
       updateBoolean("enableNewWeb3ActionsPost")
@@ -335,6 +386,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           }
         }
       }
+      // Strings-default-intro
+      updateString("defaultHeaderImageLink")
+      updateString("defaultButtonPrimaryText")
+      updateString("defaultButtonPrimaryLink")
+      updateString("defaultButtonSecondaryText")
+      updateString("defaultButtonSecondaryLink")
+      // Strings-socials
       updateString("anotherWebsiteLink")
       updateString("ipfsLink")
       updateString("torLink")

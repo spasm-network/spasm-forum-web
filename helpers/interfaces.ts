@@ -1458,6 +1458,16 @@ export interface AppConfig {
   admins?: string[]
   // Can be changed via admin web page:
   // Booleans
+  // Booleans-default-intro
+  enableDefaultIntro?: boolean
+  enableDefaultContacts?: boolean
+  enableDefaultHeaderImage?: boolean
+  defaultHeaderImageUrl?: boolean
+  enableDefaultButtonPrimary?: boolean
+  enableDefaultButtonSecondary?: boolean
+  enableCustomIntro?: boolean
+  enableCustomContacts?: boolean
+  // Booleans-other
   allowNewEventsWithoutSignature?: boolean
   enableNewWeb3ActionsAll?: boolean
   enableNewWeb3ActionsPost?: boolean
@@ -1489,6 +1499,12 @@ export interface AppConfig {
   feedFiltersActivityRising?: number
   shortUrlsLengthOfWeb3Ids?: number
   // Strings
+  // String-default-intro
+  defaultHeaderImageLink?: string
+  defaultButtonPrimaryText?: string
+  defaultButtonPrimaryLink?: string
+  defaultButtonSecondaryText?: string
+  defaultButtonSecondaryLink?: string
   // Strings-socials
   anotherWebsiteLink?: string
   ipfsLink?: string
@@ -1546,6 +1562,11 @@ export interface AppConfig {
 
 export type AppConfigKeyString =
   | "apiUrl"
+  | "defaultHeaderImageLink"
+  | "defaultButtonPrimaryText"
+  | "defaultButtonPrimaryLink"
+  | "defaultButtonSecondaryText"
+  | "defaultButtonSecondaryLink"
   | "anotherWebsiteLink"
   | "ipfsLink"
   | "torLink"
@@ -1604,6 +1625,13 @@ export type AppConfigKeyBoolean =
   | "enableAppConfigChangesByAdmin"
   | "enableAdmin"
   | "admins"
+  | "enableDefaultIntro"
+  | "enableDefaultContacts"
+  | "enableDefaultHeaderImage"
+  | "enableDefaultButtonPrimary"
+  | "enableDefaultButtonSecondary"
+  | "enableCustomIntro"
+  | "enableCustomContacts"
   | "allowNewEventsWithoutSignature"
   | "enableNewWeb3ActionsAll"
   | "enableNewWeb3ActionsPost"

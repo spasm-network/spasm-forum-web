@@ -47,9 +47,19 @@ export default defineNuxtConfig({
       enableModeration: process.env.ENABLE_MODERATION,
       moderators: process.env.MODERATORS,
 
-      // Default/custom intro and contacts
+      // Default intro, contacts, images, buttons
       enableDefaultIntro: process.env.ENABLE_DEFAULT_INTRO,
       enableDefaultContacts: process.env.ENABLE_DEFAULT_CONTACTS,
+      enableDefaultHeaderImage: process.env.ENABLE_DEFAULT_HEADER_IMAGE,
+      defaultHeaderImageLink: process.env.DEFAULT_HEADER_IMAGE_LINK,
+      enableDefaultButtonPrimary: process.env.ENABLE_DEFAULT_BUTTON_PRIMARY,
+      defaultButtonPrimaryText: process.env.DEFAULT_BUTTON_PRIMARY_TEXT,
+      defaultButtonPrimaryLink: process.env.DEFAULT_BUTTON_PRIMARY_LINK,
+      enableDefaultButtonSecondary: process.env.ENABLE_DEFAULT_BUTTON_SECONDARY,
+      defaultButtonSecondaryText: process.env.DEFAULT_BUTTON_SECONDARY_TEXT,
+      defaultButtonSecondaryLink: process.env.DEFAULT_BUTTON_SECONDARY_LINK,
+
+      // Custom header image, intro, contacts
       enableCustomIntro: process.env.ENABLE_CUSTOM_INTRO,
       enableCustomContacts: process.env.ENABLE_CUSTOM_CONTACTS,
 

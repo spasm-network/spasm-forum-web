@@ -5,7 +5,11 @@
   <client-only>
   -->
   <div class="p-5">
+    <DefaultHeaderImage v-if="enableDefaultHeaderImage" />
+
     <DefaultIntro v-if="enableDefaultIntro" />
+
+    <DefaultHomeButtons v-if="enableDefaultButtonPrimary || enableDefaultButtonSecondary" />
 
     <CustomIntro v-if="enableCustomIntro" />
 
@@ -89,10 +93,11 @@
 <script setup lang="ts">
 import {SpasmEventV2} from '@/helpers/interfaces';
 import { spasm } from 'spasm.js'
-
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
 // Nostr usernames
 import {useProfilesStore} from '@/stores/useProfilesStore'
 const profilesStore = useProfilesStore()
+const appConfig = useAppConfigStore()?.getAppConfig
 
 const {showFeed} = useFeed()
 const {areValidSpasmEventsV2} = useUtils()
@@ -102,13 +107,21 @@ const useMockedDataIfBackendIsDown = useRuntimeConfig()?.public
   ?.useMockedDataIfBackendIsDown === "true" ? true : false
 
 // Features are enabled by default if not explicitly disabled in .env
-const ifShowHomeLatestComments = useRuntimeConfig()?.public?.ifShowHomeLatestComments === 'false' ? false : true
-const enableDefaultIntro = useRuntimeConfig()?.public?.enableDefaultIntro === 'false' ? false : true
-const enableCustomIntro = useRuntimeConfig()?.public?.enableCustomIntro === 'false' ? false : true
+// Default-intro
+const enableDefaultHeaderImage = appConfig?.enableDefaultHeaderImage
+const enableDefaultIntro = appConfig?.enableDefaultIntro
+const enableDefaultContacts = appConfig?.enableDefaultContacts
+const enableDefaultButtonPrimary = appConfig?.enableDefaultButtonPrimary
+const enableDefaultButtonSecondary = appConfig?.enableDefaultButtonSecondary
+// Custom-intro
+const enableCustomIntro = appConfig?.enableCustomIntro
+const enableCustomContacts = appConfig?.enableCustomContacts
+
 const ifShowContactsInIntro = useRuntimeConfig()?.public?.ifShowContactsInIntro === 'false' ? false : true
 const ifShowIntroTutorial = useRuntimeConfig()?.public?.ifShowIntroTutorial === 'false' ? false : true
-const enableDefaultContacts = useRuntimeConfig()?.public?.enableDefaultContacts === 'false' ? false : true
-const enableCustomContacts = useRuntimeConfig()?.public?.enableCustomContacts === 'false' ? false : true
+
+const ifShowHomeLatestComments = useRuntimeConfig()?.public?.ifShowHomeLatestComments === 'false' ? false : true
+
 
 const showActionDetails = ref(false)
 const showActionDetailsText = ref('show')

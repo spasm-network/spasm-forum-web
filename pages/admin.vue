@@ -1,6 +1,75 @@
 <template>
   <div>
     <div class="mt-4">
+      <!-- TODO Refactor or delete after testing -->
+      <div class="my-4">
+        <div
+          :class="[isResponseError ? 'text-colorRed-light dark:text-colorRed-dark' : 'text-colorGreen-light dark:text-colorGreen-dark']"
+        >
+          {{ responseMessage }}
+        </div>
+        <div
+          class="mb-16"
+          v-if="connectedAddress &&
+           typeof(connectedAddress) === 'string' &&
+           isInList(connectedAddress, appConfig?.admins)"
+        >
+          <button
+            @click="saveAppConfig()"
+            class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark"
+          >
+            Save app config
+          </button>
+        </div>
+      </div>
+
+      <h5 class="mt-4">Home page:</h5>
+      <div class="pl-4">
+        <div class="pl-0 mt-2">
+          <div class="pl-0 mt-0">
+            <input v-model="enableDefaultHeaderImage" type="checkbox" >
+            Enable default header image
+          </div>
+          <div>
+            Default header image link:
+            <input v-model="defaultHeaderImageLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials">
+          </div>
+          <div class="text-colorNotImportant-light text-colorNotImportant-dark">
+            Option 1: add full URL to image file (.jpeg, .jpg, .png, .webp, .svg) <br>
+            Option 2: leave URL field blank and upload your jpeg image to <code>frontend/public/header.jpeg</code> (only jpeg supported).
+          </div>
+        </div>
+        <div class="pl-0 mt-4">
+          <input v-model="enableDefaultIntro" type="checkbox" >
+          Enable default intro section: title, description from <code>frontend/.env</code>
+        </div>
+        <div class="pl-0 mt-4">
+          <input v-model="enableDefaultContacts" type="checkbox" >
+          Enable default contacts section
+        </div>
+        <div class="mt-6">
+          <div class="pl-0">
+            <input v-model="enableDefaultButtonPrimary" type="checkbox" >
+            Enable default button primary
+          </div>
+          <div>Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div>Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="pl-0">
+            <input v-model="enableDefaultButtonSecondary" type="checkbox" >
+            Enable default button secondary
+          </div>
+          <div>Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div>Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        </div>
+        <div class="pl-0">
+          <input v-model="enableCustomIntro" type="checkbox" >
+          Enable custom intro
+        </div>
+        <div class="pl-0">
+          <input v-model="enableCustomContacts" type="checkbox" >
+          Enable custom contacts
+        </div>
+      </div>
       <h5 class="mt-4">Social media links:</h5>
       <div class="pl-4">
         <div>Another website: <input v-model="anotherWebsiteLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
@@ -265,6 +334,22 @@ const enableShortUrlsForWeb3Actions =
   ref<boolean>(appConfig?.enableShortUrlsForWeb3Actions)
 const allowNewEventsWithoutSignature =
   ref<boolean>(appConfig?.allowNewEventsWithoutSignature)
+// Booleans-default-intro
+const enableDefaultIntro =
+  ref<boolean>(appConfig?.enableDefaultIntro)
+const enableDefaultContacts =
+  ref<boolean>(appConfig?.enableDefaultContacts)
+const enableDefaultHeaderImage =
+  ref<boolean>(appConfig?.enableDefaultHeaderImage)
+const enableDefaultButtonPrimary =
+  ref<boolean>(appConfig?.enableDefaultButtonPrimary)
+const enableDefaultButtonSecondary =
+  ref<boolean>(appConfig?.enableDefaultButtonSecondary)
+const enableCustomIntro =
+  ref<boolean>(appConfig?.enableCustomIntro)
+const enableCustomContacts =
+  ref<boolean>(appConfig?.enableCustomContacts)
+// Booleans-other
 const enableNewWeb3ActionsAll =
   ref<boolean>(appConfig?.enableNewWeb3ActionsAll)
 const enableNewWeb3ActionsPost =
@@ -297,6 +382,18 @@ const pinnedIds =
   ref<string[]>(appConfig?.pinnedIds)
 
 // Strings
+// Strings-default-intro
+const defaultHeaderImageLink =
+  ref<string>(appConfig?.defaultHeaderImageLink)
+const defaultButtonPrimaryText =
+  ref<string>(appConfig?.defaultButtonPrimaryText)
+const defaultButtonPrimaryLink =
+  ref<string>(appConfig?.defaultButtonPrimaryLink)
+const defaultButtonSecondaryText =
+  ref<string>(appConfig?.defaultButtonSecondaryText)
+const defaultButtonSecondaryLink =
+  ref<string>(appConfig?.defaultButtonSecondaryLink)
+// Strings-socials
 const anotherWebsiteLink = ref<string>(appConfig?.anotherWebsiteLink)
 const ipfsLink = ref<string>(appConfig?.ipfsLink)
 const torLink = ref<string>(appConfig?.torLink)
@@ -368,6 +465,23 @@ const saveAppConfig = async () => {
       enableShortUrlsForWeb3Actions.value
     newAppConfig.allowNewEventsWithoutSignature =
       allowNewEventsWithoutSignature.value
+    // Booleans-default-intro
+    newAppConfig.enableDefaultIntro =
+      enableDefaultIntro.value
+    newAppConfig.enableDefaultContacts =
+      enableDefaultContacts.value
+    newAppConfig.enableDefaultHeaderImage =
+      enableDefaultHeaderImage.value
+    newAppConfig.enableDefaultButtonPrimary =
+      enableDefaultButtonPrimary.value
+    newAppConfig.enableDefaultButtonSecondary =
+      enableDefaultButtonSecondary.value
+    // Booleans-custom-intro
+    newAppConfig.enableCustomIntro =
+      enableCustomIntro.value
+    newAppConfig.enableCustomContacts =
+      enableCustomContacts.value
+    // Booleans-others
     newAppConfig.enableNewWeb3ActionsAll =
       enableNewWeb3ActionsAll.value
     newAppConfig.enableNewWeb3ActionsPost =
@@ -424,6 +538,23 @@ const saveAppConfig = async () => {
     }
 
     // Strings
+    // Strings-intro-home
+    if (typeof(defaultHeaderImageLink.value) === "string") {
+      newAppConfig.defaultHeaderImageLink = defaultHeaderImageLink.value
+    }
+    if (typeof(defaultButtonPrimaryText.value) === "string") {
+      newAppConfig.defaultButtonPrimaryText = defaultButtonPrimaryText.value
+    }
+    if (typeof(defaultButtonPrimaryLink.value) === "string") {
+      newAppConfig.defaultButtonPrimaryLink = defaultButtonPrimaryLink.value
+    }
+    if (typeof(defaultButtonSecondaryText.value) === "string") {
+      newAppConfig.defaultButtonSecondaryText = defaultButtonSecondaryText.value
+    }
+    if (typeof(defaultButtonSecondaryLink.value) === "string") {
+      newAppConfig.defaultButtonSecondaryLink = defaultButtonSecondaryLink.value
+    }
+    // Strings-socials
     if (typeof(anotherWebsiteLink.value) === "string") {
       newAppConfig.anotherWebsiteLink = anotherWebsiteLink.value
     }
