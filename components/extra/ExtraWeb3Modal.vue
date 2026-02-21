@@ -19,6 +19,9 @@
           </div>
         </div>
       </div>
+      <div v-else class="h-16">
+        <br>
+      </div>
 
       <!-- Ethereum -->
       <div v-if="enableNewEthereumActionsAll">
