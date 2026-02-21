@@ -9,12 +9,15 @@
 
     <DefaultIntro v-if="enableDefaultIntro" />
 
+    <div v-if="ifShowContactsInIntro">
+      <DefaultContacts v-if="enableDefaultContacts" />
+    </div>
+
     <DefaultHomeButtons v-if="enableDefaultButtonPrimary || enableDefaultButtonSecondary" />
 
     <CustomIntro v-if="enableCustomIntro" />
 
     <div v-if="ifShowContactsInIntro">
-      <DefaultContacts v-if="enableDefaultContacts" />
       <CustomContacts v-if="enableCustomContacts" />
     </div>
 
@@ -37,7 +40,7 @@
     </button>
 
     <ExtraRssBlock
-      class="mt-2 ml-2"
+      class="mt-4 ml-2"
       :enablePosts="true"
       :enableComments="true"
       :activity="'rising'"
