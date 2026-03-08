@@ -15,6 +15,9 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         NITRO_PORT: parseInt(process.env.FRONTEND_PROD_PORT) || 3000,
+        // By default, nuxt prod defaults to 0.0.0.0, 
+        // nuxt dev defaults to 127.0.0.1
+        // NITRO_HOST: "0.0.0.0", 
       }
     }
   ]
