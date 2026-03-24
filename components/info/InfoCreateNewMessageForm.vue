@@ -15,17 +15,19 @@
       <div v-if="formAction === 'post'">
         <div v-if="ifShowCategoriesFilter">
           <!-- Dropdown toggle button -->
-          <div
-            @click="toggleCategoriesDropDown()"
-            class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
-          >
-            <span>
-              <span class="mt-2">Category:</span>
-              <span class="ml-2 uppercase text-colorPrimary-light dark:text-colorPrimary-dark">
-                {{ userInputCategoryMain }}
+          <div>
+            <span
+              @click="toggleCategoriesDropDown()"
+              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
+            >
+              <span>
+                <span class="mt-2">Category:</span>
+                <span class="ml-2 uppercase text-colorPrimary-light dark:text-colorPrimary-dark">
+                  {{ userInputCategoryMain }}
+                </span>
               </span>
+              <IconsTriangle :rotateIf="categoriesDropDownShown" />
             </span>
-            <IconsTriangle :rotateIf="categoriesDropDownShown" />
           </div>
 
           <!-- Dropdown menu -->
@@ -37,10 +39,13 @@
             <span v-if="categories[0]" class="">
               <div
                 v-for="category in categories"
-                class="uppercase hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-                @click="selectCategoryMain(category)"
               >
-                {{category}}
+                <span
+                  class="uppercase hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
+                  @click="selectCategoryMain(category)"
+                >
+                  {{category}}
+                </span>
               </div>
             </span>
           </span>
@@ -77,23 +82,27 @@
 
       <!-- MORE OPTIONS -->
       <div v-if="enableMoreOptions" class="my-2">
-        <div
-          class="ml-2 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
-          @click="toggleMoreOptionsShown"
-        >
-          More options
-          <IconsTriangle :rotateIf="moreOptionsShown" />
+        <div>
+          <span
+            class="ml-2 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+            @click="toggleMoreOptionsShown"
+          >
+            More options
+            <IconsTriangle :rotateIf="moreOptionsShown" />
+          </span>
         </div>
 
         <div v-if="moreOptionsShown" class="ml-2">
           <!-- TIPS -->
           <div class="ml-2 my-2">
-            <div
-              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
-              @click="toggleTipsInputFieldsShown"
-            >
-              Add addresses for tips
-              <IconsTriangle :rotateIf="tipsInputFieldsShown" />
+            <div>
+              <span
+                class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+                @click="toggleTipsInputFieldsShown"
+              >
+                Add addresses for tips
+                <IconsTriangle :rotateIf="tipsInputFieldsShown" />
+              </span>
             </div>
 
             <div v-if="tipsInputFieldsShown">
@@ -159,10 +168,14 @@
             </div>
           </div>
 
-          <span class="block mt-2 ml-2 mb-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
-            @click="toggleShowAdvanced()">
-            {{showAdvancedText}} multi-signing options 
-            <IconsTriangle :rotateIf="showAdvanced" />
+          <span class="block">
+            <span
+              class="mt-2 ml-2 mb-4 cursor-pointer text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+              @click="toggleShowAdvanced()"
+            >
+              {{showAdvancedText}} multi-signing options 
+              <IconsTriangle :rotateIf="showAdvanced" />
+            </span>
           </span>
 
           <!-- Advanced (multi-signing) -->
@@ -354,10 +367,12 @@ import {
   useNotificationStore
 } from '@/stores/useNotificationStore'
 import { spasm } from 'spasm.js'
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
+const appConfig = useAppConfigStore()?.getAppConfig
 const notificationStore = useNotificationStore()
 
-const ifShowCategoriesFilter = useRuntimeConfig()?.public?.ifShowCategoriesFilter === 'true' ? true : false
-const envCategories = useRuntimeConfig()?.public?.envCategories
+const ifShowCategoriesFilter = appConfig?.ifShowCategoriesFilter
+const envCategories = appConfig?.envCategories
 
 const {
   submitSingleSignedEventV2,

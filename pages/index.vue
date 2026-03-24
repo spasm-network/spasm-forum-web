@@ -4,7 +4,7 @@
     which can be solved with <client-only> tags
   <client-only>
   -->
-  <div class="p-5">
+  <div class="p-5 mb-10">
     <DefaultHeaderImage v-if="enableDefaultHeaderImage" />
 
     <DefaultIntro v-if="enableDefaultIntro" />
@@ -109,7 +109,6 @@ const apiURL = useRuntimeConfig()?.public?.apiURL
 const useMockedDataIfBackendIsDown = useRuntimeConfig()?.public
   ?.useMockedDataIfBackendIsDown === "true" ? true : false
 
-// Features are enabled by default if not explicitly disabled in .env
 // Default-intro
 const enableDefaultHeaderImage = appConfig?.enableDefaultHeaderImage
 const enableDefaultIntro = appConfig?.enableDefaultIntro
@@ -120,11 +119,9 @@ const enableDefaultButtonSecondary = appConfig?.enableDefaultButtonSecondary
 const enableCustomIntro = appConfig?.enableCustomIntro
 const enableCustomContacts = appConfig?.enableCustomContacts
 
-const ifShowContactsInIntro = useRuntimeConfig()?.public?.ifShowContactsInIntro === 'false' ? false : true
-const ifShowIntroTutorial = useRuntimeConfig()?.public?.ifShowIntroTutorial === 'false' ? false : true
-
-const ifShowHomeLatestComments = useRuntimeConfig()?.public?.ifShowHomeLatestComments === 'false' ? false : true
-
+const ifShowContactsInIntro = appConfig?.ifShowContactsInIntro
+const ifShowIntroTutorial = appConfig?.ifShowIntroTutorial
+const ifShowHomeLatestComments = appConfig?.ifShowHomeLatestComments
 
 const showActionDetails = ref(false)
 const showActionDetailsText = ref('show')

@@ -1461,12 +1461,16 @@ export interface AppConfig {
   // Booleans-default-intro
   enableDefaultIntro?: boolean
   enableDefaultContacts?: boolean
+  ifShowDevelopersInfo?: boolean
   enableDefaultHeaderImage?: boolean
   defaultHeaderImageUrl?: boolean
   enableDefaultButtonPrimary?: boolean
   enableDefaultButtonSecondary?: boolean
   enableCustomIntro?: boolean
   enableCustomContacts?: boolean
+  ifShowContactsInIntro?: boolean
+  ifShowIntroTutorial?: boolean
+  ifShowHomeLatestComments?: boolean
   // Booleans-other
   allowNewEventsWithoutSignature?: boolean
   enableNewWeb3ActionsAll?: boolean
@@ -1474,6 +1478,8 @@ export interface AppConfig {
   enableNewWeb3ActionsReply?: boolean
   enableNewWeb3ActionsReact?: boolean
   enableNewWeb3ActionsModerate?: boolean
+  ifShowCategoriesFilter?: boolean
+  ifAllowGuestLogin?: boolean
   enableNewNostrActionsAll?: boolean
   enableNewEthereumActionsAll?: boolean
   enableModeration?: boolean
@@ -1494,6 +1500,7 @@ export interface AppConfig {
   whitelistedForActionReply?: string[]
   whitelistedForActionReact?: string[]
   pinnedIds?: string[]
+  envCategories?: string[]
   // Numbers
   feedFiltersActivityHot?: number
   feedFiltersActivityRising?: number
@@ -1501,6 +1508,11 @@ export interface AppConfig {
   // Strings
   // String-default-intro
   defaultHeaderImageLink?: string
+  introTitle?: string
+  introTitleExtra?: string
+  introAbout?: string
+  postPlaceholder?: string
+  commentPlaceholder?: string
   defaultButtonPrimaryText?: string
   defaultButtonPrimaryLink?: string
   defaultButtonSecondaryText?: string
@@ -1563,6 +1575,11 @@ export interface AppConfig {
 export type AppConfigKeyString =
   | "apiUrl"
   | "defaultHeaderImageLink"
+  | "introTitle"
+  | "introTitleExtra"
+  | "introAbout"
+  | "postPlaceholder"
+  | "commentPlaceholder"
   | "defaultButtonPrimaryText"
   | "defaultButtonPrimaryLink"
   | "defaultButtonSecondaryText"
@@ -1627,11 +1644,15 @@ export type AppConfigKeyBoolean =
   | "admins"
   | "enableDefaultIntro"
   | "enableDefaultContacts"
+  | "ifShowDevelopersInfo"
   | "enableDefaultHeaderImage"
   | "enableDefaultButtonPrimary"
   | "enableDefaultButtonSecondary"
   | "enableCustomIntro"
   | "enableCustomContacts"
+  | "ifShowContactsInIntro"
+  | "ifShowIntroTutorial"
+  | "ifShowHomeLatestComments"
   | "allowNewEventsWithoutSignature"
   | "enableNewWeb3ActionsAll"
   | "enableNewWeb3ActionsPost"
@@ -1643,6 +1664,8 @@ export type AppConfigKeyBoolean =
   | "enableNewWeb3ActionsReact"
   | "enableNewWeb3ActionsReply"
   | "enableNewWeb3ActionsModerate"
+  | "ifShowCategoriesFilter"
+  | "ifAllowGuestLogin"
   | "enableNewNostrActionsAll"
   | "enableNewEthereumActionsAll"
   | "enableModeration"
@@ -1667,6 +1690,7 @@ export type AppConfigKeyArray =
   | "whitelistedForActionReply"
   | "whitelistedForActionReact"
   | "pinnedIds"
+  | "envCategories"
 
 export type AppConfigKeyNumber =
   | "shortUrlsLengthOfWeb3Ids"

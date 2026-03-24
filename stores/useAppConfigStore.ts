@@ -8,7 +8,8 @@ import {
 } from './../helpers/interfaces'
 import {useEventsStore} from './useEventsStore'
 const {
-  splitIntoArray
+  splitIntoArray,
+  parseEnvBool
 } = useUtils()
 
 interface AppConfigState extends AppConfig {}
@@ -17,9 +18,9 @@ export const useAppConfigStore = defineStore('appConfigStore', {
   state: (): AppConfigState => ({
     // Environment settings:
     apiUrl: useRuntimeConfig()?.public?.apiURL,
-    enableAppConfigChanges: useRuntimeConfig()?.public?.enableAppConfigChanges === "false" ? false : true,
-    enableAppConfigChangesByAdmin: useRuntimeConfig()?.public?.enableAppConfigChangesByAdmin === "false" ? false : true,
-    enableAdmin: useRuntimeConfig()?.public?.enableAdmin === "false" ? false : true,
+    enableAppConfigChanges: parseEnvBool(useRuntimeConfig()?.public?.enableAppConfigChanges, true),
+    enableAppConfigChangesByAdmin: parseEnvBool(useRuntimeConfig()?.public?.enableAppConfigChangesByAdmin, true),
+    enableAdmin: parseEnvBool(useRuntimeConfig()?.public?.enableAdmin, true),
     admins: splitIntoArray(useRuntimeConfig()?.public?.admins),
     // TODO backend env vars
     // Not set in frontend .env file:
@@ -29,6 +30,11 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     // Strings
     // Strings-default-intro
     defaultHeaderImageLink: useRuntimeConfig()?.public?.defaultHeaderImageLink,
+    introTitle: useRuntimeConfig()?.public?.introTitle || "Default title",
+    introTitleExtra: useRuntimeConfig()?.public?.introTitleExtra || "forum",
+    introAbout: useRuntimeConfig()?.public?.introAbout || "Default about",
+    postPlaceholder: useRuntimeConfig()?.public?.postPlaceholder || "(Basic markdown is enabled, but HTML tags are not allowed, so use markdown instead).",
+    commentPlaceholder: useRuntimeConfig()?.public?.commentPlaceholder || "(Basic markdown is enabled, but HTML tags are not allowed, so use markdown instead).",
     defaultButtonPrimaryText: useRuntimeConfig()?.public?.defaultButtonPrimaryText || "Primary button",
     defaultButtonPrimaryLink: useRuntimeConfig()?.public?.defaultButtonPrimaryLink || "https://spasm.network",
     defaultButtonSecondaryText: useRuntimeConfig()?.public?.defaultButtonSecondaryText || "Secondary button",
@@ -89,28 +95,39 @@ export const useAppConfigStore = defineStore('appConfigStore', {
 
     // Booleans
     // Boolean-default-intro
-    enableDefaultIntro: useRuntimeConfig()?.public?.enableDefaultIntro === "false" ? false : true,
-    enableDefaultContacts: useRuntimeConfig()?.public?.enableDefaultContacts === "false" ? false : true,
-    enableDefaultHeaderImage: useRuntimeConfig()?.public?.enableDefaultIntro === "true" ? true : false,
-    enableDefaultButtonPrimary: useRuntimeConfig()?.public?.enableDefaultButtonPrimary === "true" ? true : false,
-    enableDefaultButtonSecondary: useRuntimeConfig()?.public?.enableDefaultButtonSecondary === "true" ? true : false,
+    enableDefaultIntro: parseEnvBool(useRuntimeConfig()?.public?.enableDefaultIntro, true),
+    enableDefaultContacts: parseEnvBool(useRuntimeConfig()?.public?.enableDefaultContacts, true),
+    ifShowDevelopersInfo: parseEnvBool(useRuntimeConfig()?.public?.ifShowDevelopersInfo, true),
+    enableDefaultHeaderImage: parseEnvBool(useRuntimeConfig()?.public?.enableDefaultHeaderImage, false),
+    enableDefaultButtonPrimary: parseEnvBool(useRuntimeConfig()?.public?.enableDefaultButtonPrimary, false),
+    enableDefaultButtonSecondary: parseEnvBool(useRuntimeConfig()?.public?.enableDefaultButtonSecondary, false),
     // Boolean-custom-intro
-    enableCustomIntro: useRuntimeConfig()?.public?.enableCustomIntro === "false" ? false : true,
-    enableCustomContacts: useRuntimeConfig()?.public?.enableCustomContacts === "false" ? false : true,
+    enableCustomIntro: parseEnvBool(useRuntimeConfig()?.public?.enableCustomIntro, true),
+    enableCustomContacts: parseEnvBool(useRuntimeConfig()?.public?.enableCustomContacts, true),
+    ifShowContactsInIntro: parseEnvBool(useRuntimeConfig()?.public?.ifShowContactsInIntro, true),
+    ifShowIntroTutorial: parseEnvBool(useRuntimeConfig()?.public?.ifShowIntroTutorial, true),
+    ifShowHomeLatestComments: parseEnvBool(useRuntimeConfig()?.public?.ifShowHomeLatestComments, true),
 
     // Boolean-others
-    enableNewWeb3ActionsAll: useRuntimeConfig()?.public?.enableNewWeb3ActionsAll === "false" ? false : true,
-    enableNewWeb3ActionsPost: useRuntimeConfig()?.public?.enableNewWeb3ActionsPost === "false" ? false : true,
-    enableNewWeb3ActionsReply: useRuntimeConfig()?.public?.enableNewWeb3ActionsReply === "false" ? false : true,
-    enableNewWeb3ActionsReact: useRuntimeConfig()?.public?.enableNewWeb3ActionsReact === "false" ? false : true,
-    enableNewWeb3ActionsModerate: useRuntimeConfig()?.public?.enableNewWeb3ActionsModerate === "false" ? false : true,
-    enableNewNostrActionsAll: useRuntimeConfig()?.public?.enableNewNostrActionsAll === 'true' ? true : false,
-    enableNewEthereumActionsAll: useRuntimeConfig()?.public?.enableNewEthereumActionsAll === 'true' ? true : false,
-    enableModeration: useRuntimeConfig()?.public?.enableModeration === 'false'? false : true,
-    enableShortUrlsForWeb3Actions: useRuntimeConfig()?.public?.enableShortUrlsForWeb3Actions === "true" ? true : false,
-    enableWhitelistForActionPost: useRuntimeConfig()?.public?.enableWhitelistForActionPost === 'true'? true : false,
-    enableWhitelistForActionReply: useRuntimeConfig()?.public?.enableWhitelistForActionReply === 'true'? true : false,
-    enableWhitelistForActionReact: useRuntimeConfig()?.public?.enableWhitelistForActionReact === 'true'? true : false,
+    // enableNewWeb3ActionsAll: useRuntimeConfig()?.public?.enableNewWeb3ActionsAll,
+    enableNewWeb3ActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsAll, true),
+    enableNewWeb3ActionsPost: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsPost, true),
+    enableNewWeb3ActionsReply: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsReply, true),
+    enableNewWeb3ActionsReact: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsReact, true),
+    enableNewWeb3ActionsModerate: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsModerate, true),
+    ifShowCategoriesFilter: parseEnvBool(useRuntimeConfig()?.public?.ifShowCategoriesFilter, true),
+    ifAllowGuestLogin: parseEnvBool(useRuntimeConfig()?.public?.ifAllowGuestLogin, true),
+    enableNewNostrActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewNostrActionsAll, true),
+    enableNewEthereumActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewEthereumActionsAll, true),
+    enableModeration: parseEnvBool(useRuntimeConfig()?.public?.enableModeration, true),
+    enableShortUrlsForWeb3Actions:
+      parseEnvBool(useRuntimeConfig()?.public?.enableShortUrlsForWeb3Actions, true),
+    enableWhitelistForActionPost:
+      parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionPost, false),
+    enableWhitelistForActionReply:
+      parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionReply, false),
+    enableWhitelistForActionReact:
+      parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionReact, false),
     // TODO backend env vars
     enableSpasmModule: undefined,
     enableSpasmSourcesUpdates: undefined,
@@ -126,6 +143,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     whitelistedForActionReply: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionReply),
     whitelistedForActionReact: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionReact),
     pinnedIds: splitIntoArray(useRuntimeConfig()?.public?.pinnedIds),
+    envCategories: splitIntoArray(useRuntimeConfig()?.public?.envCategories),
 
     // Numbers
     shortUrlsLengthOfWeb3Ids: Number(useRuntimeConfig()?.public?.shortUrlsLengthOfWeb3Ids) || 30,
@@ -149,6 +167,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableDefaultIntro,
         enableDefaultContacts:
           this.enableDefaultContacts,
+        ifShowDevelopersInfo:
+          this.ifShowDevelopersInfo,
         enableDefaultHeaderImage:
           this.enableDefaultHeaderImage,
         enableDefaultButtonPrimary:
@@ -159,6 +179,12 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableCustomIntro,
         enableCustomContacts:
           this.enableCustomContacts,
+        ifShowContactsInIntro:
+          this.ifShowContactsInIntro,
+        ifShowIntroTutorial:
+          this.ifShowIntroTutorial,
+        ifShowHomeLatestComments:
+          this.ifShowHomeLatestComments,
         allowNewEventsWithoutSignature:
           this.allowNewEventsWithoutSignature,
         enableNewWeb3ActionsAll:
@@ -171,6 +197,10 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableNewWeb3ActionsReply,
         enableNewWeb3ActionsModerate:
           this.enableNewWeb3ActionsModerate,
+        ifShowCategoriesFilter:
+          this.ifShowCategoriesFilter,
+        ifAllowGuestLogin:
+          this.ifAllowGuestLogin,
         enableNewNostrActionsAll:
           this.enableNewNostrActionsAll,
         enableNewEthereumActionsAll:
@@ -212,6 +242,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.whitelistedForActionReact,
         pinnedIds:
           this.pinnedIds,
+        envCategories:
+          this.envCategories,
         // Numbers
         shortUrlsLengthOfWeb3Ids:
           this.shortUrlsLengthOfWeb3Ids,
@@ -223,6 +255,11 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         // Strings-default-intro
         defaultHeaderImageLink:
           this.defaultHeaderImageLink,
+        introTitle: this.introTitle,
+        introTitleExtra: this.introTitleExtra,
+        introAbout: this.introAbout,
+        postPlaceholder: this.postPlaceholder,
+        commentPlaceholder: this.commentPlaceholder,
         defaultButtonPrimaryText:
           this.defaultButtonPrimaryText,
         defaultButtonPrimaryLink:
@@ -324,17 +361,23 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       }
       updateBoolean("enableDefaultIntro")
       updateBoolean("enableDefaultContacts")
+      updateBoolean("ifShowDevelopersInfo")
       updateBoolean("enableDefaultHeaderImage")
       updateBoolean("enableDefaultButtonPrimary")
       updateBoolean("enableDefaultButtonSecondary")
       updateBoolean("enableCustomIntro")
       updateBoolean("enableCustomContacts")
+      updateBoolean("ifShowContactsInIntro")
+      updateBoolean("ifShowIntroTutorial")
+      updateBoolean("ifShowHomeLatestComments")
       updateBoolean("allowNewEventsWithoutSignature")
       updateBoolean("enableNewWeb3ActionsAll")
       updateBoolean("enableNewWeb3ActionsPost")
       updateBoolean("enableNewWeb3ActionsReact")
       updateBoolean("enableNewWeb3ActionsReply")
       updateBoolean("enableNewWeb3ActionsModerate")
+      updateBoolean("ifShowCategoriesFilter")
+      updateBoolean("ifAllowGuestLogin")
       updateBoolean("enableNewNostrActionsAll")
       updateBoolean("enableNewEthereumActionsAll")
       updateBoolean("enableModeration")
@@ -363,6 +406,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateArray("whitelistedForActionReply")
       updateArray("whitelistedForActionReact")
       updateArray("pinnedIds")
+      updateArray("envCategories")
 
       // Numbers
       const updateNumber = (key: AppConfigKeyNumber) => {
@@ -388,6 +432,11 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       }
       // Strings-default-intro
       updateString("defaultHeaderImageLink")
+      updateString("introTitle")
+      updateString("introTitleExtra")
+      updateString("introAbout")
+      updateString("postPlaceholder")
+      updateString("commentPlaceholder")
       updateString("defaultButtonPrimaryText")
       updateString("defaultButtonPrimaryLink")
       updateString("defaultButtonSecondaryText")

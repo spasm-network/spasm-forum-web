@@ -30,10 +30,11 @@
 
 <script setup lang="ts">
 import {marked} from 'marked'
-const env = useRuntimeConfig()?.public
-const introTitle = env?.introTitle
-const introTitleExtra = env?.introTitleExtra
-const introAbout = env?.introAbout
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
+const appConfig = useAppConfigStore()?.getAppConfig
+const introTitle = appConfig?.introTitle
+const introTitleExtra = appConfig?.introTitleExtra
+const introAbout = appConfig?.introAbout
 </script>
 
 <style scoped></style>

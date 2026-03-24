@@ -1,8 +1,5 @@
 <template>
   <div class="pl-1 bg-bgSecondary-light dark:bg-bgSecondary-dark">
-    <!--
-    <FeedFiltersMenu />
-    -->
     <FeedEventsFiltersMenu />
   </div>
 </template>

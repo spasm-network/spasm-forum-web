@@ -23,55 +23,121 @@
         </div>
       </div>
 
-      <h5 class="mt-4">Home page:</h5>
-      <div class="pl-4">
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleHomePage" >
+        Home page
+        <IconsTriangle :rotateIf="showHomePage" />
+        </span>
+      </div>
+
+      <div v-if="showHomePage" class="pl-4">
         <div class="pl-0 mt-2">
           <div class="pl-0 mt-0">
             <input v-model="enableDefaultHeaderImage" type="checkbox" >
             Enable default header image
           </div>
-          <div>
+          <div class="ml-5">
             Default header image link:
             <input v-model="defaultHeaderImageLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials">
           </div>
-          <div class="text-colorNotImportant-light text-colorNotImportant-dark">
+          <div class="ml-5 text-colorNotImportant-light text-colorNotImportant-dark">
             Option 1: add full URL to image file (.jpeg, .jpg, .png, .webp, .svg) <br>
-            Option 2: leave URL field blank and upload your jpeg image to <code>frontend/public/header.jpeg</code> (only jpeg supported).
+            Option 2: leave URL field blank and upload your jpeg image to <code>frontend/public/header.jpeg</code> (only jpeg supported, docker/podman deployment not supported).
           </div>
         </div>
         <div class="pl-0 mt-4">
           <input v-model="enableDefaultIntro" type="checkbox" >
-          Enable default intro section: title, description from <code>frontend/.env</code>
+          Enable default intro section: title, extra, about (description)
+          <div class="ml-5">
+            <div>
+              Intro title
+              <input v-model="introTitle" type="text" placeholder="type intro title (e.g., Spasm)" class="custom-admin-input-socials">
+            </div>
+            <div>
+              Intro title extra
+              <input v-model="introTitleExtra" type="text" placeholder="type intro title extra (e.g., forum)" class="custom-admin-input-socials">
+            </div>
+            <div>
+              Intro about
+              <input v-model="introAbout" type="text" placeholder="type intro about (e.g., Get latest Spasm news)" class="custom-admin-input-socials">
+            </div>
+          </div>
         </div>
         <div class="pl-0 mt-4">
           <input v-model="enableDefaultContacts" type="checkbox" >
-          Enable default contacts section
+          Enable default contacts
+          <div class="ml-5 pl-0">
+            <input v-model="ifShowContactsInIntro" type="checkbox" >
+            And show contacts in intro section
+            <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+              (if disabled, contacts will be shown only at
+              <nuxt-link
+                class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+                :to="`/contacts`"
+              >
+                /contacts
+              </nuxt-link>
+              page)
+            </span>
+          </div>
         </div>
         <div class="mt-6">
           <div class="pl-0">
             <input v-model="enableDefaultButtonPrimary" type="checkbox" >
             Enable default button primary
           </div>
-          <div>Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div>Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
           <div class="pl-0">
             <input v-model="enableDefaultButtonSecondary" type="checkbox" >
             Enable default button secondary
           </div>
-          <div>Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div>Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         </div>
         <div class="pl-0">
           <input v-model="enableCustomIntro" type="checkbox" >
           Enable custom intro
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            (not supported via docker/podman deployment)
+          </span>
         </div>
         <div class="pl-0">
           <input v-model="enableCustomContacts" type="checkbox" >
           Enable custom contacts
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            (not supported via docker/podman deployment)
+          </span>
+        </div>
+        <div class="pl-0">
+          <input v-model="ifShowIntroTutorial" type="checkbox" >
+          Show intro tutorial
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            (tutorial like "connect your wallet, read what you sign, etc.")
+          </span>
+        </div>
+        <div class="pl-0">
+          <input v-model="ifShowHomeLatestComments" type="checkbox" >
+          Show latest comments
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleHomePage" >
+          hide section
+          <IconsTriangle :rotateIf="showHomePage" />
+          </span>
         </div>
       </div>
-      <h5 class="mt-4">Social media links:</h5>
-      <div class="pl-4">
+
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleSocialMediaLinks">
+        Social media links
+        <IconsTriangle :rotateIf="showSocialMediaLinks" />
+        </span>
+      </div>
+
+      <div v-if="showSocialMediaLinks" class="pl-4">
         <div>Another website: <input v-model="anotherWebsiteLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>IPFS: <input v-model="ipfsLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Tor: <input v-model="torLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
@@ -98,9 +164,23 @@
         <div>LinkedIn: <input v-model="linkedinLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Wikipedia: <input v-model="wikipediaLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Github: <input v-model="githubLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleSocialMediaLinks" >
+          hide section
+          <IconsTriangle :rotateIf="showSocialMediaLinks" />
+          </span>
+        </div>
       </div>
-      <h5 class="mt-4">Social media names:</h5>
-      <div class="pl-4">
+
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleSocialMediaNames">
+        Social media names
+        <IconsTriangle :rotateIf="showSocialMediaNames" />
+        </span>
+      </div>
+
+      <div v-if="showSocialMediaNames" class="pl-4">
         <div>Nostr npub: <input v-model="nostrNpub" type="text" placeholder="enter npub" class="custom-admin-input-socials"></div>
         <div>Session: <input v-model="sessionName" type="text" placeholder="enter username" class="custom-admin-input-socials"></div>
         <div>Matrix: <input v-model="matrixName" type="text" placeholder="enter username" class="custom-admin-input-socials"></div>
@@ -118,9 +198,23 @@
         <div>XMPP: <input v-model="xmppName" type="text" placeholder="enter username" class="custom-admin-input-socials"></div>
         <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">Note: extra info supports markdown, but not <code>\n</code></div>
         <div>Extra info: <textarea v-model="extraContactInfo" placeholder="enter any extra info (markdown links supported)" class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"/></div>
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleSocialMediaNames" >
+          hide section
+          <IconsTriangle :rotateIf="showSocialMediaNames" />
+          </span>
+        </div>
       </div>
-      <h5 class="mt-4">Blockchain links:</h5>
-      <div class="pl-4">
+
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleBlockchainLinks">
+        Blockchain links
+        <IconsTriangle :rotateIf="showBlockchainLinks" />
+        </span>
+      </div>
+
+      <div v-if="showBlockchainLinks" class="pl-4">
         <div>Uniswap: <input v-model="uniswapLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Sushiswap: <input v-model="sushiswapLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Etherscan: <input v-model="etherscanLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
@@ -131,146 +225,243 @@
         <div>Dexscreener: <input v-model="dexscreenerLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Birdeye: <input v-model="birdeyeLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>GeckoTerminal: <input v-model="geckoterminalLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleBlockchainLinks" >
+          hide section
+          <IconsTriangle :rotateIf="showBlockchainLinks" />
+          </span>
+        </div>
       </div>
-      <h5 class="mt-4">Short URLs</h5>
-        <div class="pl-4">
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleFeedSettings">
+        Feed settings
+        <IconsTriangle :rotateIf="showFeedSettings" />
+        </span>
+      </div>
+
+      <div v-if="showFeedSettings" class="ml-5">
+        <h5 class="mt-4">Feed activity filters</h5>
+        <div class="ml-5">
+          <div>The amount of reactions for "Hot" filter: <input v-model="feedFiltersActivityHot" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
+          <div>The amount of reactions for "Rising" filter: <input v-model="feedFiltersActivityRising" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
+        </div>
+        <h5 class="mt-2">Feed categories filters</h5>
+        <div class="mt-2 ml-5">
+          <input
+            v-model="ifShowCategoriesFilter"
+            type="checkbox"
+          >
+          show categories filter
+        </div>
+        <div class="mt-4 ml-5">
+          Categories ({{ count(envCategories) }})
+          <textarea
+            v-model="envCategories"
+            placeholder="defi,privacy,tech,memes"
+            class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-30 lg:h-36 focus:outline-none rounded-b-lg border-2"
+          />
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleFeedSettings" >
+          hide section
+          <IconsTriangle :rotateIf="showFeedSettings" />
+          </span>
+        </div>
+      </div>
+
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleOther">
+        Other
+        <IconsTriangle :rotateIf="showOther" />
+        </span>
+      </div>
+
+      <div v-if="showOther" class="mt-2 ml-5">
+        <div>
           <input
             v-model="enableShortUrlsForWeb3Actions"
             type="checkbox"
           >
           enable short URLs for Spasm IDs (recommended length is 30+ chars)
-          <div>Short URL length: <input v-model="shortUrlsLengthOfWeb3Ids" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Short URL length: <input v-model="shortUrlsLengthOfWeb3Ids" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
         </div>
-      <h5 class="mt-4">Feed activity filters</h5>
-          <div>The amount of reactions for "Hot" filter: <input v-model="feedFiltersActivityHot" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
-          <div>The amount of reactions for "Rising" filter: <input v-model="feedFiltersActivityRising" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
-      <h5 class="mt-4">New content</h5>
-      <div class="hidden mt-4 pl-4">
-        RSS module:
-        <div class="pl-4">
+        <div class="pl-0 mt-4">
+          <input v-model="ifShowDevelopersInfo" type="checkbox" >
+          Show developers info at
+          <nuxt-link
+            class="cursor-pointer text-colorPrimary-light dark:text-colorPrimary-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark"
+            :to="`/contacts`"
+          >
+            /contacts
+          </nuxt-link>
+          page
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            (powered by Spasm)
+          </span>
+        </div>
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleOther" >
+          hide section
+          <IconsTriangle :rotateIf="showOther" />
+          </span>
+        </div>
+      </div>
+
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleNewContent">
+        New Content
+        <IconsTriangle :rotateIf="showNewContent" />
+        </span>
+      </div>
+
+      <div v-if="showNewContent">
+        <div class="hidden mt-4 pl-4">
+          RSS module:
+          <div class="pl-4">
+            <input
+              v-model="allowNewEventsWithoutSignature"
+              type="checkbox"
+            >
+            allow new events without signature
+            (e.g., RSS posts)
+          </div>
+        </div>
+        <div class="mt-4 pl-4">
+          Pinned events at the top of the news feed:
+          <div>
+            List of Spasm IDs of pinned events
+            ({{ count(pinnedIds) }})
+              <textarea
+                v-model="pinnedIds"
+                placeholder="0x123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+          </div>
+        </div>
+        <div class="mt-4 pl-4">
+          Connect button:
+          <div class="ml-5">
+            <input
+              v-model="ifAllowGuestLogin"
+              type="checkbox"
+            >
+            allow "log in as guest"
+          </div>
+        </div>
+        <div class="mt-4 pl-4">
+          Enable new actions:
+          <div class="pl-4">
+            <div>
+              <input
+                v-model="enableNewWeb3ActionsAll"
+                type="checkbox"
+              >
+              all
+              (you still need to enable all actions individually)
+            </div>
+            <div>
+              <input
+                v-model="enableNewWeb3ActionsPost"
+                type="checkbox"
+              >
+              post
+            </div>
+            <div>
+              <input
+                v-model="enableNewWeb3ActionsReply"
+                type="checkbox"
+              >
+              reply
+              (comments)
+            </div>
+            <div>
+              <input
+                v-model="enableNewWeb3ActionsReact"
+                type="checkbox"
+              >
+              react
+              (upvote, downvote, etc.)
+            </div>
+            <div>
+              <input
+                v-model="enableNewWeb3ActionsModerate"
+                type="checkbox"
+              >
+              moderate
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 pl-4">
           <input
-            v-model="allowNewEventsWithoutSignature"
+            v-model="enableModeration"
             type="checkbox"
           >
-          allow new events without signature
-          (e.g., RSS posts)
-        </div>
-      </div>
-      <div class="mt-4 pl-4">
-        Pinned events at the top of the news feed:
-        <div>
-          List of Spasm IDs of pinned events
-          ({{ count(pinnedIds) }})
-            <textarea
-              v-model="pinnedIds"
-              placeholder="0x123456789"
-              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
-            />
-        </div>
-      </div>
-      <div class="mt-4 pl-4">
-        Enable new actions:
-        <div class="pl-4">
+          Enable moderation
           <div>
-            <input
-              v-model="enableNewWeb3ActionsAll"
-              type="checkbox"
-            >
-            all
-            (you still need to enable all actions individually)
-          </div>
-          <div>
-            <input
-              v-model="enableNewWeb3ActionsPost"
-              type="checkbox"
-            >
-            post
-          </div>
-          <div>
-            <input
-              v-model="enableNewWeb3ActionsReply"
-              type="checkbox"
-            >
-            reply
-            (comments)
-          </div>
-          <div>
-            <input
-              v-model="enableNewWeb3ActionsReact"
-              type="checkbox"
-            >
-            react
-            (upvote, downvote, etc.)
-          </div>
-          <div>
-            <input
-              v-model="enableNewWeb3ActionsModerate"
-              type="checkbox"
-            >
-            moderate
+            List of moderators
+            ({{ count(moderators) }})
+              <textarea
+                v-model="moderators"
+                placeholder="0x123456789,npub123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
           </div>
         </div>
-      </div>
-      <div class="mt-4 pl-4">
-        <input
-          v-model="enableModeration"
-          type="checkbox"
-        >
-        Enable moderation
-        <div>
-          List of moderators
-          ({{ count(moderators) }})
-            <textarea
-              v-model="moderators"
-              placeholder="0x123456789,npub123456789"
-              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
-            />
+        <div class="mt-4 pl-4">
+          <h6>Whitelists for new actions</h6>
+          <div class="pl-2">
+            <div>
+              <input
+                v-model="enableWhitelistForActionPost"
+                type="checkbox"
+              >
+              enable whitelist for new posts
+              ({{ count(whitelistedForActionPost) }})
+              <textarea
+                v-model="whitelistedForActionPost"
+                placeholder="0x123456789,npub123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+            </div>
+            <div class="mt-4">
+              <input
+                v-model="enableWhitelistForActionReply"
+                type="checkbox"
+              >
+              enable whitelist for new replies
+              (comments)
+              ({{ count(whitelistedForActionReply) }})
+              <textarea
+                v-model="whitelistedForActionReply"
+                placeholder="0x123456789,npub123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+            </div>
+            <div class="mt-4">
+              <input
+                v-model="enableWhitelistForActionReact"
+                type="checkbox"
+              >
+              enable whitelist for new reactions
+              (upvote, downvote, etc.)
+              ({{ count(whitelistedForActionReact) }})
+              <textarea
+                v-model="whitelistedForActionReact"
+                placeholder="0x123456789,npub123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="mt-4 pl-4">
-        <h6>Whitelists for new actions</h6>
-        <div class="pl-2">
-          <div>
-            <input
-              v-model="enableWhitelistForActionPost"
-              type="checkbox"
-            >
-            enable whitelist for new posts
-            ({{ count(whitelistedForActionPost) }})
-            <textarea
-              v-model="whitelistedForActionPost"
-              placeholder="0x123456789,npub123456789"
-              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
-            />
-          </div>
-          <div class="mt-4">
-            <input
-              v-model="enableWhitelistForActionReply"
-              type="checkbox"
-            >
-            enable whitelist for new replies
-            (comments)
-            ({{ count(whitelistedForActionReply) }})
-            <textarea
-              v-model="whitelistedForActionReply"
-              placeholder="0x123456789,npub123456789"
-              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
-            />
-          </div>
-          <div class="mt-4">
-            <input
-              v-model="enableWhitelistForActionReact"
-              type="checkbox"
-            >
-            enable whitelist for new reactions
-            (upvote, downvote, etc.)
-            ({{ count(whitelistedForActionReact) }})
-            <textarea
-              v-model="whitelistedForActionReact"
-              placeholder="0x123456789,npub123456789"
-              class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
-            />
-          </div>
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleNewContent" >
+          hide section
+          <IconsTriangle :rotateIf="showNewContent" />
+          </span>
         </div>
       </div>
       <div class="my-4">
@@ -316,6 +507,35 @@ const {
   hasValue, splitIntoArray
 } = useUtils()
 
+const showHomePage = ref<boolean>(false)
+const showSocialMediaLinks = ref<boolean>(false)
+const showSocialMediaNames = ref<boolean>(false)
+const showBlockchainLinks = ref<boolean>(false)
+const showFeedSettings = ref<boolean>(false)
+const showOther = ref<boolean>(false)
+const showNewContent = ref<boolean>(false)
+const toggleHomePage = () => {
+  showHomePage.value = !showHomePage.value
+}
+const toggleSocialMediaLinks = () => {
+  showSocialMediaLinks.value = !showSocialMediaLinks.value
+}
+const toggleSocialMediaNames = () => {
+  showSocialMediaNames.value = !showSocialMediaNames.value
+}
+const toggleBlockchainLinks = () => {
+  showBlockchainLinks.value = !showBlockchainLinks.value
+}
+const toggleFeedSettings = () => {
+  showFeedSettings.value = !showFeedSettings.value
+}
+const toggleOther = () => {
+  showOther.value = !showOther.value
+}
+const toggleNewContent = () => {
+  showNewContent.value = !showNewContent.value
+}
+
 const count = (list: any): number => {
   if (!list) return 0
   if (Array.isArray(list) && list.length) {
@@ -339,6 +559,8 @@ const enableDefaultIntro =
   ref<boolean>(appConfig?.enableDefaultIntro)
 const enableDefaultContacts =
   ref<boolean>(appConfig?.enableDefaultContacts)
+const ifShowDevelopersInfo =
+  ref<boolean>(appConfig?.ifShowDevelopersInfo)
 const enableDefaultHeaderImage =
   ref<boolean>(appConfig?.enableDefaultHeaderImage)
 const enableDefaultButtonPrimary =
@@ -349,7 +571,17 @@ const enableCustomIntro =
   ref<boolean>(appConfig?.enableCustomIntro)
 const enableCustomContacts =
   ref<boolean>(appConfig?.enableCustomContacts)
+const ifShowContactsInIntro =
+  ref<boolean>(appConfig?.ifShowContactsInIntro)
+const ifShowIntroTutorial =
+  ref<boolean>(appConfig?.ifShowIntroTutorial)
+const ifShowHomeLatestComments =
+  ref<boolean>(appConfig?.ifShowHomeLatestComments)
 // Booleans-other
+const ifShowCategoriesFilter =
+  ref<boolean>(appConfig?.ifShowCategoriesFilter)
+const ifAllowGuestLogin =
+  ref<boolean>(appConfig?.ifAllowGuestLogin)
 const enableNewWeb3ActionsAll =
   ref<boolean>(appConfig?.enableNewWeb3ActionsAll)
 const enableNewWeb3ActionsPost =
@@ -380,11 +612,23 @@ const whitelistedForActionReact =
   ref<string[]>(appConfig?.whitelistedForActionReact)
 const pinnedIds =
   ref<string[]>(appConfig?.pinnedIds)
+const envCategories =
+  ref<string[]>(appConfig?.envCategories)
 
 // Strings
 // Strings-default-intro
 const defaultHeaderImageLink =
   ref<string>(appConfig?.defaultHeaderImageLink)
+const introTitle =
+  ref<string>(appConfig?.introTitle)
+const introTitleExtra =
+  ref<string>(appConfig?.introTitleExtra)
+const introAbout =
+  ref<string>(appConfig?.introAbout)
+const postPlaceholder =
+  ref<string>(appConfig?.postPlaceholder)
+const commentPlaceholder =
+  ref<string>(appConfig?.commentPlaceholder)
 const defaultButtonPrimaryText =
   ref<string>(appConfig?.defaultButtonPrimaryText)
 const defaultButtonPrimaryLink =
@@ -470,6 +714,8 @@ const saveAppConfig = async () => {
       enableDefaultIntro.value
     newAppConfig.enableDefaultContacts =
       enableDefaultContacts.value
+    newAppConfig.ifShowDevelopersInfo =
+      ifShowDevelopersInfo.value
     newAppConfig.enableDefaultHeaderImage =
       enableDefaultHeaderImage.value
     newAppConfig.enableDefaultButtonPrimary =
@@ -481,7 +727,17 @@ const saveAppConfig = async () => {
       enableCustomIntro.value
     newAppConfig.enableCustomContacts =
       enableCustomContacts.value
+    newAppConfig.ifShowContactsInIntro =
+      ifShowContactsInIntro.value
+    newAppConfig.ifShowIntroTutorial =
+      ifShowIntroTutorial.value
+    newAppConfig.ifShowHomeLatestComments =
+      ifShowHomeLatestComments.value
     // Booleans-others
+    newAppConfig.ifShowCategoriesFilter =
+      ifShowCategoriesFilter.value
+    newAppConfig.ifAllowGuestLogin =
+      ifAllowGuestLogin.value
     newAppConfig.enableNewWeb3ActionsAll =
       enableNewWeb3ActionsAll.value
     newAppConfig.enableNewWeb3ActionsPost =
@@ -536,11 +792,33 @@ const saveAppConfig = async () => {
       newAppConfig.pinnedIds =
         pinnedIds.value
     }
+    if (typeof(envCategories.value) === "string") {
+      newAppConfig.envCategories =
+        splitIntoArray(envCategories.value)
+    } else if (Array.isArray(envCategories.value)) {
+      newAppConfig.envCategories =
+        envCategories.value
+    }
 
     // Strings
     // Strings-intro-home
     if (typeof(defaultHeaderImageLink.value) === "string") {
       newAppConfig.defaultHeaderImageLink = defaultHeaderImageLink.value
+    }
+    if (typeof(introTitle.value) === "string") {
+      newAppConfig.introTitle = introTitle.value
+    }
+    if (typeof(introTitleExtra.value) === "string") {
+      newAppConfig.introTitleExtra = introTitleExtra.value
+    }
+    if (typeof(introAbout.value) === "string") {
+      newAppConfig.introAbout = introAbout.value
+    }
+    if (typeof(postPlaceholder.value) === "string") {
+      newAppConfig.postPlaceholder = postPlaceholder.value
+    }
+    if (typeof(commentPlaceholder.value) === "string") {
+      newAppConfig.commentPlaceholder = commentPlaceholder.value
     }
     if (typeof(defaultButtonPrimaryText.value) === "string") {
       newAppConfig.defaultButtonPrimaryText = defaultButtonPrimaryText.value

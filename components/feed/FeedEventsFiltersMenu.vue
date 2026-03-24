@@ -65,9 +65,11 @@
 
 <script setup lang="ts">
 import {FiltersActivity, FiltersCategory} from '@/helpers/interfaces';
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
+const appConfig = useAppConfigStore()?.getAppConfig
 const { feedFilters, changeFeedFiltersActivity, changeFeedFiltersCategory } = useFeedEventsFilters()
-const ifShowCategoriesFilter = useRuntimeConfig()?.public?.ifShowCategoriesFilter === 'true' ? true : false
-const envCategories = useRuntimeConfig()?.public?.envCategories
+const ifShowCategoriesFilter = appConfig?.ifShowCategoriesFilter
+const envCategories = appConfig?.envCategories
 
 // state
 const categoriesDropDownShown = ref(false)

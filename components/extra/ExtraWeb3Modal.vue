@@ -122,6 +122,8 @@
 import {
   useNotificationStore
 } from '@/stores/useNotificationStore'
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
+const appConfig = useAppConfigStore()?.getAppConfig
 const notificationStore = useNotificationStore()
 const {
   connectWeb3Authenticator,
@@ -130,9 +132,9 @@ const {
   disconnectAccount,
   hideWeb3Modal
 } = useWeb3()
-const ifAllowGuestLogin = useRuntimeConfig()?.public?.ifAllowGuestLogin === 'true' ? true : false
-const enableNewNostrActionsAll = useRuntimeConfig()?.public?.enableNewNostrActionsAll === 'true' ? true : false
-const enableNewEthereumActionsAll = useRuntimeConfig()?.public?.enableNewEthereumActionsAll === 'true' ? true : false
+const ifAllowGuestLogin = appConfig?.ifAllowGuestLogin
+const enableNewNostrActionsAll = appConfig?.enableNewNostrActionsAll
+const enableNewEthereumActionsAll = appConfig?.enableNewEthereumActionsAll
 
 const browserExtensionClicked = async () => {
   /* console.log("browserExtensionClicked called") */
