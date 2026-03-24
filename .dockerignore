@@ -1,0 +1,35 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+dist
+.gitignore
+README.md
+.env
+.env.local
+.env*
+
+# Service worker
+sw.*
+
+# macOS
+.DS_Store
+
+# Vim swap files
+*~
+*.swp
+*.swo
+
+# Other
+.output
+.nitro
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
