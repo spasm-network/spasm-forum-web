@@ -1517,6 +1517,35 @@ export interface AppConfig {
   defaultButtonPrimaryLink?: string
   defaultButtonSecondaryText?: string
   defaultButtonSecondaryLink?: string
+  // Colors
+  colorPrimaryLight?: string
+  colorPrimaryDark?: string
+  colorBaseLight?: string
+  colorBaseDark?: string
+  colorSecondaryLight?: string
+  colorSecondaryDark?: string
+  colorHoverLight?: string
+  colorHoverDark?: string
+  colorNotImportantLight?: string
+  colorNotImportantDark?: string
+  colorGreenLight?: string
+  colorGreenDark?: string
+  colorRedLight?: string
+  colorRedDark?: string
+  colorOrangeLight?: string
+  colorOrangeDark?: string
+  colorBlueLight?: string
+  colorBlueDark?: string
+  bgBaseLight?: string
+  bgBaseDark?: string
+  bgSecondaryLight?: string
+  bgSecondaryDark?: string
+  bgHoverLight?: string
+  bgHoverDark?: string
+  bgDarkLight?: string
+  bgDarkDark?: string
+  borderColorLight?: string
+  borderColorDark?: string
   // Strings-socials
   anotherWebsiteLink?: string
   ipfsLink?: string
@@ -1584,6 +1613,35 @@ export type AppConfigKeyString =
   | "defaultButtonPrimaryLink"
   | "defaultButtonSecondaryText"
   | "defaultButtonSecondaryLink"
+  | "colorPrimaryDark"
+  | "colorPrimaryLight"
+  | "colorPrimaryDark"
+  | "colorBaseLight"
+  | "colorBaseDark"
+  | "colorSecondaryLight"
+  | "colorSecondaryDark"
+  | "colorHoverLight"
+  | "colorHoverDark"
+  | "colorNotImportantLight"
+  | "colorNotImportantDark"
+  | "colorGreenLight"
+  | "colorGreenDark"
+  | "colorRedLight"
+  | "colorRedDark"
+  | "colorOrangeLight"
+  | "colorOrangeDark"
+  | "colorBlueLight"
+  | "colorBlueDark"
+  | "bgBaseLight"
+  | "bgBaseDark"
+  | "bgSecondaryLight"
+  | "bgSecondaryDark"
+  | "bgHoverLight"
+  | "bgHoverDark"
+  | "bgDarkLight"
+  | "bgDarkDark"
+  | "borderColorLight"
+  | "borderColorDark"
   | "anotherWebsiteLink"
   | "ipfsLink"
   | "torLink"

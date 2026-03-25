@@ -1,25 +1,21 @@
 export default defineNuxtConfig({
   devServer: {
-    port: parseInt(process.env.FRONTEND_DEV_PORT as string) || parseInt(process.env.NUXT_PUBLIC_FRONTEND_DEV_PORT as string)  || 3000
+    port: parseInt(process.env.FRONTEND_DEV_PORT as string)
+      || parseInt(process.env.NUXT_PUBLIC_FRONTEND_DEV_PORT as string)
+      || 3000
   },
 
   app: {
-    head: {
-    title: process.env.META_TITLE,
-      meta: [
-        // 'hid:' key-value pair can be removed
-        { name: 'description', content: process.env.META_DESCRIPTION },
-        { name: 'apple-mobile-web-app-title', content: process.env.META_TITLE },
-        { name: 'og:title', property: 'og:title', content: process.env.META_TITLE },
-        { name: 'og:site_name', property: 'og:site_name', content: process.env.META_TITLE },
-        { name: 'og:description', property: 'og:description', content: process.env.META_DESCRIPTION }
-      ],
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'shortcut icon', href: '/favicon.ico' },
-        { rel: 'apple-touch-icon', href: '/favicon.ico', sizes: '512x512' },
-      ]
-    }
+    /**
+     * Meta is now set by runtime vars INTRO_TITLE, INTRO_ABOUT,
+     * so admins can change values via web admin panel and also
+     * pass env values for pre-built docker/podman images using
+     * NUXT_PUBLIC_ prefix.
+     */
+    // head: {
+    // title: process.env.META_TITLE,
+    //   meta: [ ]
+    // }
   },
 
   runtimeConfig: {
@@ -53,13 +49,8 @@ export default defineNuxtConfig({
       apiURL: process.env.API_URL || process.env.NUXT_PUBLIC_API_URL,
 
       // Testing
-      useMockedDataIfBackendIsDown: process.env.USE_MOCKED_DATA_IF_BACKEND_IS_DOWN || process.env.NUXT_PUBLIC_USE_MOCKED_DATA_IF_BACKEND_IS_DOWN,
-
-      // Default meta values are used on other pages
-      // so it's easy to change values in just one place.
-      defaultMetaAppName: process.env.META_APP_NAME || process.env.NUXT_PUBLIC_META_APP_NAME,
-      defaultMetaTitle: process.env.META_TITLE || process.env.NUXT_PUBLIC_META_TITLE,
-      defaultMetaDescription: process.env.META_DESCRIPTION || process.env.NUXT_PUBLIC_META_DESCRIPTION,
+      useMockedDataIfBackendIsDown: process.env.USE_MOCKED_DATA_IF_BACKEND_IS_DOWN
+        || process.env.NUXT_PUBLIC_USE_MOCKED_DATA_IF_BACKEND_IS_DOWN,
 
       // App config
       enableAppConfigChanges: process.env.ENABLE_APP_CONFIG_CHANGES || process.env.NUXT_PUBLIC_ENABLE_APP_CONFIG_CHANGES,
@@ -262,6 +253,64 @@ export default defineNuxtConfig({
 
       // Pinned events
       pinnedIds: process.env.PINNED_IDS || process.env.NUXT_PUBLIC_PINNED_IDS,
+
+      // Colors
+      colorPrimaryLight: process.env.COLOR_PRIMARY_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_PRIMARY_LIGHT || '#f420af',
+      colorPrimaryDark: process.env.COLOR_PRIMARY_DARK
+        || process.env.NUXT_PUBLIC_COLOR_PRIMARY_DARK || '#f420af',
+      colorBaseLight: process.env.COLOR_BASE_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_BASE_LIGHT || '#000000',
+      colorBaseDark: process.env.COLOR_BASE_DARK
+        || process.env.NUXT_PUBLIC_COLOR_BASE_DARK || '#d8d8d8',
+      colorSecondaryLight: process.env.COLOR_SECONDARY_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_SECONDARY_LIGHT || '#000000',
+      colorSecondaryDark: process.env.COLOR_SECONDARY_DARK
+        || process.env.NUXT_PUBLIC_COLOR_SECONDARY_DARK || '#ffffff',
+      colorHoverLight: process.env.COLOR_HOVER_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_HOVER_LIGHT || '#243746',
+      colorHoverDark: process.env.COLOR_HOVER_DARK
+        || process.env.NUXT_PUBLIC_COLOR_HOVER_DARK || '#cbd4d1',
+      colorNotImportantLight: process.env.COLOR_NOT_IMPORTANT_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_NOT_IMPORTANT_LIGHT || '#9b8bc6',
+      colorNotImportantDark: process.env.COLOR_NOT_IMPORTANT_DARK
+        || process.env.NUXT_PUBLIC_COLOR_NOT_IMPORTANT_DARK || '#706297',
+      colorGreenLight: process.env.COLOR_GREEN_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_GREEN_LIGHT || '#089703',
+      colorGreenDark: process.env.COLOR_GREEN_DARK
+        || process.env.NUXT_PUBLIC_COLOR_GREEN_DARK || '#0ad203',
+      colorRedLight: process.env.COLOR_RED_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_RED_LIGHT || '#ff0a0a',
+      colorRedDark: process.env.COLOR_RED_DARK
+        || process.env.NUXT_PUBLIC_COLOR_RED_DARK || '#ff0a0a',
+      colorOrangeLight: process.env.COLOR_ORANGE_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_ORANGE_LIGHT || '#f4af0c',
+      colorOrangeDark: process.env.COLOR_ORANGE_DARK
+        || process.env.NUXT_PUBLIC_COLOR_ORANGE_DARK || '#f4af0c',
+      colorBlueLight: process.env.COLOR_BLUE_LIGHT
+        || process.env.NUXT_PUBLIC_COLOR_BLUE_LIGHT || '#3a3dff',
+      colorBlueDark: process.env.COLOR_BLUE_DARK
+        || process.env.NUXT_PUBLIC_COLOR_BLUE_DARK || '#3a3dff',
+      bgBaseLight: process.env.BG_BASE_LIGHT
+        || process.env.NUXT_PUBLIC_BG_BASE_LIGHT || '#fafafa',
+      bgBaseDark: process.env.BG_BASE_DARK
+        || process.env.NUXT_PUBLIC_BG_BASE_DARK || '#0F0F0F',
+      bgSecondaryLight: process.env.BG_SECONDARY_LIGHT
+        || process.env.NUXT_PUBLIC_BG_SECONDARY_LIGHT || '#f0f0f0',
+      bgSecondaryDark: process.env.BG_SECONDARY_DARK
+        || process.env.NUXT_PUBLIC_BG_SECONDARY_DARK || '#181818',
+      bgHoverLight: process.env.BG_HOVER_LIGHT
+        || process.env.NUXT_PUBLIC_BG_HOVER_LIGHT || '#e3e3e3',
+      bgHoverDark: process.env.BG_HOVER_DARK
+        || process.env.NUXT_PUBLIC_BG_HOVER_DARK || '#1f1f1f',
+      bgDarkLight: process.env.BG_DARK_LIGHT
+        || process.env.NUXT_PUBLIC_BG_DARK_LIGHT || '#bbbbbb',
+      bgDarkDark: process.env.BG_DARK_DARK
+        || process.env.NUXT_PUBLIC_BG_DARK_DARK || '#000000',
+      borderColorLight: process.env.BORDER_COLOR_LIGHT
+        || process.env.NUXT_PUBLIC_BORDER_COLOR_LIGHT || '#ddd',
+      borderColorDark: process.env.BORDER_COLOR_DARK
+        || process.env.NUXT_PUBLIC_BORDER_COLOR_DARK || '#312d3e',
     }
   },
 
@@ -295,11 +344,23 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: process.env.MANIFEST_NAME || "spasm.forum",
-      short_name: process.env.MANIFEST_SHORT_NAME || "spasm.forum",
+      name: process.env.MANIFEST_NAME
+        || process.env.NUXT_PUBLIC_MANIFEST_NAME
+        || process.env.INTRO_TITLE
+        || process.env.NUXT_PUBLIC_INTRO_TITLE
+        || "Spasm",
+      short_name: process.env.MANIFEST_SHORT_NAME
+        || process.env.NUXT_PUBLIC_MANIFEST_SHORT_NAME
+        || process.env.INTRO_TITLE
+        || process.env.NUXT_PUBLIC_INTRO_TITLE
+        || "Spasm",
       background_color: '#000000',
       theme_color: '#000000',
-      id: process.env.MANIFEST_ID || "spasm.forum",
+      id: process.env.MANIFEST_ID
+        || process.env.NUXT_PUBLIC_MANIFEST_ID
+        || process.env.INTRO_TITLE
+        || process.env.NUXT_PUBLIC_INTRO_TITLE
+        || "Spasm",
       start_url: '.',
       display: 'standalone',
       lang: 'en',
@@ -338,5 +399,5 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2024-08-08',
+  compatibilityDate: '2026-03-24',
 })

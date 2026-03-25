@@ -30,15 +30,44 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     // Strings
     // Strings-default-intro
     defaultHeaderImageLink: useRuntimeConfig()?.public?.defaultHeaderImageLink,
-    introTitle: useRuntimeConfig()?.public?.introTitle || "Default title",
+    introTitle: useRuntimeConfig()?.public?.introTitle || "Spasm",
     introTitleExtra: useRuntimeConfig()?.public?.introTitleExtra || "forum",
-    introAbout: useRuntimeConfig()?.public?.introAbout || "Default about",
+    introAbout: useRuntimeConfig()?.public?.introAbout || "Unplug from slave tech!",
     postPlaceholder: useRuntimeConfig()?.public?.postPlaceholder || "(Basic markdown is enabled, but HTML tags are not allowed, so use markdown instead).",
     commentPlaceholder: useRuntimeConfig()?.public?.commentPlaceholder || "(Basic markdown is enabled, but HTML tags are not allowed, so use markdown instead).",
     defaultButtonPrimaryText: useRuntimeConfig()?.public?.defaultButtonPrimaryText || "Primary button",
     defaultButtonPrimaryLink: useRuntimeConfig()?.public?.defaultButtonPrimaryLink || "https://spasm.network",
     defaultButtonSecondaryText: useRuntimeConfig()?.public?.defaultButtonSecondaryText || "Secondary button",
     defaultButtonSecondaryLink: useRuntimeConfig()?.public?.defaultButtonSecondaryLink || "https://docs.spasm.network",
+    // Colors
+    colorPrimaryDark: useRuntimeConfig()?.public?.colorPrimaryDark,
+    colorPrimaryLight: useRuntimeConfig()?.public?.colorPrimaryLight,
+    colorBaseLight: useRuntimeConfig()?.public?.colorBaseLight,
+    colorBaseDark: useRuntimeConfig()?.public?.colorBaseDark,
+    colorSecondaryLight: useRuntimeConfig()?.public?.colorSecondaryLight,
+    colorSecondaryDark: useRuntimeConfig()?.public?.colorSecondaryDark,
+    colorHoverLight: useRuntimeConfig()?.public?.colorHoverLight,
+    colorHoverDark: useRuntimeConfig()?.public?.colorHoverDark,
+    colorNotImportantLight: useRuntimeConfig()?.public?.colorNotImportantLight,
+    colorNotImportantDark: useRuntimeConfig()?.public?.colorNotImportantDark,
+    colorGreenLight: useRuntimeConfig()?.public?.colorGreenLight,
+    colorGreenDark: useRuntimeConfig()?.public?.colorGreenDark,
+    colorRedLight: useRuntimeConfig()?.public?.colorRedLight,
+    colorRedDark: useRuntimeConfig()?.public?.colorRedDark,
+    colorOrangeLight: useRuntimeConfig()?.public?.colorOrangeLight,
+    colorOrangeDark: useRuntimeConfig()?.public?.colorOrangeDark,
+    colorBlueLight: useRuntimeConfig()?.public?.colorBlueLight,
+    colorBlueDark: useRuntimeConfig()?.public?.colorBlueDark,
+    bgBaseLight: useRuntimeConfig()?.public?.bgBaseLight,
+    bgBaseDark: useRuntimeConfig()?.public?.bgBaseDark,
+    bgSecondaryLight: useRuntimeConfig()?.public?.bgSecondaryLight,
+    bgSecondaryDark: useRuntimeConfig()?.public?.bgSecondaryDark,
+    bgHoverLight: useRuntimeConfig()?.public?.bgHoverLight,
+    bgHoverDark: useRuntimeConfig()?.public?.bgHoverDark,
+    bgDarkLight: useRuntimeConfig()?.public?.bgDarkLight,
+    bgDarkDark: useRuntimeConfig()?.public?.bgDarkDark,
+    borderColorLight: useRuntimeConfig()?.public?.borderColorLight,
+    borderColorDark: useRuntimeConfig()?.public?.borderColorDark,
     // Strings-socials
     anotherWebsiteLink: useRuntimeConfig()?.public?.anotherWebsiteLink,
     ipfsLink: useRuntimeConfig()?.public?.ipfsLink,
@@ -268,6 +297,35 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.defaultButtonSecondaryText,
         defaultButtonSecondaryLink:
           this.defaultButtonSecondaryLink,
+        // Colors
+        colorPrimaryDark: this.colorPrimaryDark,
+        colorPrimaryLight: this.colorPrimaryLight,
+        colorBaseLight: this.colorBaseLight,
+        colorBaseDark: this.colorBaseDark,
+        colorSecondaryLight: this.colorSecondaryLight,
+        colorSecondaryDark: this.colorSecondaryDark,
+        colorHoverLight: this.colorHoverLight,
+        colorHoverDark: this.colorHoverDark,
+        colorNotImportantLight: this.colorNotImportantLight,
+        colorNotImportantDark: this.colorNotImportantDark,
+        colorGreenLight: this.colorGreenLight,
+        colorGreenDark: this.colorGreenDark,
+        colorRedLight: this.colorRedLight,
+        colorRedDark: this.colorRedDark,
+        colorOrangeLight: this.colorOrangeLight,
+        colorOrangeDark: this.colorOrangeDark,
+        colorBlueLight: this.colorBlueLight,
+        colorBlueDark: this.colorBlueDark,
+        bgBaseLight: this.bgBaseLight,
+        bgBaseDark: this.bgBaseDark,
+        bgSecondaryLight: this.bgSecondaryLight,
+        bgSecondaryDark: this.bgSecondaryDark,
+        bgHoverLight: this.bgHoverLight,
+        bgHoverDark: this.bgHoverDark,
+        bgDarkLight: this.bgDarkLight,
+        bgDarkDark: this.bgDarkDark,
+        borderColorLight: this.borderColorLight,
+        borderColorDark: this.borderColorDark,
         // Strings-socials
         anotherWebsiteLink: this.anotherWebsiteLink,
         ipfsLink: this.ipfsLink,
@@ -441,6 +499,35 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateString("defaultButtonPrimaryLink")
       updateString("defaultButtonSecondaryText")
       updateString("defaultButtonSecondaryLink")
+      // Colors
+      updateString("colorPrimaryLight")
+      updateString("colorPrimaryDark")
+      updateString("colorBaseLight")
+      updateString("colorBaseDark")
+      updateString("colorSecondaryLight")
+      updateString("colorSecondaryDark")
+      updateString("colorHoverLight")
+      updateString("colorHoverDark")
+      updateString("colorNotImportantLight")
+      updateString("colorNotImportantDark")
+      updateString("colorGreenLight")
+      updateString("colorGreenDark")
+      updateString("colorRedLight")
+      updateString("colorRedDark")
+      updateString("colorOrangeLight")
+      updateString("colorOrangeDark")
+      updateString("colorBlueLight")
+      updateString("colorBlueDark")
+      updateString("bgBaseLight")
+      updateString("bgBaseDark")
+      updateString("bgSecondaryLight")
+      updateString("bgSecondaryDark")
+      updateString("bgHoverLight")
+      updateString("bgHoverDark")
+      updateString("bgDarkLight")
+      updateString("bgDarkDark")
+      updateString("borderColorLight")
+      updateString("borderColorDark")
       // Strings-socials
       updateString("anotherWebsiteLink")
       updateString("ipfsLink")

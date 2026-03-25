@@ -88,18 +88,17 @@ const appConfigStore = useAppConfigStore()
 // Updating app config so users can create new posts after
 // being whitelisted without refreshing the web page.
 await appConfigStore.fetchAndUpdateAppConfig()
-// New web3 actions are enabled by default if not disabled in .env
+const appConfig = useAppConfigStore()?.getAppConfig
 const enableNewWeb3ActionsAll: boolean =
-  appConfigStore.getAppConfig.enableNewWeb3ActionsAll
+  appConfig?.enableNewWeb3ActionsAll
 const enableNewWeb3ActionsPost: boolean =
-  appConfigStore.getAppConfig.enableNewWeb3ActionsPost
+  appConfig?.enableNewWeb3ActionsPost
 const enableWhitelistForActionPost: boolean =
-  appConfigStore.getAppConfig.enableWhitelistForActionPost
+  appConfig?.enableWhitelistForActionPost
 const whitelistedForActionPost: string[] =
-  appConfigStore.getAppConfig.whitelistedForActionPost
+  appConfig?.whitelistedForActionPost
 const {
   connectedAddress,
-  /* assembledMessage, */
   /* connectedAddressEthereum, */
   /* connectedAddressNostr,    */
 } = useWeb3()

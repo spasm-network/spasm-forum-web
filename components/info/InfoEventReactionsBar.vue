@@ -56,11 +56,13 @@
 <script setup lang="ts">
 import {SpasmEventV2} from '@/helpers/interfaces'
 import { spasm } from 'spasm.js'
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
 
-// New web3 actions are enabled by default if not disabled in .env
-const env = useRuntimeConfig()?.public
-const enableNewWeb3ActionsAll: boolean = env?.enableNewWeb3ActionsAll === 'false'? false : true
-const enableNewWeb3ActionsReact: boolean = env?.enableNewWeb3ActionsReact === 'false'? false : true
+const appConfig = useAppConfigStore()?.getAppConfig
+const enableNewWeb3ActionsAll: boolean =
+  appConfig?.enableNewWeb3ActionsAll
+const enableNewWeb3ActionsReact: boolean =
+  appConfig?.enableNewWeb3ActionsReact
 
 defineProps<{
   event?: SpasmEventV2

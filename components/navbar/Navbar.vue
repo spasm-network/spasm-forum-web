@@ -56,21 +56,22 @@
 
 <script setup lang="ts">
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
-const appConfigStore = useAppConfigStore()
-const admins = appConfigStore.getAppConfig.admins
-const enableAdmin = appConfigStore.getAppConfig.enableAdmin
+const appConfig = useAppConfigStore()?.getAppConfig
+const admins = appConfig?.admins
+const enableAdmin = appConfig?.enableAdmin
 const enableAppConfigChanges =
-  appConfigStore.getAppConfig.enableAppConfigChanges
+  appConfig?.enableAppConfigChanges
 const enableAppConfigChangesByAdmin =
-  appConfigStore.getAppConfig.enableAppConfigChangesByAdmin
+  appConfig?.enableAppConfigChangesByAdmin
 const {showFeed, hideFeed, isFeedShown} = useFeed()
 const {showWeb3Modal, pendingAuthentication, connectedAddress } = useWeb3()
 const { sliceAddress} = useUtils()
 const { isInList } = useNostr()
-// New web3 actions are enabled by default if not disabled in .env
 const env = useRuntimeConfig()?.public
-const enableNewWeb3ActionsAll: boolean = env?.enableNewWeb3ActionsAll === 'false'? false : true
-const enableNewWeb3ActionsPost: boolean = env?.enableNewWeb3ActionsPost === 'false'? false : true
+const enableNewWeb3ActionsAll: boolean =
+  appConfig?.enableNewWeb3ActionsAll
+const enableNewWeb3ActionsPost: boolean =
+  appConfig?.enableNewWeb3ActionsPost
 const showNewPostButtonInMenu: boolean = env?.showNewPostButtonInMenu === 'false'? false : true
 </script>
 

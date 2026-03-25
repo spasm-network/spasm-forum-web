@@ -44,6 +44,9 @@ const {
 
 // Always use the latest app config from database
 await useAppConfigStore()?.fetchAndUpdateAppConfig()
+const appConfig = useAppConfigStore()?.getAppConfig
+const introTitle = appConfig?.introTitle
+const introAbout = appConfig?.introAbout
 
 // componentKey is added as an extra safeguard against
 // hydration mismatches. The idea is that an element
@@ -91,6 +94,54 @@ onUnmounted(() => {
   /* console.log("onUnmounted") */
   /* if (isMetamaskInstalled.value) setListeners(false) */
   setListeners(false)
+})
+
+useHead({
+  title: appConfig?.introTitle,
+  meta: [
+    { name: 'description', content: appConfig?.introTitle },
+    { name: 'apple-mobile-web-app-title', content:appConfig?.introTitle },
+    { name: 'og:title', property: 'og:title', content:appConfig?.introTitle },
+    { name: 'og:site_name', property: 'og:site_name', content:appConfig?.introTitle },
+    { name: 'og:description', property: 'og:description', content:appConfig?.introAbout },
+  ],
+  link: [
+    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    { rel: 'shortcut icon', href: '/favicon.ico' },
+    { rel: 'apple-touch-icon', href: '/favicon.ico', sizes: '512x512' },
+  ],
+  style: [{
+    innerHTML: `:root {
+      --color-primary-light: ${appConfig?.colorPrimaryLight || "#f420af"};
+      --color-primary-dark: ${appConfig?.colorPrimaryDark || "#f420af"};
+      --color-base-light: ${appConfig?.colorBaseLight || "#000000"};
+      --color-base-dark: ${appConfig?.colorBaseDark || "#d8d8d8"};
+      --color-secondary-light: ${appConfig?.colorSecondaryLight || "#000000"};
+      --color-secondary-dark: ${appConfig?.colorSecondaryDark || "#ffffff"};
+      --color-hover-light: ${appConfig?.colorHoverLight || "#243746"};
+      --color-hover-dark: ${appConfig?.colorHoverDark || "#cbd4d1"};
+      --color-not-important-light: ${appConfig?.colorNotImportantLight || "#9b8bc6"};
+      --color-not-important-dark: ${appConfig?.colorNotImportantDark || "#706297"};
+      --color-green-light: ${appConfig?.colorGreenLight || "#089703"};
+      --color-green-dark: ${appConfig?.colorGreenDark || "#0ad203"};
+      --color-red-light: ${appConfig?.colorRedLight || "#ff0a0a"};
+      --color-red-dark: ${appConfig?.colorRedDark || "#ff0a0a"};
+      --color-orange-light: ${appConfig?.colorOrangeLight || "#f4af0c"};
+      --color-orange-dark: ${appConfig?.colorOrangeDark || "#f4af0c"};
+      --color-blue-light: ${appConfig?.colorBlueLight || "#3a3dff"};
+      --color-blue-dark: ${appConfig?.colorBlueDark || "#3a3dff"};
+      --bg-base-light: ${appConfig?.bgBaseLight || "#fafafa"};
+      --bg-base-dark: ${appConfig?.bgBaseDark || "#0F0F0F"};
+      --bg-secondary-light: ${appConfig?.bgSecondaryLight || "#f0f0f0"};
+      --bg-secondary-dark: ${appConfig?.bgSecondaryDark || "#181818"};
+      --bg-hover-light: ${appConfig?.bgHoverLight || "#e3e3e3"};
+      --bg-hover-dark: ${appConfig?.bgHoverDark || "#1f1f1f"};
+      --bg-dark-light: ${appConfig?.bgDarkLight || "#bbbbbb"};
+      --bg-dark-dark: ${appConfig?.bgDarkDark || "#000000"};
+      --border-color-light: ${appConfig?.borderColorLight || "#dddddd"};
+      --border-color-dark: ${appConfig?.borderColorDark || "#312d3e"};
+    }`
+  }]
 })
 </script>
 

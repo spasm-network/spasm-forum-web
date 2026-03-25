@@ -9,11 +9,24 @@
           {{ responseMessage }}
         </div>
         <div
-          class="mb-16"
+          class="mb-6"
           v-if="connectedAddress &&
            typeof(connectedAddress) === 'string' &&
            isInList(connectedAddress, appConfig?.admins)"
         >
+          <div>
+            Address:
+            <nuxt-link :to="`/authors/${connectedAddress}`"
+              class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline">
+              {{connectedAddress}}
+            </nuxt-link>
+          </div>
+          <div>
+            You're an admin on this instance.
+          </div>
+          <div class="mb-4">
+            You can change settings and save them by signing an admin event with your private key.
+          </div>
           <button
             @click="saveAppConfig()"
             class="inline px-6 lg:min-w-[200px] min-h-[40px] text-colorPrimary-light dark:text-colorPrimary-dark border-2 border-colorPrimary-light dark:border-colorPrimary-dark rounded-lg hover:bg-bgHover-light dark:hover:bg-bgHover-dark"
@@ -47,19 +60,22 @@
         </div>
         <div class="pl-0 mt-4">
           <input v-model="enableDefaultIntro" type="checkbox" >
-          Enable default intro section: title, extra, about (description)
+          Enable default intro section: title, extra, about
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            (also used for meta)
+          </span>
           <div class="ml-5">
             <div>
               Intro title
-              <input v-model="introTitle" type="text" placeholder="type intro title (e.g., Spasm)" class="custom-admin-input-socials">
+              <input v-model="introTitle" type="text" placeholder="enter intro title (e.g., Spasm)" class="custom-admin-input-socials">
             </div>
             <div>
               Intro title extra
-              <input v-model="introTitleExtra" type="text" placeholder="type intro title extra (e.g., forum)" class="custom-admin-input-socials">
+              <input v-model="introTitleExtra" type="text" placeholder="enter intro title extra (e.g., forum)" class="custom-admin-input-socials">
             </div>
             <div>
               Intro about
-              <input v-model="introAbout" type="text" placeholder="type intro about (e.g., Get latest Spasm news)" class="custom-admin-input-socials">
+              <input v-model="introAbout" type="text" placeholder="enter intro about (e.g., Unplug from slave tech!)" class="custom-admin-input-socials">
             </div>
           </div>
         </div>
@@ -87,13 +103,13 @@
             Enable default button primary
           </div>
           <div class="ml-5">Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div class="ml-5">Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter button text (e.g., Get started)" class="custom-admin-input-socials"></div>
           <div class="pl-0">
             <input v-model="enableDefaultButtonSecondary" type="checkbox" >
             Enable default button secondary
           </div>
           <div class="ml-5">Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div class="ml-5">Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+          <div class="ml-5">Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter button text (e.g., Read docs)" class="custom-admin-input-socials"></div>
         </div>
         <div class="pl-0">
           <input v-model="enableCustomIntro" type="checkbox" >
@@ -125,6 +141,150 @@
           <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleHomePage" >
           hide section
           <IconsTriangle :rotateIf="showHomePage" />
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleTheme">
+        Theme
+        <IconsTriangle :rotateIf="showTheme" />
+        </span>
+      </div>
+
+      <div v-if="showTheme" class="pl-4">
+
+        <!-- Themes -->
+        <div>
+          <!-- Dropdown toggle button -->
+          <h5 class="mt-4">Choose theme:</h5>
+          <div class="mt-1">
+            <span
+              @click="toggleThemeDropDown()"
+              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
+            >
+              <span class="text-xl font-bold text-colorPrimary-light dark:text-colorPrimary-dark">
+                {{ theme }}
+              </span>
+              <IconsTriangle :rotateIf="themeDropDownShown" />
+            </span>
+          </div>
+
+          <!-- Dropdown menu -->
+          <div
+            v-show="themeDropDownShown"
+            class="ml-0 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
+          >
+            <span v-if="themes">
+              <span v-if="themes[0]" class="">
+                <div
+                  v-for="theme in themes"
+                  class="py-1 text-xl font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
+                  @click="selectTheme(theme)"
+                >
+                  {{ theme }}
+                </div>
+              </span>
+            </span>
+          </div>
+
+          <div class="mt-2 mb-2">
+            <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
+              <IconsReset class="custom-icons" />
+              Reset theme
+            </span>
+          </div>
+        </div>
+
+
+        <div>
+          <span class="text-2xl hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleAdvancedColors">
+          Advanced colors
+          <IconsTriangle :rotateIf="showAdvancedColors" />
+          </span>
+        </div>
+
+        <div v-if="showAdvancedColors" class="pl-4">
+          <div class="mt-2 ml-5">
+            <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+              For each color you can specify values for dark and light themes
+            </div>
+            <div class="mt-2 mb-2">
+              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="setColorsToNull" >
+                <IconsReset class="custom-icons" />
+                Click to delete all custom colors
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  (don't forget to save config)
+                </span>
+              </span>
+            </div>
+            <!-- Primary Colors -->
+            <div>Primary color (light): <input v-model="colorPrimaryLight" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryLight}}</div>
+            <div>Primary color (dark): <input v-model="colorPrimaryDark" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryDark}}</div>
+
+            <!-- Base Colors -->
+            <div>Base color (light): <input v-model="colorBaseLight" type="color" class="custom-color-picker"> {{colorBaseLight}}</div>
+            <div>Base color (dark): <input v-model="colorBaseDark" type="color" class="custom-color-picker"> {{colorBaseDark}}</div>
+
+            <!-- Secondary Colors -->
+            <div>Secondary color (light): <input v-model="colorSecondaryLight" type="color" class="custom-color-picker"> {{colorSecondaryLight}}</div>
+            <div>Secondary color (dark): <input v-model="colorSecondaryDark" type="color" class="custom-color-picker"> {{colorSecondaryDark}}</div>
+
+            <!-- Hover Colors -->
+            <div>Hover color (light): <input v-model="colorHoverLight" type="color" class="custom-color-picker"> {{colorHoverLight}}</div>
+            <div>Hover color (dark): <input v-model="colorHoverDark" type="color" class="custom-color-picker"> {{colorHoverDark}}</div>
+
+            <!-- Not Important Colors -->
+            <div>Not important color (light): <input v-model="colorNotImportantLight" type="color" class="custom-color-picker"> {{colorNotImportantLight}}</div>
+            <div>Not important color (dark): <input v-model="colorNotImportantDark" type="color" class="custom-color-picker"> {{colorNotImportantDark}}</div>
+
+            <!-- Green Colors -->
+            <div>Green color (light): <input v-model="colorGreenLight" type="color" class="custom-color-picker"> {{colorGreenLight}}</div>
+            <div>Green color (dark): <input v-model="colorGreenDark" type="color" class="custom-color-picker">{{colorGreenDark}}</div>
+
+            <!-- Red Colors -->
+            <div>Red color (light): <input v-model="colorRedLight" type="color" class="custom-color-picker"> {{colorRedLight}}</div>
+            <div>Red color (dark): <input v-model="colorRedDark" type="color" class="custom-color-picker"> {{colorRedDark}}</div>
+
+            <!-- Orange Colors -->
+            <div>Orange color (light): <input v-model="colorOrangeLight" type="color" class="custom-color-picker"> {{colorOrangeLight}}</div>
+            <div>Orange color (dark): <input v-model="colorOrangeDark" type="color" class="custom-color-picker"> {{colorOrangeDark}}</div>
+
+            <!-- Blue Colors -->
+            <div>Blue color (light): <input v-model="colorBlueLight" type="color" class="custom-color-picker"> {{colorBlueLight}}</div>
+            <div>Blue color (dark): <input v-model="colorBlueDark" type="color" class="custom-color-picker"> {{colorBlueDark}}</div>
+
+            <!-- Background Colors -->
+            <div>Background Base (light): <input v-model="bgBaseLight" type="color" class="custom-color-picker"> {{bgBaseLight}}</div>
+            <div>Background Base (dark): <input v-model="bgBaseDark" type="color" class="custom-color-picker"> {{bgBaseDark}}</div>
+
+            <div>Background Secondary (light): <input v-model="bgSecondaryLight" type="color" class="custom-color-picker"> {{bgSecondaryLight}}</div>
+            <div>Background Secondary (dark): <input v-model="bgSecondaryDark" type="color" class="custom-color-picker"> {{bgSecondaryDark}}</div>
+
+            <div>Background Hover (light): <input v-model="bgHoverLight" type="color" class="custom-color-picker"> {{bgHoverLight}}</div>
+            <div>Background Hover (dark): <input v-model="bgHoverDark" type="color" class="custom-color-picker"> {{bgHoverDark}}</div>
+
+            <div>Background Dark (light): <input v-model="bgDarkLight" type="color" class="custom-color-picker"> {{bgDarkLight}}</div>
+            <div>Background Dark (dark): <input v-model="bgDarkDark" type="color" class="custom-color-picker"> {{bgDarkDark}}</div>
+
+            <!-- Border Colors -->
+            <div>Border color (light): <input v-model="borderColorLight" type="color" class="custom-color-picker"> {{borderColorLight}}</div>
+            <div>Border color (dark): <input v-model="borderColorDark" type="color" class="custom-color-picker"> {{borderColorDark}}</div>
+
+            <div class="mt-2 mb-2">
+              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
+                <IconsReset class="custom-icons" />
+                Reset colors
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="mt-2 mb-6">
+          <span class="ml-0 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleTheme" >
+          hide section
+          <IconsTriangle :rotateIf="showTheme" />
           </span>
         </div>
       </div>
@@ -243,6 +403,12 @@
       <div v-if="showFeedSettings" class="ml-5">
         <h5 class="mt-4">Feed activity filters</h5>
         <div class="ml-5">
+          <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            Hot/rising activity filter is based on reaction volume (upvote, downvote, etc.).
+          </div>
+          <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            Consider increasing thresholds if your instance has many users eligible to submit reactions.
+          </div>
           <div>The amount of reactions for "Hot" filter: <input v-model="feedFiltersActivityHot" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
           <div>The amount of reactions for "Rising" filter: <input v-model="feedFiltersActivityRising" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
         </div>
@@ -350,6 +516,28 @@
               type="checkbox"
             >
             allow "log in as guest"
+            <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+              (uses browser-generated temporary Ethereum keys)
+            </span>
+          </div>
+        </div>
+        <div class="mt-4 pl-4">
+          Enable private keys:
+          <div class="pl-4">
+            <div>
+              <input
+                v-model="enableNewEthereumActionsAll"
+                type="checkbox"
+              >
+              Ethereum
+            </div>
+            <div>
+              <input
+                v-model="enableNewNostrActionsAll"
+                type="checkbox"
+              >
+              Nostr
+            </div>
           </div>
         </div>
         <div class="mt-4 pl-4">
@@ -361,7 +549,9 @@
                 type="checkbox"
               >
               all
-              (you still need to enable all actions individually)
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (you still need to enable all actions individually)
+              </span>
             </div>
             <div>
               <input
@@ -376,7 +566,9 @@
                 type="checkbox"
               >
               reply
-              (comments)
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (comments)
+              </span>
             </div>
             <div>
               <input
@@ -384,7 +576,9 @@
                 type="checkbox"
               >
               react
-              (upvote, downvote, etc.)
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (upvote, downvote, etc.)
+              </span>
             </div>
             <div>
               <input
@@ -433,7 +627,9 @@
                 type="checkbox"
               >
               enable whitelist for new replies
-              (comments)
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (comments)
+              </span>
               ({{ count(whitelistedForActionReply) }})
               <textarea
                 v-model="whitelistedForActionReply"
@@ -447,7 +643,9 @@
                 type="checkbox"
               >
               enable whitelist for new reactions
-              (upvote, downvote, etc.)
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (upvote, downvote, etc.)
+              </span>
               ({{ count(whitelistedForActionReact) }})
               <textarea
                 v-model="whitelistedForActionReact"
@@ -508,6 +706,8 @@ const {
 } = useUtils()
 
 const showHomePage = ref<boolean>(false)
+const showTheme = ref<boolean>(false)
+const showAdvancedColors = ref<boolean>(false)
 const showSocialMediaLinks = ref<boolean>(false)
 const showSocialMediaNames = ref<boolean>(false)
 const showBlockchainLinks = ref<boolean>(false)
@@ -516,6 +716,12 @@ const showOther = ref<boolean>(false)
 const showNewContent = ref<boolean>(false)
 const toggleHomePage = () => {
   showHomePage.value = !showHomePage.value
+}
+const toggleTheme = () => {
+  showTheme.value = !showTheme.value
+}
+const toggleAdvancedColors = () => {
+  showAdvancedColors.value = !showAdvancedColors.value
 }
 const toggleSocialMediaLinks = () => {
   showSocialMediaLinks.value = !showSocialMediaLinks.value
@@ -534,6 +740,197 @@ const toggleOther = () => {
 }
 const toggleNewContent = () => {
   showNewContent.value = !showNewContent.value
+}
+
+const themes = ["Spasm", "DarkVegas", "Neon", "Greeny", "Custom"]
+const themeDropDownShown = ref(false)
+const toggleThemeDropDown = () => {
+  themeDropDownShown.value = !themeDropDownShown.value
+}
+
+const theme = ref<string>("Custom")
+
+const selectTheme = (newTheme: string): void => {
+  theme.value = newTheme
+  toggleThemeDropDown()
+  if (newTheme === "Spasm") {
+    setThemeSpasm()
+  }
+  if (newTheme === "DarkVegas") {
+    setThemeDarkVegas()
+  }
+  if (newTheme === "Neon") {
+    setThemeNeon()
+  }
+  if (newTheme === "Greeny") {
+    setThemeGreeny()
+  }
+  if (newTheme === "Custom") {
+    resetColorsToSavedTheme()
+  }
+}
+
+// Theme
+// Colors
+const resetColorsToSavedTheme = () => {
+  colorPrimaryLight.value = savedTheme.colorPrimaryLight
+  colorPrimaryDark.value = savedTheme.colorPrimaryDark
+  colorBaseLight.value = savedTheme.colorBaseLight
+  colorBaseDark.value = savedTheme.colorBaseDark
+  colorSecondaryLight.value = savedTheme.colorSecondaryLight
+  colorSecondaryDark.value = savedTheme.colorSecondaryDark
+  colorHoverLight.value = savedTheme.colorHoverLight
+  colorHoverDark.value = savedTheme.colorHoverDark
+  colorNotImportantLight.value = savedTheme.colorNotImportantLight
+  colorNotImportantDark.value = savedTheme.colorNotImportantDark
+  colorGreenLight.value = savedTheme.colorGreenLight
+  colorGreenDark.value = savedTheme.colorGreenDark
+  colorRedLight.value = savedTheme.colorRedLight
+  colorRedDark.value = savedTheme.colorRedDark
+  colorOrangeLight.value = savedTheme.colorOrangeLight
+  colorOrangeDark.value = savedTheme.colorOrangeDark
+  colorBlueLight.value = savedTheme.colorBlueLight
+  colorBlueDark.value = savedTheme.colorBlueDark
+  bgBaseLight.value = savedTheme.bgBaseLight
+  bgBaseDark.value = savedTheme.bgBaseDark
+  bgSecondaryLight.value = savedTheme.bgSecondaryLight
+  bgSecondaryDark.value = savedTheme.bgSecondaryDark
+  bgHoverLight.value = savedTheme.bgHoverLight
+  bgHoverDark.value = savedTheme.bgHoverDark
+  bgDarkLight.value = savedTheme.bgDarkLight
+  bgDarkDark.value = savedTheme.bgDarkDark
+  borderColorLight.value = savedTheme.borderColorLight
+  borderColorDark.value = savedTheme.borderColorDark
+  theme.value = "Custom"
+}
+
+const setColorsToNull = () => {
+  colorPrimaryLight.value = null
+  colorPrimaryDark.value = null
+  colorBaseLight.value = null
+  colorBaseDark.value = null
+  colorSecondaryLight.value = null
+  colorSecondaryDark.value = null
+  colorHoverLight.value = null
+  colorHoverDark.value = null
+  colorNotImportantLight.value = null
+  colorNotImportantDark.value = null
+  colorGreenLight.value = null
+  colorGreenDark.value = null
+  colorRedLight.value = null
+  colorRedDark.value = null
+  colorOrangeLight.value = null
+  colorOrangeDark.value = null
+  colorBlueLight.value = null
+  colorBlueDark.value = null
+  bgBaseLight.value = null
+  bgBaseDark.value = null
+  bgSecondaryLight.value = null
+  bgSecondaryDark.value = null
+  bgHoverLight.value = null
+  bgHoverDark.value = null
+  bgDarkLight.value = null
+  bgDarkDark.value = null
+  borderColorLight.value = null
+  borderColorDark.value = null
+}
+
+const setColorsToDefault = () => {
+  colorPrimaryLight.value = '#f420af'
+  colorPrimaryDark.value = '#f420af'
+  colorBaseLight.value = '#000000'
+  colorBaseDark.value = '#d8d8d8'
+  colorSecondaryLight.value = '#000000'
+  colorSecondaryDark.value = '#ffffff'
+  colorHoverLight.value = '#243746'
+  colorHoverDark.value = '#cbd4d1'
+  colorNotImportantLight.value = '#9b8bc6'
+  colorNotImportantDark.value = '#706297'
+  colorGreenLight.value = '#089703'
+  colorGreenDark.value = '#0ad203'
+  colorRedLight.value = '#ff0a0a'
+  colorRedDark.value = '#ff0a0a'
+  colorOrangeLight.value = '#f4af0c'
+  colorOrangeDark.value = '#f4af0c'
+  colorBlueLight.value = '#3a3dff'
+  colorBlueDark.value = '#3a3dff'
+  bgBaseLight.value = '#fafafa'
+  bgBaseDark.value = '#0F0F0F'
+  bgSecondaryLight.value = '#f0f0f0'
+  bgSecondaryDark.value = '#181818'
+  bgHoverLight.value = '#e3e3e3'
+  bgHoverDark.value = '#1f1f1f'
+  bgDarkLight.value = '#bbbbbb'
+  bgDarkDark.value = '#000000'
+  borderColorLight.value = '#dddddd'
+  borderColorDark.value = '#312d3e'
+}
+
+const setThemeSpasm = () => {
+  setColorsToDefault()
+  colorPrimaryLight.value = "#f420af"
+  colorPrimaryDark.value = "#f420af"
+}
+
+const setThemeDarkVegas = () => {
+  setColorsToDefault()
+  colorPrimaryLight.value = "#ff0000"
+  colorPrimaryDark.value = "#ff0000"
+  bgBaseDark.value = "#000000"
+  bgSecondaryDark.value = "#000000"
+}
+
+
+const setThemeNeon = () => {
+  setColorsToDefault()
+  colorPrimaryLight.value = "#f420af"
+  colorPrimaryDark.value = "#f420af"
+  colorBaseDark.value = "#f5c211"
+  colorNotImportantDark.value = "#1a5fb4"
+  bgBaseDark.value = "#000000"
+  bgSecondaryDark.value = "#000000"
+}
+
+const setThemeGreeny = () => {
+  setColorsToDefault()
+  colorPrimaryLight.value = "#e5c46b"
+  colorPrimaryDark.value = "#e5c46b"
+  colorNotImportantLight.value = "#4fb848"
+  colorNotImportantDark.value = "#4fb848"
+  bgBaseDark.value = "#181818"
+  bgSecondaryDark.value = "#1e1e1e"
+}
+
+const applyTheme = () => {
+  const root = document.documentElement;
+  root.style.setProperty('--color-primary-light', colorPrimaryLight.value || '#f420af')
+  root.style.setProperty('--color-primary-dark', colorPrimaryDark.value || '#f420af')
+  root.style.setProperty('--color-base-light', colorBaseLight.value || '#000000')
+  root.style.setProperty('--color-base-dark', colorBaseDark.value || '#d8d8d8')
+  root.style.setProperty('--color-secondary-light', colorSecondaryLight.value || '#000000')
+  root.style.setProperty('--color-secondary-dark', colorSecondaryDark.value || '#ffffff')
+  root.style.setProperty('--color-hover-light', colorHoverLight.value || '#243746')
+  root.style.setProperty('--color-hover-dark', colorHoverDark.value || '#cbd4d1')
+  root.style.setProperty('--color-not-important-light', colorNotImportantLight.value || '#9b8bc6')
+  root.style.setProperty('--color-not-important-dark', colorNotImportantDark.value || '#706297')
+  root.style.setProperty('--color-green-light', colorGreenLight.value || '#089703')
+  root.style.setProperty('--color-green-dark', colorGreenDark.value || '#0ad203')
+  root.style.setProperty('--color-red-light', colorRedLight.value || '#ff0a0a')
+  root.style.setProperty('--color-red-dark', colorRedDark.value || '#ff0a0a')
+  root.style.setProperty('--color-orange-light', colorOrangeLight.value || '#f4af0c')
+  root.style.setProperty('--color-orange-dark', colorOrangeDark.value || '#f4af0c')
+  root.style.setProperty('--color-blue-light', colorBlueLight.value || '#3a3dff')
+  root.style.setProperty('--color-blue-dark', colorBlueDark.value || '#3a3dff')
+  root.style.setProperty('--bg-base-light', bgBaseLight.value || '#fafafa')
+  root.style.setProperty('--bg-base-dark', bgBaseDark.value || '#0F0F0F')
+  root.style.setProperty('--bg-secondary-light', bgSecondaryLight.value || '#f0f0f0')
+  root.style.setProperty('--bg-secondary-dark', bgSecondaryDark.value || '#181818')
+  root.style.setProperty('--bg-hover-light', bgHoverLight.value || '#e3e3e3')
+  root.style.setProperty('--bg-hover-dark', bgHoverDark.value || '#1f1f1f')
+  root.style.setProperty('--bg-dark-light', bgDarkLight.value || '#bbbbbb')
+  root.style.setProperty('--bg-dark-dark', bgDarkDark.value || '#000000')
+  root.style.setProperty('--border-color-light', borderColorLight.value || '#ddd')
+  root.style.setProperty('--border-color-dark', borderColorDark.value || '#312d3e')
 }
 
 const count = (list: any): number => {
@@ -584,6 +981,10 @@ const ifAllowGuestLogin =
   ref<boolean>(appConfig?.ifAllowGuestLogin)
 const enableNewWeb3ActionsAll =
   ref<boolean>(appConfig?.enableNewWeb3ActionsAll)
+const enableNewEthereumActionsAll =
+  ref<boolean>(appConfig?.enableNewEthereumActionsAll)
+const enableNewNostrActionsAll =
+  ref<boolean>(appConfig?.enableNewNostrActionsAll)
 const enableNewWeb3ActionsPost =
   ref<boolean>(appConfig?.enableNewWeb3ActionsPost)
 const enableNewWeb3ActionsReply =
@@ -637,6 +1038,65 @@ const defaultButtonSecondaryText =
   ref<string>(appConfig?.defaultButtonSecondaryText)
 const defaultButtonSecondaryLink =
   ref<string>(appConfig?.defaultButtonSecondaryLink)
+// Colors
+const colorPrimaryLight = ref<string>(appConfig?.colorPrimaryLight)
+const colorPrimaryDark = ref<string>(appConfig?.colorPrimaryDark)
+const colorBaseLight = ref<string>(appConfig?.colorBaseLight)
+const colorBaseDark = ref<string>(appConfig?.colorBaseDark)
+const colorSecondaryLight = ref<string>(appConfig?.colorSecondaryLight)
+const colorSecondaryDark = ref<string>(appConfig?.colorSecondaryDark)
+const colorHoverLight = ref<string>(appConfig?.colorHoverLight)
+const colorHoverDark = ref<string>(appConfig?.colorHoverDark)
+const colorNotImportantLight = ref<string>(appConfig?.colorNotImportantLight)
+const colorNotImportantDark = ref<string>(appConfig?.colorNotImportantDark)
+const colorGreenLight = ref<string>(appConfig?.colorGreenLight)
+const colorGreenDark = ref<string>(appConfig?.colorGreenDark)
+const colorRedLight = ref<string>(appConfig?.colorRedLight)
+const colorRedDark = ref<string>(appConfig?.colorRedDark)
+const colorOrangeLight = ref<string>(appConfig?.colorOrangeLight)
+const colorOrangeDark = ref<string>(appConfig?.colorOrangeDark)
+const colorBlueLight = ref<string>(appConfig?.colorBlueLight)
+const colorBlueDark = ref<string>(appConfig?.colorBlueDark)
+const bgBaseLight = ref<string>(appConfig?.bgBaseLight)
+const bgBaseDark = ref<string>(appConfig?.bgBaseDark)
+const bgSecondaryLight = ref<string>(appConfig?.bgSecondaryLight)
+const bgSecondaryDark = ref<string>(appConfig?.bgSecondaryDark)
+const bgHoverLight = ref<string>(appConfig?.bgHoverLight)
+const bgHoverDark = ref<string>(appConfig?.bgHoverDark)
+const bgDarkLight = ref<string>(appConfig?.bgDarkLight)
+const bgDarkDark = ref<string>(appConfig?.bgDarkDark)
+const borderColorLight = ref<string>(appConfig?.borderColorLight)
+const borderColorDark = ref<string>(appConfig?.borderColorDark)
+const savedTheme = {
+  colorPrimaryLight: appConfig?.colorPrimaryLight,
+  colorPrimaryDark: appConfig?.colorPrimaryDark,
+  colorBaseLight: appConfig?.colorBaseLight,
+  colorBaseDark: appConfig?.colorBaseDark,
+  colorSecondaryLight: appConfig?.colorSecondaryLight,
+  colorSecondaryDark: appConfig?.colorSecondaryDark,
+  colorHoverLight: appConfig?.colorHoverLight,
+  colorHoverDark: appConfig?.colorHoverDark,
+  colorNotImportantLight: appConfig?.colorNotImportantLight,
+  colorNotImportantDark: appConfig?.colorNotImportantDark,
+  colorGreenLight: appConfig?.colorGreenLight,
+  colorGreenDark: appConfig?.colorGreenDark,
+  colorRedLight: appConfig?.colorRedLight,
+  colorRedDark: appConfig?.colorRedDark,
+  colorOrangeLight: appConfig?.colorOrangeLight,
+  colorOrangeDark: appConfig?.colorOrangeDark,
+  colorBlueLight: appConfig?.colorBlueLight,
+  colorBlueDark: appConfig?.colorBlueDark,
+  bgBaseLight: appConfig?.bgBaseLight,
+  bgBaseDark: appConfig?.bgBaseDark,
+  bgSecondaryLight: appConfig?.bgSecondaryLight,
+  bgSecondaryDark: appConfig?.bgSecondaryDark,
+  bgHoverLight: appConfig?.bgHoverLight,
+  bgHoverDark: appConfig?.bgHoverDark,
+  bgDarkLight: appConfig?.bgDarkLight,
+  bgDarkDark: appConfig?.bgDarkDark,
+  borderColorLight: appConfig?.borderColorLight,
+  borderColorDark: appConfig?.borderColorDark
+}
 // Strings-socials
 const anotherWebsiteLink = ref<string>(appConfig?.anotherWebsiteLink)
 const ipfsLink = ref<string>(appConfig?.ipfsLink)
@@ -699,6 +1159,27 @@ const feedFiltersActivityRising = ref<number>(appConfig?.feedFiltersActivityRisi
 const isResponseError = ref<boolean>(false)
 const responseMessage = ref<boolean>('')
 
+watch(
+  () => [
+    colorPrimaryDark.value, colorPrimaryLight.value,
+    colorBaseDark.value, colorBaseLight.value,
+    colorSecondaryDark.value, colorSecondaryLight.value,
+    colorHoverDark.value, colorHoverLight.value,
+    colorNotImportantDark.value, colorNotImportantLight.value,
+    colorGreenDark.value, colorGreenLight.value,
+    colorRedDark.value, colorRedLight.value,
+    colorOrangeDark.value, colorOrangeLight.value,
+    colorBlueDark.value, colorBlueLight.value,
+    bgBaseDark.value, bgBaseLight.value,
+    bgSecondaryDark.value, bgSecondaryLight.value,
+    bgHoverDark.value, bgHoverLight.value,
+    bgDarkDark.value, bgDarkLight.value,
+    borderColorDark.value, borderColorLight.value
+  ], async () => {
+    applyTheme()
+  }
+)
+
 const saveAppConfig = async () => {
   try {
     isResponseError.value = false
@@ -740,6 +1221,10 @@ const saveAppConfig = async () => {
       ifAllowGuestLogin.value
     newAppConfig.enableNewWeb3ActionsAll =
       enableNewWeb3ActionsAll.value
+    newAppConfig.enableNewEthereumActionsAll =
+      enableNewEthereumActionsAll.value
+    newAppConfig.enableNewNostrActionsAll =
+      enableNewNostrActionsAll.value
     newAppConfig.enableNewWeb3ActionsPost =
       enableNewWeb3ActionsPost.value
     newAppConfig.enableNewWeb3ActionsReply =
@@ -831,6 +1316,91 @@ const saveAppConfig = async () => {
     }
     if (typeof(defaultButtonSecondaryLink.value) === "string") {
       newAppConfig.defaultButtonSecondaryLink = defaultButtonSecondaryLink.value
+    }
+    // Colors
+    if (typeof(colorPrimaryDark.value) === "string") {
+      newAppConfig.colorPrimaryDark = colorPrimaryDark.value
+    }
+    if (typeof(colorPrimaryLight.value) === "string") {
+      newAppConfig.colorPrimaryLight = colorPrimaryLight.value
+    }
+    if (typeof(colorBaseDark.value) === "string") {
+      newAppConfig.colorBaseDark = colorBaseDark.value
+    }
+    if (typeof(colorBaseLight.value) === "string") {
+      newAppConfig.colorBaseLight = colorBaseLight.value
+    }
+    if (typeof(colorSecondaryDark.value) === "string") {
+      newAppConfig.colorSecondaryDark = colorSecondaryDark.value
+    }
+    if (typeof(colorSecondaryLight.value) === "string") {
+      newAppConfig.colorSecondaryLight = colorSecondaryLight.value
+    }
+    if (typeof(colorHoverDark.value) === "string") {
+      newAppConfig.colorHoverDark = colorHoverDark.value
+    }
+    if (typeof(colorHoverLight.value) === "string") {
+      newAppConfig.colorHoverLight = colorHoverLight.value
+    }
+    if (typeof(colorNotImportantDark.value) === "string") {
+      newAppConfig.colorNotImportantDark = colorNotImportantDark.value
+    }
+    if (typeof(colorNotImportantLight.value) === "string") {
+      newAppConfig.colorNotImportantLight = colorNotImportantLight.value
+    }
+    if (typeof(colorGreenDark.value) === "string") {
+      newAppConfig.colorGreenDark = colorGreenDark.value
+    }
+    if (typeof(colorGreenLight.value) === "string") {
+      newAppConfig.colorGreenLight = colorGreenLight.value
+    }
+    if (typeof(colorRedDark.value) === "string") {
+      newAppConfig.colorRedDark = colorRedDark.value
+    }
+    if (typeof(colorRedLight.value) === "string") {
+      newAppConfig.colorRedLight = colorRedLight.value
+    }
+    if (typeof(colorOrangeDark.value) === "string") {
+      newAppConfig.colorOrangeDark = colorOrangeDark.value
+    }
+    if (typeof(colorOrangeLight.value) === "string") {
+      newAppConfig.colorOrangeLight = colorOrangeLight.value
+    }
+    if (typeof(colorBlueDark.value) === "string") {
+      newAppConfig.colorBlueDark = colorBlueDark.value
+    }
+    if (typeof(colorBlueLight.value) === "string") {
+      newAppConfig.colorBlueLight = colorBlueLight.value
+    }
+    if (typeof(bgBaseDark.value) === "string") {
+      newAppConfig.bgBaseDark = bgBaseDark.value
+    }
+    if (typeof(bgBaseLight.value) === "string") {
+      newAppConfig.bgBaseLight = bgBaseLight.value
+    }
+    if (typeof(bgSecondaryDark.value) === "string") {
+      newAppConfig.bgSecondaryDark = bgSecondaryDark.value
+    }
+    if (typeof(bgSecondaryLight.value) === "string") {
+      newAppConfig.bgSecondaryLight = bgSecondaryLight.value
+    }
+    if (typeof(bgHoverDark.value) === "string") {
+      newAppConfig.bgHoverDark = bgHoverDark.value
+    }
+    if (typeof(bgHoverLight.value) === "string") {
+      newAppConfig.bgHoverLight = bgHoverLight.value
+    }
+    if (typeof(bgDarkDark.value) === "string") {
+      newAppConfig.bgDarkDark = bgDarkDark.value
+    }
+    if (typeof(bgDarkLight.value) === "string") {
+      newAppConfig.bgDarkLight = bgDarkLight.value
+    }
+    if (typeof(borderColorDark.value) === "string") {
+      newAppConfig.borderColorDark = borderColorDark.value
+    }
+    if (typeof(borderColorLight.value) === "string") {
+      newAppConfig.borderColorLight = borderColorLight.value
     }
     // Strings-socials
     if (typeof(anotherWebsiteLink.value) === "string") {

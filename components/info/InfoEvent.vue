@@ -141,6 +141,7 @@
 
 <script setup lang="ts">
 import { spasm } from 'spasm.js'
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
 import {useEventsStore} from '@/stores/useEventsStore'
 import {
   useNotificationStore
@@ -149,12 +150,13 @@ import {
   SpasmEventV2,
   SubmitEventV2Return
 } from '@/helpers/interfaces';
+const appConfig = useAppConfigStore()?.getAppConfig
 const eventsStore = useEventsStore()
 const notificationStore = useNotificationStore()
-// New web3 actions are enabled by default if not disabled in .env
-const env = useRuntimeConfig()?.public
-const enableNewWeb3ActionsAll: boolean = env?.enableNewWeb3ActionsAll === 'false'? false : true
-const enableNewWeb3ActionsReply: boolean = env?.enableNewWeb3ActionsReply === 'false'? false : true
+const enableNewWeb3ActionsAll: boolean =
+  appConfig?.enableNewWeb3ActionsAll
+const enableNewWeb3ActionsReply: boolean =
+  appConfig?.enableNewWeb3ActionsReply
 const params = useRoute().params
 const query = useRoute().query
 const {
@@ -330,18 +332,12 @@ onMounted(async () => {
 })
 
 // Meta
-const {
-  defaultMetaAppName,
-  defaultMetaTitle,
-  defaultMetaDescription
-} = useRuntimeConfig()?.public
-
 let title = eventsStore.getPost?.title
 let description = eventsStore.getPost?.content
 
 // Page Title - App Title
 if (title && typeof (title) === 'string') {
-  title = title.slice(0, 100) + ' - ' + defaultMetaAppName
+  title = title.slice(0, 100) + ' - ' + appConfig?.introTitle
 }
 
 if (description && typeof (description) === 'string') {
@@ -352,8 +348,8 @@ if (description && typeof (description) === 'string') {
 }
 
 // If no values, assign default values from nuxt.config.ts
-title = title || defaultMetaTitle
-description = description || defaultMetaDescription
+title = title || appConfig?.introTitle
+description = description || appConfig?.introAbout
 
 useHead({
   title: title || 'Feed',

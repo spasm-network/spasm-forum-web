@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-// Features are enabled by default if not explicitly disabled in .env
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
 const appConfig = useAppConfigStore()?.getAppConfig
 const ifShowDevelopersInfo = appConfig?.ifShowDevelopersInfo

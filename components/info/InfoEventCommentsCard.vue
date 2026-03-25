@@ -198,10 +198,12 @@ import {
   SpasmEventChildV2
 } from '@/helpers/interfaces'
 import { spasm } from 'spasm.js'
-
+import {useAppConfigStore} from '@/stores/useAppConfigStore'
 // Nostr usernames
 import { storeToRefs } from 'pinia'
 import {useProfilesStore} from '@/stores/useProfilesStore'
+
+const appConfig = useAppConfigStore()?.getAppConfig
 const profilesStore = useProfilesStore()
 const { getMetadataByAddressNostr } = storeToRefs(profilesStore)
 
@@ -222,11 +224,14 @@ const {
 const env = useRuntimeConfig()?.public
 const enableMarkdownInComments = env?.enableMarkdownInComments === 'true'? true : false
 const enableEmbedIframeTagsInComments = env?.enableEmbedIframeTagsInComments === 'true'? true : false
-// New web3 actions are enabled by default if not disabled in .env
-const enableNewWeb3ActionsAll: boolean = env?.enableNewWeb3ActionsAll === 'false'? false : true
-const enableNewWeb3ActionsReply: boolean = env?.enableNewWeb3ActionsReply === 'false'? false : true
-// Short URLs for web3 actions are enabled by default if not disabled in .env
-const {checkIfSignerAllowedIframe, getArrayOfArraysOfTextAndTagsV2} = useHtmlTags()
+const enableNewWeb3ActionsAll: boolean =
+  appConfig?.enableNewWeb3ActionsAll
+const enableNewWeb3ActionsReply: boolean =
+  appConfig?.enableNewWeb3ActionsReply
+const {
+  checkIfSignerAllowedIframe,
+  getArrayOfArraysOfTextAndTagsV2
+} = useHtmlTags()
 
 const props = defineProps<{
   comment?: SpasmEventChildV2

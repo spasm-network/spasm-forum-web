@@ -5,67 +5,64 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Do not change this file because it will be overwritten
-        // after you update the code e.g. using 'git pull'.
-        // You can customize these colors in the '.env' file.
         colorBase: {
-          light: process.env.COLOR_BASE_LIGHT || '#000000',
-          dark: process.env.COLOR_BASE_DARK || '#d8d8d8'
+          light: 'var(--color-base-light)',
+          dark: 'var(--color-base-dark)',
         },
         colorPrimary: {
-          light: process.env.COLOR_PRIMARY_LIGHT || '#ba14bf',
-          dark: process.env.COLOR_PRIMARY_DARK || '#ba14bf'
+          light: 'var(--color-primary-light)',
+          dark: 'var(--color-primary-dark)',
         },
         colorSecondary: {
-          light: process.env.COLOR_SECONDARY_LIGHT || '#000000',
-          dark: process.env.COLOR_SECONDARY_DARK || '#ffffff'
+          light: 'var(--color-secondary-light)',
+          dark: 'var(--color-secondary-dark)',
         },
         colorHover: {
-          light: process.env.COLOR_HOVER_LIGHT || '#243746',
-          dark: process.env.COLOR_HOVER_DARK || '#cbd4d1'
+          light: 'var(--color-hover-light)',
+          dark: 'var(--color-hover-dark)',
         },
         colorNotImportant: {
-          light: process.env.COLOR_NOT_IMPORTANT_LIGHT || '#9b8bc6',
-          dark: process.env.COLOR_NOT_IMPORTANT_DARK || '#706297'
+          light: 'var(--color-not-important-light)',
+          dark: 'var(--color-not-important-dark)',
         },
         colorGreen: {
-          light: process.env.COLOR_GREEN_LIGHT || '#089703',
-          dark: process.env.COLOR_GREEN_DARK || '#0ad203'
+          light: 'var(--color-green-light)',
+          dark: 'var(--color-green-dark)',
         },
         colorRed: {
-          light: process.env.COLOR_RED_LIGHT || '#ff0a0a',
-          dark: process.env.COLOR_RED_DARK || '#ff0a0a'
+          light: 'var(--color-red-light)',
+          dark: 'var(--color-red-dark)',
         },
         colorOrange: {
-          light: process.env.COLOR_ORANGE_LIGHT || '#f4af0c',
-          dark: process.env.COLOR_ORANGE_DARK || '#f4af0c'
+          light: 'var(--color-orange-light)',
+          dark: 'var(--color-orange-dark)',
         },
         colorBlue: {
-          light: process.env.COLOR_BLUE_LIGHT || '#3a3dff',
-          dark: process.env.COLOR_BLUE_DARK || '#3a3dff'
+          light: 'var(--color-blue-light)',
+          dark: 'var(--color-blue-dark)',
         },
         bgBase: {
-          light: process.env.BG_BASE_LIGHT || '#fafafa',
-          dark: process.env.BG_BASE_DARK || '#0F0F0F'
+          light: 'var(--bg-base-light)',
+          dark: 'var(--bg-base-dark)',
         },
         bgSecondary: {
-          light: process.env.BG_SECONDARY_LIGHT || '#f0f0f0',
-          dark: process.env.BG_SECONDARY_DARK || '#181818'
+          light: 'var(--bg-secondary-light)',
+          dark: 'var(--bg-secondary-dark)',
         },
         bgHover: {
-          light: process.env.BG_HOVER_LIGHT || '#e3e3e3',
-          dark: process.env.BG_HOVER_DARK || '#1f1f1f'
+          light: 'var(--bg-hover-light)',
+          dark: 'var(--bg-hover-dark)',
         },
         bgDark: {
-          light: process.env.BG_DARK_LIGHT || '#bbbbbb',
-          dark: process.env.BG_DARK_DARK || '#000000'
+          light: 'var(--bg-dark-light)',
+          dark: 'var(--bg-dark-dark)',
         },
         borderColor: {
-          light: process.env.BORDER_COLOR_LIGHT || '#ddd',
-          dark: process.env.BORDER_COLOR_DARK || '#312d3e'
-        },
+          light: 'var(--border-color-light)',
+          dark: 'var(--border-color-dark)',
+        }
       }
-    },
+    }
   },
   plugins: [],
 }
