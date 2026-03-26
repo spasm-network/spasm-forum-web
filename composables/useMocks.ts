@@ -725,7 +725,6 @@ export const useMocks = () => {
 
   const getMockPosts = (): Post[] => {
     let mockPosts: Post[] = []
-      // const {apiURL} = useRuntimeConfig()?.public
     mockPosts = mockPosts.concat(getDmpPosts())
     mockPosts = mockPosts.concat(getRssPosts())
     mockPosts = mockPosts.concat(getNostrPosts())
@@ -734,7 +733,6 @@ export const useMocks = () => {
 
   const getMockEvents = (): SpasmEventV2[] => {
     let mockEvents: SpasmEventV2[] = []
-      // const {apiURL} = useRuntimeConfig()?.public
     mockEvents = mockEvents.concat(getSpasmEvents())
     // mockEvents = mockEvents.concat(getRssPosts())
     // mockEvents = mockEvents.concat(getNostrPosts())

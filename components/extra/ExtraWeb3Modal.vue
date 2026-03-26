@@ -8,7 +8,7 @@
       </div>
       -->
 
-      <div v-if="ifAllowGuestLogin">
+      <div v-if="ifAllowGuestLogin && enableNewEthereumActionsAll">
         <div class="mt-5 mx-10 text-sm text-colorNotImportant-light dark:text-colorNotImportant-dark">
           Temporary:
         </div>

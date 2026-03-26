@@ -1,6 +1,6 @@
 <template>
   <div v-if="imageUrl" class="mb-4">
-    <img :src="imageUrl" alt="Header Image" />
+    <img :src="imageUrl" />
   </div>
 </template>
 

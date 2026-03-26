@@ -9,7 +9,8 @@ import {
 import {useEventsStore} from './useEventsStore'
 const {
   splitIntoArray,
-  parseEnvBool
+  parseEnvBool,
+  // logExecution
 } = useUtils()
 
 interface AppConfigState extends AppConfig {}
@@ -180,6 +181,36 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     feedFiltersActivityRising: Number(useRuntimeConfig()?.public?.feedFiltersActivityRising) || 3,
   }),
   getters: {
+    getApiUrlFetch(): string {
+      // Client-side: use this.apiUrl
+      if (process.client) {
+        return this.apiUrl
+      }
+      
+      /**
+       * apiUrlDockerSsr is used for SSR requests inside Docker
+       * containers to reach backend via internal DNS because
+       * localhost refers to a frontend container itself,
+       * not the host.
+       * For example, use "http://spasm-backend:5000"
+       * instead of external domain.
+       */
+      // Server-side: check for Docker internal URL
+      if (process.server) {
+        const config = useRuntimeConfig()
+        if (
+          config?.apiUrlDockerSsr &&
+          typeof(config.apiUrlDockerSsr) === 'string'
+        ) {
+          return config.apiUrlDockerSsr
+        }
+      }
+      
+      // If apiUrlDockerSsr is not set, then the app is probably
+      // not running in a container, so fallback to apiUrl.
+      return this.apiUrl
+    },
+
     getAppConfig(): AppConfig {
       const appConfig = {
         // Strings
@@ -387,12 +418,17 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     async fetchAndUpdateAppConfig(
     ): Promise<void> {
       try {
-        if (!this.apiUrl) { return }
-        const path = this.apiUrl + '/api/app-config'
+        const apiUrl = this.getApiUrlFetch
+        if (!apiUrl) { return }
+
+        const path = apiUrl + '/api/app-config'
+
         const appConfig = await $fetch(path)
         if (!appConfig) { return }
         if (typeof(appConfig) !== "object") { return }
+
         this.updateAppConfig(appConfig)
+
         // Change states (load app config) in other stores:
         // Currently, calling the update function only on the
         // client-side, because calling it during the server-side

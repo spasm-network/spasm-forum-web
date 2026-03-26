@@ -1,9 +1,7 @@
 import {ref, readonly} from "vue";
 import {ethers, JsonRpcApiProvider, JsonRpcSigner} from "ethers";
 import {
-  Web3Message,
   Web3MessageAction,
-  NostrEvent,
   SpasmEventBodyV2,
   SpasmEventIdV2,
   SpasmEventBodySignedClosedV2,
@@ -20,9 +18,7 @@ import {
 } from "./../helpers/interfaces";
 import { bech32 } from 'bech32'
 import {
-  // validateEvent,
   verifySignature,
-  // getSignature,
   getEventHash
 } from 'nostr-tools'
 // import detectEthereumProvider from '@metamask/detect-provider'
@@ -262,11 +258,6 @@ export const useWeb3 = () => {
     // if (connectedKeyType.value === "nostr") {
     //   connectedAddress.value = null
     // }
-  }
-
-  interface SubmitActionReturn {
-    res: string | boolean | null | undefined,
-    signature: string | undefined
   }
 
   const assembleSpasmEventBodyV2 = (
@@ -647,13 +638,16 @@ export const useWeb3 = () => {
       ) {
         finalApiUrl = customApiUrl
       } else {
-        const config = useRuntimeConfig()?.public
+        // Using getApiUrlFetch instead of apiUrl in case
+        // if events will be submitted via SSR docker.
+        const getApiUrlFetch =
+          useAppConfigStore()?.getApiUrlFetch
         if (
-          !config || !config.apiURL ||
-          typeof(config.apiURL) !== "string" ||
-          !isValidUrl(config.apiURL)
+          !getApiUrlFetch ||
+          typeof(getApiUrlFetch) !== "string" ||
+          !isValidUrl(getApiUrlFetch)
         ) { throw new Error('API URL is not configured.'); }
-        finalApiUrl = config.apiURL
+        finalApiUrl = getApiUrlFetch
       }
 
       const envelope: SpasmEventEnvelopeV2 | null =
@@ -816,125 +810,6 @@ export const useWeb3 = () => {
     }
   }
 
-  const submitAction = async (
-    action?: Web3MessageAction,
-    text?: string,
-    target?: string,
-    title?: string
-  ): Promise<SubmitActionReturn | false> => {
-    // Only try to connect an Ethereum extension.
-    // If web3 (Ethereum) is not detected, then the web3
-    // modal with different connect options will be shown.
-    // if (!signer) { await connectWeb3Authenticator() }
-    if (!connectedAddress.value) { await connectWeb3Authenticator() }
-
-    if (action && typeof(action) === "string") {
-      action = DOMPurify.sanitize(action) as Web3MessageAction
-    }
-    
-    if (text && typeof(text) === "string") {
-      text = DOMPurify.sanitize(text)
-    }
-
-    if (target && typeof(target) === "string") {
-      target = DOMPurify.sanitize(target)
-    }
-
-    if (title && typeof(title) === "string") {
-      title = DOMPurify.sanitize(title)
-    }
-
-    if (connectedKeyType.value === 'ethereum') {
-      return submitEthereumAction(action, text, target, title)
-    } else if (connectedKeyType.value === 'nostr') {
-      return submitNostrAction(action, text, target, title)
-    } else {
-      return false
-    }
-  }
-
-  const submitEthereumAction = async (action?: Web3MessageAction, text?: string, target?: string, title?: string): Promise<SubmitActionReturn | false> => {
-    try {
-      // assemble JSON object for signing
-      const web3MessageJson: Web3Message = assembleActionIntoJSON(action, text, target, title)
-      // console.log("web3Message:", web3MessageJson)
-
-      const stringToSign: string = JSON.stringify(web3MessageJson)
-      // console.log("stringToSign:", stringToSign)
-
-      // sign the message
-      const signature: string | null = await signString(stringToSign)
-
-      if (!signature) return false
-      if (!signer?.address) return false
-      const signerAddress = signer.address.toLowerCase()
-
-      // verify the signature
-      const isSignatureValid: boolean = verifyEthereumSignature(stringToSign, signature, signer?.address)
-      // console.log("isSignatureValid:", isSignatureValid)
-
-      if (!isSignatureValid) return false
-
-      // send data to backend
-      const res: string | boolean | null | undefined = await submitSignature(stringToSign, signature, signerAddress)
-
-      // signature is returned so a user can be redirected
-      // to a newly created post or a comment/reply
-      return { res, signature}
-
-    } catch (err) {
-      console.error('submitAction failed:', err)
-      return false
-    }
-  }
-
-  const submitNostrAction = async (action?: Web3MessageAction, text?: string, target?: string, title?: string): Promise<SubmitActionReturn | false> => {
-    if (!action) return false
-    if (!text) return false
-    if (!connectedAddress.value) return false
-
-    try {
-      // assemble JSON object for signing
-      const nostrEventJson: NostrEvent = await assembleActionIntoNostrJson(action, text, target, title)
-
-      // add ID to Nostr event
-      nostrEventJson.id = getEventHash(nostrEventJson)
-
-      // sign the message
-      // const signature: string | undefined = await signString(stringToSign)
-      // TODO: "nostr-tools: `signEvent` is deprecated and will
-      // be removed or changed in the future.
-      // Please use `getSignature` instead."
-      // However, two options below don't work.
-      // const signedNostrEvent: NostrEvent = await window.nostr.getSignature(nostrEventJson)
-      // const signedNostrEvent: NostrEvent = await getSignature(nostrEventJson)
-      const signedNostrEvent: NostrEvent = await window.nostr.signEvent(nostrEventJson)
-
-      const signature = signedNostrEvent.sig
-
-      if (!signature) return false
-      // if (!signer?.address) return false
-      // const signerAddress = signer.address.toLowerCase()
-
-      // verify the signature
-      const isSignatureValid: boolean = verifySignature(signedNostrEvent)
-
-      if (!isSignatureValid) return false
-
-      // send data to backend
-      // const res: string | boolean | null | undefined = await submitSignature(stringToSign, signature, signerAddress)
-      const res: string | boolean | null | undefined = await submitNostrSignature(signedNostrEvent)
-
-      // signature is returned so a user can be redirected
-      // to a newly created post or a comment/reply
-      return { res, signature}
-
-    } catch (err) {
-      console.error('submitAction failed:', err)
-      return false
-    }
-  }
-
   const signString = async (stringToSign: string): Promise<string | null> => {
     // TODO: delete signer, because use connectWeb3Authenticator
     if (!signer) { signer = await provider?.getSigner() }
@@ -971,105 +846,6 @@ export const useWeb3 = () => {
     return false
   }
 
-  const assembleActionIntoJSON = (action?: Web3MessageAction, text?: string, target?: string, title?: string): Web3Message => {
-    // Change uppercase reactions such as 'Bullish' to 'bullish'
-    if (action === 'react') {
-      text = text?.toLowerCase()
-    }
-    return {
-      version: 'dmp_v0.1.0',
-      time: new Date(Date.now()).toISOString(),
-      action,
-      target,
-      title,
-      text,
-      // license: 'MIT'
-      license: 'SPDX-License-Identifier: CC0-1.0'
-    }
-  }
-
-  const assembleActionIntoNostrJson = async (action: Web3MessageAction, text: string, target?: string, title?: string): Promise<NostrEvent> => {
-    // Change uppercase reactions such as 'Bullish' to 'bullish'
-    if (action === 'react') {
-      text = text?.toLowerCase()
-    }
-
-    const nostrPublicKey: string = await window.nostr.getPublicKey()
-
-    const spasmVersion = "1.0.0"
-
-    // const spasmLicense = "MIT"
-    const spasmLicense = "SPDX-License-Identifier: CC0-1.0"
-
-    let nostrEvent = {
-      kind: 1,
-      created_at: Math.floor(Date.now() / 1000),
-      tags: [
-        [
-          "license", spasmLicense
-        ],
-        [
-          "spasm_version", spasmVersion
-        ],
-        // [
-        //   "spasm_target", target
-        // ],
-        [
-          "spasm_action", action
-        ],
-        // [
-        //   "spasm_title", title
-        // ],
-        // [
-        //   "spasm_category", category
-        // ],
-      ],
-      content: text,
-      // pubkey: connectedAddress.value as string
-      pubkey: nostrPublicKey
-    }
-
-    if (target) {
-      nostrEvent.tags.push(["spasm_target", target])
-    }
-
-    if (title) {
-      nostrEvent.tags.push(["spasm_title", title])
-    }
-
-    return nostrEvent
-  }
-
-  const submitSignature = async (signedString: string, signature: string, signerAddress: string): Promise<string | boolean | null | undefined> => {
-
-    try {
-      const {apiURL} = useRuntimeConfig()?.public
-
-      const path = `${apiURL}/api/submit/`
-      // console.log("path:", path)
-
-      const data = {
-        // dmpEvent: {
-        unknownEvent: {
-          signedString,
-          signature,
-          signer: signerAddress
-        }
-      }
-
-      const res: string | boolean | null | undefined = await $fetch(path, {
-        method: 'POST',
-        body: data
-      });
-
-      return res
-
-    } catch (err) {
-      console.error(err)
-      return false
-    }
-  }
-
   // Nostr
   const connectNostrExtension = async (): Promise<boolean> => {
     pendingAuthentication.value = true
@@ -1100,28 +876,6 @@ export const useWeb3 = () => {
       console.error(error)
       setConnectedAddress('','')
       return ''
-    }
-  }
-
-  const submitNostrSignature = async (nostrEvent: NostrEvent): Promise<string | boolean | null | undefined> => {
-    try {
-      const {apiURL} = useRuntimeConfig()?.public
-
-      const path = `${apiURL}/api/submit/`
-
-      const data = { unknownEvent: nostrEvent }
-      // const data = { nostrEvent }
-
-      const res: string | boolean | null | undefined = await $fetch(path, {
-        method: 'POST',
-        body: data
-      });
-
-      return res
-
-    } catch (err) {
-      console.error(err)
-      return false
     }
   }
 
@@ -1442,7 +1196,6 @@ export const useWeb3 = () => {
     // submitEventV2,
     signMessageWithEthereum,
     signSavedMessageWithNostr,
-    submitAction,
     connectNostrExtension,
     // V2
     selectNetworkSpasm,

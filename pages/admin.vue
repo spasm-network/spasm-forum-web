@@ -523,7 +523,7 @@
         </div>
         <div class="mt-4 pl-4">
           Enable private keys:
-          <div class="pl-4">
+          <div class="ml-5">
             <div>
               <input
                 v-model="enableNewEthereumActionsAll"
@@ -542,7 +542,7 @@
         </div>
         <div class="mt-4 pl-4">
           Enable new actions:
-          <div class="pl-4">
+          <div class="ml-5">
             <div>
               <input
                 v-model="enableNewWeb3ActionsAll"
@@ -691,8 +691,13 @@
 <script setup lang="ts">
 import { AppConfig } from '@/helpers/interfaces';
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
-const { isInList } = useNostr()
+import {
+  useNotificationStore
+} from '@/stores/useNotificationStore'
+
 const appConfig = useAppConfigStore()?.getAppConfig
+const notificationStore = useNotificationStore()
+const { isInList } = useNostr()
 
 // Always show the latest app config when loading the admin page
 await useAppConfigStore()?.fetchAndUpdateAppConfig()
@@ -876,8 +881,10 @@ const setThemeDarkVegas = () => {
   setColorsToDefault()
   colorPrimaryLight.value = "#ff0000"
   colorPrimaryDark.value = "#ff0000"
+  bgBaseLight.value = "#f6f5f4"
   bgBaseDark.value = "#000000"
-  bgSecondaryDark.value = "#000000"
+  bgSecondaryLight.value = "#eeeeee"
+  bgSecondaryDark.value = "#080808"
 }
 
 
@@ -885,10 +892,14 @@ const setThemeNeon = () => {
   setColorsToDefault()
   colorPrimaryLight.value = "#f420af"
   colorPrimaryDark.value = "#f420af"
+  colorBaseLight.value = "#613583"
   colorBaseDark.value = "#f5c211"
+  colorNotImportantLight.value = "#1a5fb4"
   colorNotImportantDark.value = "#1a5fb4"
+  bgBaseLight.value = "#f6f5f4"
   bgBaseDark.value = "#000000"
-  bgSecondaryDark.value = "#000000"
+  bgSecondaryLight.value = "#eeeeee"
+  bgSecondaryDark.value = "#080808"
 }
 
 const setThemeGreeny = () => {
@@ -897,8 +908,8 @@ const setThemeGreeny = () => {
   colorPrimaryDark.value = "#e5c46b"
   colorNotImportantLight.value = "#4fb848"
   colorNotImportantDark.value = "#4fb848"
-  bgBaseDark.value = "#181818"
-  bgSecondaryDark.value = "#1e1e1e"
+  bgBaseDark.value = "#161616"
+  bgSecondaryDark.value = "#1a1a1a"
 }
 
 const applyTheme = () => {
@@ -1586,6 +1597,10 @@ const saveAppConfig = async () => {
     if (!hasValue(newAppConfig)) { return }
     const text = JSON.stringify(newAppConfig)
 
+    notificationStore.showNotification(
+      "Submitting",
+      "note", 3000
+    )
     const response = await submitSingleSignedEventV2(
       'app-config-dr', text, '', ''
     )
@@ -1599,9 +1614,14 @@ const saveAppConfig = async () => {
       responseMessage.value = res
       if (res.toLowerCase().startsWith("error")) {
         isResponseError.value = true
+        notificationStore.showNotification(
+          "Something went wrong",
+          "error", 6000
+        )
         return
       } else if (res.toLowerCase().startsWith("success")) {
         await useAppConfigStore()?.fetchAndUpdateAppConfig()
+        notificationStore.showNotification('Success: config is saved', 'success', 8000)
         return
       }
     }

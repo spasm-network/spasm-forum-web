@@ -155,6 +155,13 @@ export const useEventsStore = defineStore('postsStore', {
   actions: {
     updateStateAppConfig(): string {
       try {
+        const getApiUrlFetch = useAppConfigStore()
+        if (
+          getApiUrlFetch &&
+          typeof(getApiUrlFetch) === "string"
+        ) {
+          this.apiUrl = getApiUrlFetch
+        }
         const appConfig = useAppConfigStore()?.getAppConfig
         this.enableShortUrlsForWeb3Actions =
           appConfig?.enableShortUrlsForWeb3Actions
