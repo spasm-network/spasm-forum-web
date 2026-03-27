@@ -38,30 +38,6 @@
           MetaMask
         </div>
 
-        <!-- Apparently, Coinbase Wallet is not open source, so hiding it.--> 
-        <!--
-        <div class="block mb-3 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer" @click="browserExtensionClicked">
-          <img
-            class="inline-block w-9"
-            src="@/assets/images/logos/coinbase-logo.svg"
-            alt="CoinbaseWallet logo"
-          >
-          Coinbase Wallet
-        </div>
-        --> 
-
-        <!-- Change Math wallet to 'another browser extension' --> 
-        <!--
-        <div class="block mb-3 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer" @click="browserExtensionClicked">
-          <img
-            class="inline-block w-9"
-            src="@/assets/images/logos/math-logo.png"
-            alt="MathWallet logo"
-          >
-          Math Wallet
-        </div>
-        --> 
-
         <div class="block mb-2 hover:bg-bgHover-light dark:hover:bg-bgHover-dark cursor-pointer" @click="browserExtensionClicked">
           <img
             class="inline-block h-11"
