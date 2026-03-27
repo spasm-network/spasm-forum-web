@@ -1507,6 +1507,8 @@ export interface AppConfig {
   shortUrlsLengthOfWeb3Ids?: number
   // Strings
   // String-default-intro
+  faviconTheme?: string
+  faviconLink?: string
   defaultHeaderImageLink?: string
   introTitle?: string
   introTitleExtra?: string
@@ -1603,6 +1605,8 @@ export interface AppConfig {
 
 export type AppConfigKeyString =
   | "apiUrl"
+  | "faviconTheme"
+  | "faviconLink"
   | "defaultHeaderImageLink"
   | "introTitle"
   | "introTitleExtra"

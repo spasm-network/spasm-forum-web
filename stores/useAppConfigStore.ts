@@ -30,6 +30,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     // Set in frontend .env file:
     // Strings
     // Strings-default-intro
+    faviconTheme: useRuntimeConfig()?.public?.faviconTheme,
+    faviconLink: useRuntimeConfig()?.public?.faviconLink,
     defaultHeaderImageLink: useRuntimeConfig()?.public?.defaultHeaderImageLink,
     introTitle: useRuntimeConfig()?.public?.introTitle || "Spasm",
     introTitleExtra: useRuntimeConfig()?.public?.introTitleExtra || "forum",
@@ -313,6 +315,10 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.feedFiltersActivityRising,
         // Strings
         // Strings-default-intro
+        faviconTheme:
+          this.faviconTheme,
+        faviconLink:
+          this.faviconLink,
         defaultHeaderImageLink:
           this.defaultHeaderImageLink,
         introTitle: this.introTitle,
@@ -525,6 +531,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         }
       }
       // Strings-default-intro
+      updateString("faviconTheme")
+      updateString("faviconLink")
       updateString("defaultHeaderImageLink")
       updateString("introTitle")
       updateString("introTitleExtra")

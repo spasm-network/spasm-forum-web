@@ -36,17 +36,31 @@
 
 <script setup lang="ts">
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
+import faviconSpasm from "@/assets/favicons/spasm.ico"
+import faviconMonero from "@/assets/favicons/monero.ico"
+import faviconZcash from "@/assets/favicons/zcash.ico"
+import faviconEthereum from "@/assets/favicons/ethereum.ico"
+import faviconBitcoin from "@/assets/favicons/bitcoin.ico"
+import faviconSolana from "@/assets/favicons/solana.ico"
+import faviconCampfire from "@/assets/favicons/campfire.ico"
+import faviconChat from "@/assets/favicons/chat.ico"
+import faviconCube from "@/assets/favicons/cube.ico"
+import faviconResearch from "@/assets/favicons/research.ico"
+import faviconRocket from "@/assets/favicons/rocket.ico"
+import faviconRoger from "@/assets/favicons/roger.ico"
+
 const {isFeedShown} = useFeed()
 const {
   isWeb3ModalShown, isQrCodeModalShown,
   setConnectedAddress, isFollowModalShown
 } = useWeb3()
+const {
+  logExecution
+} = useUtils()
 
 // Always use the latest app config from database
 await useAppConfigStore()?.fetchAndUpdateAppConfig()
 const appConfig = useAppConfigStore()?.getAppConfig
-const introTitle = appConfig?.introTitle
-const introAbout = appConfig?.introAbout
 
 // componentKey is added as an extra safeguard against
 // hydration mismatches. The idea is that an element
@@ -91,10 +105,58 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-  /* console.log("onUnmounted") */
-  /* if (isMetamaskInstalled.value) setListeners(false) */
   setListeners(false)
 })
+
+let faviconPath =
+  useRuntimeConfig()?.public?.faviconPath || '/favicon.ico'
+
+type FaviconKey =
+  | "spasm" | "monero" | "zcash" | "ethereum" | "bitcoin" | "solana"
+  | "custom-link" | "default"
+  | "campfire" | "chat" | "cube" | "research" | "rocket" | "roger"
+
+const faviconMap: Record<Exclude<FaviconKey, "custom-link">, string> = {
+  default: "/favicon.ico",
+  spasm: faviconSpasm,
+  monero: faviconMonero,
+  zcash: faviconZcash,
+  ethereum: faviconEthereum,
+  bitcoin: faviconBitcoin,
+  solana: faviconSolana,
+  campfire: faviconCampfire,
+  chat: faviconChat,
+  cube: faviconCube,
+  research: faviconResearch,
+  rocket: faviconRocket,
+  roger: faviconRoger
+}
+
+function isFaviconKey(v: unknown): v is FaviconKey {
+  return typeof v === "string" && [
+    "spasm","monero","zcash","ethereum","bitcoin","solana",
+    "custom-link","default","campfire","chat","cube",
+    "research","rocket","roger"
+  ].includes(v)
+}
+
+const faviconTheme = appConfig?.faviconTheme
+if (isFaviconKey(faviconTheme)) {
+  if (faviconTheme === "custom-link") {
+    if (
+      appConfig?.faviconLink &&
+      typeof(appConfig?.faviconLink) === "string"
+    ) {
+      faviconPath = appConfig.faviconLink
+    } else {
+      faviconPath = faviconMap.default
+    }
+  } else {
+    faviconPath = faviconMap[faviconTheme]
+  }
+} else {
+  faviconPath = faviconMap.default
+}
 
 useHead({
   title: appConfig?.introTitle,
@@ -106,9 +168,10 @@ useHead({
     { name: 'og:description', property: 'og:description', content:appConfig?.introAbout },
   ],
   link: [
-    { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-    { rel: 'shortcut icon', href: '/favicon.ico' },
-    { rel: 'apple-touch-icon', href: '/favicon.ico', sizes: '512x512' },
+    // { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    { rel: 'icon', type: 'image/x-icon', href: faviconPath },
+    { rel: 'shortcut icon', href: faviconPath },
+    { rel: 'apple-touch-icon', href: faviconPath, sizes: '512x512' },
   ],
   style: [{
     innerHTML: `:root {

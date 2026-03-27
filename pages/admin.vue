@@ -44,27 +44,86 @@
       </div>
 
       <div v-if="showHomePage" class="pl-4">
-        <div class="pl-0 mt-2">
-          <div class="pl-0 mt-0">
+        <!-- Favicons -->
+        <div class="pl-0 mt-4">
+          <!-- Favicons dropdown toggle button -->
+          <div class="mt-2">
+            <span
+              @click="toggleFaviconDropDown()"
+              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
+            >
+              Favicon: 
+              <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">
+                {{ faviconTheme }}
+              </span>
+              <IconsTriangle :rotateIf="faviconDropDownShown" />
+            </span>
+          </div>
+
+          <!-- Favicons dropdown menu -->
+          <div
+            v-show="faviconDropDownShown"
+            class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
+          >
+
+          <!--
+            <span v-if="favicons">
+              <span v-if="favicons[0]" class="">
+                <div
+                  v-for="favicon in favicons"
+                  class="py-1 font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
+                  @click="selectFavicon(favicon)"
+                >
+                  {{ favicon }}
+                </div>
+              </span>
+            </span>
+          -->
+
+            <span v-if="favicons">
+              <span v-if="favicons[0]">
+                <ExtraFaviconsMenuItem
+                  v-for="favicon in favicons"
+                  :key="favicon"
+                  :favicon="favicon"
+                  @click="selectFavicon(favicon)"
+                />
+              </span>
+            </span>
+          </div>
+
+          <div v-if="faviconTheme === 'custom-link'" class="ml-5">
+            Favicon custom-link:
+            <input v-model="faviconLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials">
+            <div class="text-colorNotImportant-light text-colorNotImportant-dark">
+              (Save and refresh the page to see new custom favicon)
+            </div>
+          </div>
+        </div>
+
+        <div class="pl-0 mt-4">
+          <div class="pl-0 mt-2">
             <input v-model="enableDefaultHeaderImage" type="checkbox" >
-            Enable default header image
+            Enable header image
           </div>
-          <div class="ml-5">
-            Default header image link:
-            <input v-model="defaultHeaderImageLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials">
-          </div>
-          <div class="ml-5 text-colorNotImportant-light text-colorNotImportant-dark">
-            Option 1: add full URL to image file (.jpeg, .jpg, .png, .webp, .svg) <br>
-            Option 2: leave URL field blank and upload your jpeg image to <code>frontend/public/header.jpeg</code> (only jpeg supported, docker/podman deployment not supported).
+          <div v-if="enableDefaultHeaderImage">
+            <div class="ml-5">
+              Header image link:
+              <input v-model="defaultHeaderImageLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials">
+            </div>
+            <div class="ml-5 text-colorNotImportant-light text-colorNotImportant-dark">
+              Option 1: add full URL to image file (.jpeg, .jpg, .png, .webp, .svg) <br>
+              Option 2: leave URL field blank and upload your jpeg image to <code>frontend/public/header.jpeg</code> (only jpeg supported, docker/podman deployment not supported).
+            </div>
           </div>
         </div>
         <div class="pl-0 mt-4">
           <input v-model="enableDefaultIntro" type="checkbox" >
-          Enable default intro section: title, extra, about
+          Enable intro section: title, extra, about
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
             (also used for meta)
           </span>
-          <div class="ml-5">
+          <div v-if="enableDefaultIntro" class="ml-5">
             <div>
               Intro title
               <input v-model="introTitle" type="text" placeholder="enter intro title (e.g., Spasm)" class="custom-admin-input-socials">
@@ -81,8 +140,8 @@
         </div>
         <div class="pl-0 mt-4">
           <input v-model="enableDefaultContacts" type="checkbox" >
-          Enable default contacts
-          <div class="ml-5 pl-0">
+          Enable contacts
+          <div v-if="enableDefaultContacts" class="ml-5 pl-0">
             <input v-model="ifShowContactsInIntro" type="checkbox" >
             And show contacts in intro section
             <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
@@ -100,41 +159,45 @@
         <div class="mt-6">
           <div class="pl-0">
             <input v-model="enableDefaultButtonPrimary" type="checkbox" >
-            Enable default button primary
+            Enable button primary
           </div>
-          <div class="ml-5">Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div class="ml-5">Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter button text (e.g., Get started)" class="custom-admin-input-socials"></div>
-          <div class="pl-0">
+          <div v-if="enableDefaultButtonPrimary">
+            <div class="ml-5">Primary button link: <input v-model="defaultButtonPrimaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+            <div class="ml-5">Primary button text: <input v-model="defaultButtonPrimaryText" type="text" placeholder="enter button text (e.g., Get started)" class="custom-admin-input-socials"></div>
+          </div>
+          <div class="mt-2 pl-0">
             <input v-model="enableDefaultButtonSecondary" type="checkbox" >
-            Enable default button secondary
+            Enable button secondary
           </div>
-          <div class="ml-5">Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-          <div class="ml-5">Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter button text (e.g., Read docs)" class="custom-admin-input-socials"></div>
+          <div v-if="enableDefaultButtonSecondary">
+            <div class="ml-5">Secondary button link: <input v-model="defaultButtonSecondaryLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+            <div class="ml-5">Secondary button text: <input v-model="defaultButtonSecondaryText" type="text" placeholder="enter button text (e.g., Read docs)" class="custom-admin-input-socials"></div>
+          </div>
         </div>
-        <div class="pl-0">
-          <input v-model="enableCustomIntro" type="checkbox" >
-          Enable custom intro
-          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-            (not supported via docker/podman deployment)
-          </span>
-        </div>
-        <div class="pl-0">
-          <input v-model="enableCustomContacts" type="checkbox" >
-          Enable custom contacts
-          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-            (not supported via docker/podman deployment)
-          </span>
-        </div>
-        <div class="pl-0">
+        <div class="mt-2 pl-0">
           <input v-model="ifShowIntroTutorial" type="checkbox" >
           Show intro tutorial
           <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
             (tutorial like "connect your wallet, read what you sign, etc.")
           </span>
         </div>
-        <div class="pl-0">
+        <div class="mt-2 pl-0">
           <input v-model="ifShowHomeLatestComments" type="checkbox" >
           Show latest comments
+        </div>
+        <h5 class="mt-4">Custom pages</h5>
+        <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+          (not supported via docker/podman deployment)
+        </span>
+        <div class="ml-5">
+          <div class="pl-0">
+            <input v-model="enableCustomIntro" type="checkbox" >
+            Enable custom intro page
+          </div>
+          <div class="pl-0">
+            <input v-model="enableCustomContacts" type="checkbox" >
+            Enable custom contacts page
+          </div>
         </div>
 
         <div class="mt-2 mb-6">
@@ -156,9 +219,9 @@
 
         <!-- Themes -->
         <div>
-          <!-- Dropdown toggle button -->
-          <h5 class="mt-4">Choose theme:</h5>
+          <!-- Themes dropdown toggle button -->
           <div class="mt-1">
+            <span class="mr-2 text-xl">Colors:</span>
             <span
               @click="toggleThemeDropDown()"
               class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
@@ -170,10 +233,10 @@
             </span>
           </div>
 
-          <!-- Dropdown menu -->
+          <!-- Themes dropdown menu -->
           <div
             v-show="themeDropDownShown"
-            class="ml-0 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
+            class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
           >
             <span v-if="themes">
               <span v-if="themes[0]" class="">
@@ -695,6 +758,22 @@ import {
   useNotificationStore
 } from '@/stores/useNotificationStore'
 
+// Importing favicon paths to simply update the browser favicon
+// for a user to see the change. However, these favicons are
+// not actually saved in the appConfig event.
+import faviconSpasm from "@/assets/favicons/spasm.ico"
+import faviconMonero from "@/assets/favicons/monero.ico"
+import faviconZcash from "@/assets/favicons/zcash.ico"
+import faviconEthereum from "@/assets/favicons/ethereum.ico"
+import faviconBitcoin from "@/assets/favicons/bitcoin.ico"
+import faviconSolana from "@/assets/favicons/solana.ico"
+import faviconCampfire from "@/assets/favicons/campfire.ico"
+import faviconChat from "@/assets/favicons/chat.ico"
+import faviconCube from "@/assets/favicons/cube.ico"
+import faviconResearch from "@/assets/favicons/research.ico"
+import faviconRocket from "@/assets/favicons/rocket.ico"
+import faviconRoger from "@/assets/favicons/roger.ico"
+
 const appConfig = useAppConfigStore()?.getAppConfig
 const notificationStore = useNotificationStore()
 const { isInList } = useNostr()
@@ -747,13 +826,99 @@ const toggleNewContent = () => {
   showNewContent.value = !showNewContent.value
 }
 
+const favicons = [
+  "custom-link",
+  "spasm", "monero", "zcash", "ethereum", "bitcoin", "solana",
+  "campfire", "chat", "cube", "research", "rocket", "roger",
+  "default",
+]
+
+const faviconDropDownShown = ref(false)
+const toggleFaviconDropDown = () => {
+  faviconDropDownShown.value = !faviconDropDownShown.value
+}
+
+const selectFavicon = (newFavicon: string): void => {
+  faviconTheme.value = newFavicon.toLowerCase()
+  toggleFaviconDropDown()
+
+  type FaviconKey =
+    | "spasm" | "monero" | "zcash"
+    | "ethereum" | "bitcoin" | "solana"
+    | "custom-link" | "default"
+    | "campfire" | "chat" | "cube"
+    | "research" | "rocket" | "roger"
+  const faviconMap: Record<FaviconKey, string> = {
+    spasm: faviconSpasm,
+    monero: faviconMonero,
+    zcash: faviconZcash,
+    ethereum: faviconEthereum,
+    bitcoin: faviconBitcoin,
+    solana: faviconSolana,
+    "custom-link": faviconLink,
+    campfire: faviconCampfire,
+    chat: faviconChat,
+    cube: faviconCube,
+    research: faviconResearch,
+    rocket: faviconRocket,
+    roger: faviconRoger,
+    default: "/favicon.ico"
+  }
+
+  function isFaviconKey(s: string): s is FaviconKey {
+    return [
+      "spasm","monero","zcash","ethereum","bitcoin","solana",
+      "custom-link","default","campfire","chat","cube",
+      "research","rocket","roger"
+    ].includes(s)
+  }
+
+  if (isFaviconKey(newFavicon)) {
+    const path = faviconMap[newFavicon]
+    updateFaviconInBrowserTab(path)
+  } else {
+    updateFaviconInBrowserTab(faviconMap.default)
+  }
+}
+
+const ensureHtmlLink = (
+  selector: string, createAttrs: Partial<HTMLLinkElement>
+) => {
+  let link = document.head.querySelector(selector) as HTMLLinkElement | null
+  if (!link) {
+    link = document.createElement('link')
+    Object.assign(link, createAttrs)
+    document.head.appendChild(link)
+  }
+  return link
+}
+
+const updateFaviconInBrowserTab = (
+  faviconValue?: string
+) => {
+  if (!faviconValue || typeof(faviconValue) !== "string") return
+  const href = faviconValue
+
+  const icon = ensureHtmlLink("link[rel='icon']", { rel: 'icon', type: 'image/x-icon' })
+  icon.type = 'image/x-icon'
+  icon.href = href
+
+  const shortcut = ensureHtmlLink("link[rel='shortcut icon']", { rel: 'shortcut icon' })
+  shortcut.href = href
+
+  const apple = ensureHtmlLink("link[rel='apple-touch-icon'][sizes='512x512']", {
+    rel: 'apple-touch-icon',
+    sizes: '512x512',
+  })
+  apple.href = href
+}
+
 const themes = ["Spasm", "DarkVegas", "Neon", "Greeny", "Custom"]
+const theme = ref<string>("Custom")
 const themeDropDownShown = ref(false)
 const toggleThemeDropDown = () => {
   themeDropDownShown.value = !themeDropDownShown.value
 }
-
-const theme = ref<string>("Custom")
 
 const selectTheme = (newTheme: string): void => {
   theme.value = newTheme
@@ -1029,6 +1194,10 @@ const envCategories =
 
 // Strings
 // Strings-default-intro
+const faviconTheme =
+  ref<string>(appConfig?.faviconTheme)
+const faviconLink =
+  ref<string>(appConfig?.faviconLink)
 const defaultHeaderImageLink =
   ref<string>(appConfig?.defaultHeaderImageLink)
 const introTitle =
@@ -1298,6 +1467,12 @@ const saveAppConfig = async () => {
 
     // Strings
     // Strings-intro-home
+    if (typeof(faviconTheme.value) === "string") {
+      newAppConfig.faviconTheme = faviconTheme.value
+    }
+    if (typeof(faviconLink.value) === "string") {
+      newAppConfig.faviconLink = faviconLink.value
+    }
     if (typeof(defaultHeaderImageLink.value) === "string") {
       newAppConfig.defaultHeaderImageLink = defaultHeaderImageLink.value
     }

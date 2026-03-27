@@ -60,6 +60,13 @@ export default defineNuxtConfig({
     apiUrlDockerSsr: process.env.NUXT_API_URL_DOCKER_SSR || '',
 
     public: {
+      faviconPath: process.env.FAVICON_BASE
+        || process.env.NUXT_PUBLIC_FAVICON_BASE
+        || '/favicon.ico',
+      faviconTheme: process.env.FAVICON_THEME
+        || process.env.NUXT_PUBLIC_FAVICON_THEME
+        || 'default',
+
       apiURL: process.env.API_URL || process.env.NUXT_PUBLIC_API_URL,
 
       // Testing
