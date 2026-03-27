@@ -6,6 +6,7 @@ public/header.jpg
 public/header.jpeg
 public/header.svg
 public/header.webp
+# Favicon is included into image
 # public/favicon.ico
 # public/pwa-192x192.png
 # public/pwa-512x512.png
