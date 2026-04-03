@@ -79,12 +79,10 @@ const savedMergedMultiSignedSpasmEventV2:
 export const useWeb3 = () => {
   const showWeb3Modal = (): void => {
     isWeb3ModalShown.value = true
-    // console.log("isWeb3ModalShown:", isWeb3ModalShown.value)
   }
 
   const hideWeb3Modal = (): void => {
     isWeb3ModalShown.value = false
-    // console.log("isWeb3ModalShown:", isWeb3ModalShown.value)
   }
 
   const showQrCodeModal = (): void => {
@@ -179,14 +177,12 @@ export const useWeb3 = () => {
   }
 
   const setRandomSigner = (): void => {
-    // console.log("setSigner called")
     signer = ethers.Wallet.createRandom()
     setConnectedAddress(signer?.address, 'ethereum')
   }
 
   // provider.getSigner() prompts a user to connect an account
   const getSigner = async (): Promise<JsonRpcSigner | undefined> => {
-    // console.log("signer:", signer)
     signer = await provider?.getSigner()
     return signer
   }
@@ -195,9 +191,7 @@ export const useWeb3 = () => {
   // only if a user is already authenticated (approved connection).
   const listAccounts = async (): Promise<JsonRpcSigner[]> => {
     try {
-      // console.log("listAccounts called")
       const accounts = await provider?.listAccounts()
-      // console.log("accounts:", accounts)
       setConnectedAddress(accounts?.[0]?.address, 'ethereum')
       return accounts ? accounts : []
     } catch (error) {
@@ -638,23 +632,21 @@ export const useWeb3 = () => {
       ) {
         finalApiUrl = customApiUrl
       } else {
-        // Using getApiUrlFetch instead of apiUrl in case
+        // Using apiUrl instead of apiUrl in case
         // if events will be submitted via SSR docker.
-        const getApiUrlFetch =
-          useAppConfigStore()?.getApiUrlFetch
+        const apiUrl =
+          useAppConfigStore()?.getApiUrl
         if (
-          !getApiUrlFetch ||
-          typeof(getApiUrlFetch) !== "string" ||
-          !isValidUrl(getApiUrlFetch)
+          !apiUrl ||
+          typeof(apiUrl) !== "string" ||
+          !isValidUrl(apiUrl)
         ) { throw new Error('API URL is not configured.'); }
-        finalApiUrl = getApiUrlFetch
+        finalApiUrl = apiUrl
       }
 
       const envelope: SpasmEventEnvelopeV2 | null =
         spasm.convertToSpasmEventEnvelope(event, "2.0.0")
       if (!envelope) return null
-        // console.log("event:", event)
-        // console.log("envelope:", envelope)
 
       const path = `${finalApiUrl}/api/submit/`
 
@@ -815,12 +807,10 @@ export const useWeb3 = () => {
     if (!signer) { signer = await provider?.getSigner() }
 
     const message = stringToSign
-    // console.log("message:", message)
     let signature: string | undefined | null
 
     try {
       signature = await signer?.signMessage(message)
-      // console.log("signature:", signature)
 
       if (
         signature && typeof(signature) === "string"
@@ -836,9 +826,6 @@ export const useWeb3 = () => {
 
     if (signature && typeof (signature) === 'string') {
       const recoveredAddress = ethers.verifyMessage(messageString, signature)
-      // console.log("recoveredAddress:", recoveredAddress)
-      // console.log("signerAddress:", signerAddress)
-      // console.log(recoveredAddress === signerAddress)
 
       return recoveredAddress.toLowerCase() === signerAddress.toLowerCase()
     }

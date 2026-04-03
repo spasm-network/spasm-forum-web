@@ -145,6 +145,10 @@
   .custom-color-picker {
     @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark focus:outline-none border-2
   }
+
+  .custom-admin-web-panel-section {
+    @apply border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark 
+  }
 }
 
 @layer utilities {

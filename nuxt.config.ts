@@ -159,19 +159,19 @@ export default defineNuxtConfig({
 
       // Images
       enableEmbedImageTagsForAllUsers: process.env.ENABLE_EMBED_IMAGE_TAGS_FOR_ALL_USERS || process.env.NUXT_PUBLIC_ENABLE_EMBED_IMAGE_TAGS_FOR_ALL_USERS,
-      enableEmbedImageTagsForFullLineImageLinks: process.env.ENABLE_EMBED_IMAGE_TAGS_FOR_FULL_LINE_IMAGE_LIN || process.env.NUXT_PUBLIC_ENABLE_EMBED_IMAGE_TAGS_FOR_FULL_LINE_IMAGE_LIKS,
+      enableEmbedImageTagsForFullLineImageLinks: process.env.ENABLE_EMBED_IMAGE_TAGS_FOR_FULL_LINE_IMAGE_LINKS || process.env.NUXT_PUBLIC_ENABLE_EMBED_IMAGE_TAGS_FOR_FULL_LINE_IMAGE_LINKS,
       enableEmbedImageTagsInPosts: process.env.ENABLE_EMBED_IMAGE_TAGS_IN_POSTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_IMAGE_TAGS_IN_POSTS,
       enableEmbedImageTagsInComments: process.env.ENABLE_EMBED_IMAGE_TAGS_IN_COMMENTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_IMAGE_TAGS_IN_COMMENTS,
 
       // Videos
       enableEmbedVideoTagsForAllUsers: process.env.ENABLE_EMBED_VIDEO_TAGS_FOR_ALL_USERS || process.env.NUXT_PUBLIC_ENABLE_EMBED_VIDEO_TAGS_FOR_ALL_USERS,
-      enableEmbedVideoTagsForFullLineVideoLinks: process.env.ENABLE_EMBED_VIDEO_TAGS_FOR_FULL_LINE_VIDEO_LIN || process.env.NUXT_PUBLIC_ENABLE_EMBED_VIDEO_TAGS_FOR_FULL_LINE_VIDEO_LIKS,
+      enableEmbedVideoTagsForFullLineVideoLinks: process.env.ENABLE_EMBED_VIDEO_TAGS_FOR_FULL_LINE_VIDEO_LINKS || process.env.ENABLE_EMBED_VIDEO_TAGS_FOR_FULL_LINE_VIDEO_LINKS,
       enableEmbedVideoTagsInPosts: process.env.ENABLE_EMBED_VIDEO_TAGS_IN_POSTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_VIDEO_TAGS_IN_POSTS,
       enableEmbedVideoTagsInComments: process.env.ENABLE_EMBED_VIDEO_TAGS_IN_COMMENTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_VIDEO_TAGS_IN_COMMENTS,
 
       // Audios
       enableEmbedAudioTagsForAllUsers: process.env.ENABLE_EMBED_AUDIO_TAGS_FOR_ALL_USERS || process.env.NUXT_PUBLIC_ENABLE_EMBED_AUDIO_TAGS_FOR_ALL_USERS,
-      enableEmbedAudioTagsForFullLineAudioLinks: process.env.ENABLE_EMBED_AUDIO_TAGS_FOR_FULL_LINE_AUDIO_LIN || process.env.NUXT_PUBLIC_ENABLE_EMBED_AUDIO_TAGS_FOR_FULL_LINE_AUDIO_LIKS,
+      enableEmbedAudioTagsForFullLineAudioLinks: process.env.ENABLE_EMBED_AUDIO_TAGS_FOR_FULL_LINE_AUDIO_LINKS || process.env.ENABLE_EMBED_AUDIO_TAGS_FOR_FULL_LINE_AUDIO_LINKS,
       enableEmbedAudioTagsInPosts: process.env.ENABLE_EMBED_AUDIO_TAGS_IN_POSTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_AUDIO_TAGS_IN_POSTS,
       enableEmbedAudioTagsInComments: process.env.ENABLE_EMBED_AUDIO_TAGS_IN_COMMENTS || process.env.NUXT_PUBLIC_ENABLE_EMBED_AUDIO_TAGS_IN_COMMENTS,
 

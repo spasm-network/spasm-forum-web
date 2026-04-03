@@ -16,7 +16,6 @@ import {useProfilesStore} from '@/stores/useProfilesStore'
 import { spasm } from 'spasm.js'
 import {useAppConfigStore} from '@/stores/useAppConfigStore'
 import {useNostrRelaysStore} from './useNostrRelaysStore'
-// const appConfig = useAppConfigStore()?.getAppConfig
 // const profilesStore = useProfilesStore()
 
 const {feedFilters} = useFeedEventsFilters()
@@ -33,7 +32,8 @@ const {
   pushToArrayIfValueIsUnique,
   isArrayOfNumbers,
   splitIntoArray,
-  copyOf
+  copyOf,
+  // logExecution
 } = useUtils()
 const {
   getMockEvents,
@@ -49,7 +49,6 @@ const {
 } = useNostr()
 
 export interface PostsState {
-  apiUrl: any
   useMockedDataIfBackendIsDown: any
   feedFiltersActivityHot: any
   feedFiltersActivityRising: any
@@ -57,8 +56,6 @@ export interface PostsState {
   shortUrlsLengthOfWeb3Ids: any
   pinnedIds: string[]
   allPosts: SpasmEventV2[]
-  // TODO delete after testing
-  eventComments: SpasmEventV2[]
   displayFilters: FeedFilters
   selectedIds: Array<string | number | null | undefined>
   fetchingPostsByFilters: boolean
@@ -70,7 +67,6 @@ export interface PostsState {
 export const useEventsStore = defineStore('postsStore', {
   state: (): PostsState => ({
     // Environment settings:
-    apiUrl: useRuntimeConfig()?.public?.apiURL,
     useMockedDataIfBackendIsDown: useRuntimeConfig()?.public?.useMockedDataIfBackendIsDown === "true" ? true : false,
     feedFiltersActivityHot: Number(useRuntimeConfig()?.public?.feedFiltersActivityHot) || 5,
     feedFiltersActivityRising: Number(useRuntimeConfig()?.public?.feedFiltersActivityRising) || 3,
@@ -85,10 +81,6 @@ export const useEventsStore = defineStore('postsStore', {
     // appPosts contains all posts fetched from the server,
     // sorted by date and cleaned from duplicates.
     allPosts: [],
-
-    // postComments contains all comments for the current post
-    // TODO delete after testing
-    eventComments: [],
 
     // Display filters are used by getters to display posts.
     // Display filters are manually updated after saving newly
@@ -145,23 +137,11 @@ export const useEventsStore = defineStore('postsStore', {
         return null
       }
     },
-
-    // TODO detele after testing
-    getPostComments(): SpasmEventV2[] {
-      return this.eventComments
-    },
   },
 
   actions: {
     updateStateAppConfig(): string {
       try {
-        const getApiUrlFetch = useAppConfigStore()
-        if (
-          getApiUrlFetch &&
-          typeof(getApiUrlFetch) === "string"
-        ) {
-          this.apiUrl = getApiUrlFetch
-        }
         const appConfig = useAppConfigStore()?.getAppConfig
         this.enableShortUrlsForWeb3Actions =
           appConfig?.enableShortUrlsForWeb3Actions
@@ -188,11 +168,12 @@ export const useEventsStore = defineStore('postsStore', {
         )
       }
 
-      if (!this.apiUrl) { return }
+      const apiUrl = useAppConfigStore()?.getApiUrl
+      if (!apiUrl) { return }
 
       this.fetchingPostsByFilters = true
 
-      const path = this.apiUrl + '/api/events'
+      const path = apiUrl + '/api/events'
 
       // It's necessary to copy filters into another object,
       // because otherwise there is some bug with useFetch()
@@ -271,12 +252,13 @@ export const useEventsStore = defineStore('postsStore', {
       originalId: (string | number) | null
     ): Promise<SpasmEventV2 | null> {
       if (!originalId) return null
-      if (!this.apiUrl) return null
+      const apiUrl = useAppConfigStore()?.getApiUrl
+      if (!apiUrl) return null
       if (!isStringOrNumber(originalId)) return null
       const id = encodeURIComponent(originalId)
       if (!id) return null
 
-      const path = this.apiUrl + '/api/events/search?e=' + id
+      const path = apiUrl + '/api/events/search?e=' + id
       const {data: fetchedResult, error} = await useFetch(path)
 
       if (error.value) {
@@ -324,7 +306,8 @@ export const useEventsStore = defineStore('postsStore', {
           action => `action=${encodeURIComponent(action)}`
       ).join('&')
 
-      const path = this.apiUrl +
+      const apiUrl = useAppConfigStore()?.getApiUrl
+      const path = apiUrl +
         '/api/events?' +
         idsString + '&' + actionsString
 
@@ -638,13 +621,14 @@ export const useEventsStore = defineStore('postsStore', {
       commentsDepth: number = 10
     ): Promise<SpasmEventV2 | null> {
       if (!originalId) return null
-      if (!this.apiUrl) return null
+      const apiUrl = useAppConfigStore()?.getApiUrl
+      if (!apiUrl) return null
       if (!isStringOrNumber(originalId)) return null
       const id = encodeURIComponent(originalId)
       if (!id) return null
 
       const path =
-        this.apiUrl +
+        apiUrl +
         '/api/events/search?e=' + id +
         '&commentsDepth=' + commentsDepth
       const {data: fetchedResult, error} = await useFetch(path)
@@ -899,35 +883,6 @@ export const useEventsStore = defineStore('postsStore', {
       if (
         !filteredEvents || !Array.isArray(filteredEvents)
       ) { return spasmEvents }
-
-      // TODO delete after testing.
-      // This should be solved in V2 since all events are stored
-      // in the same table.
-      // Old approach:
-      // Since web2 and web3 posts are fetched together, it's
-      // necessary to limit the amount of posts shown in the feed
-      // otherwise all posts from the store will be shown, which
-      // can mess up chronological order and posts can jump around
-      // the feed after resorting after fetching new posts. 
-      // if (typeof filters?.limitWeb2 === 'number'
-      //   && typeof filters?.limitWeb3 === 'number') {
-      //   let numberOfPostsToDisplay: number = 10
-      //   // Choosing the smallest limit as the number of posts to be
-      //   // displayed in the feed provides chronological order of
-      //   // posts after sorting in most cases.
-      //   // Ideally, all limits should be equal to provide the best
-      //   // chronological order. (eg. limitWeb2 and limitWeb3 = 40)
-      //   // However, in that case a lot of posts will be fetched
-      //   // from the server and saved in the store, without
-      //   // displaying them to a user in the feed.
-      //   // (Downside: higher traffic load).
-      //   if (filters.limitWeb2 < filters.limitWeb3) {
-      //     numberOfPostsToDisplay = filters.limitWeb2
-      //   } else {
-      //     numberOfPostsToDisplay = filters.limitWeb3
-      //   }
-      //   filteredEvents.splice(numberOfPostsToDisplay)
-      // }
 
       if (
         feedFilters && 'limit' in feedFilters &&

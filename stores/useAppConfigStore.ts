@@ -9,8 +9,7 @@ import {
 import {useEventsStore} from './useEventsStore'
 const {
   splitIntoArray,
-  parseEnvBool,
-  // logExecution
+  parseEnvBool
 } = useUtils()
 
 interface AppConfigState extends AppConfig {}
@@ -183,11 +182,35 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     feedFiltersActivityRising: Number(useRuntimeConfig()?.public?.feedFiltersActivityRising) || 3,
   }),
   getters: {
-    getApiUrlFetch(): string {
-      // Client-side: use this.apiUrl
-      if (process.client) {
-        return this.apiUrl
+    getApiUrl(): string {
+      function stripTrailingSlash(
+        s?: string | null
+      ): string {
+        if (!s) return ""
+        return s.endsWith('/') ? s.slice(0, -1) : s
       }
+
+      // Client-side: prefer this.apiUrl,
+      // fallback to location.origin
+      if (process.client) {
+        const fromEnv = stripTrailingSlash(this.apiUrl)
+        if (fromEnv && typeof(fromEnv) === "string") {
+          return fromEnv
+        }
+        if (
+          typeof(window) !== 'undefined' &&
+          window?.location?.origin &&
+          typeof(window?.location?.origin) === "string"
+        ) {
+          return stripTrailingSlash(window?.location?.origin)
+        }
+        return ""
+      }
+
+      // // Client-side: use this.apiUrl
+      // if (process.client) {
+      //   return this.apiUrl
+      // }
       
       /**
        * apiUrlDockerSsr is used for SSR requests inside Docker
@@ -204,13 +227,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           config?.apiUrlDockerSsr &&
           typeof(config.apiUrlDockerSsr) === 'string'
         ) {
-          return config.apiUrlDockerSsr
+          return stripTrailingSlash(config.apiUrlDockerSsr)
         }
       }
       
       // If apiUrlDockerSsr is not set, then the app is probably
       // not running in a container, so fallback to apiUrl.
-      return this.apiUrl
+      return stripTrailingSlash(this.apiUrl)
     },
 
     getAppConfig(): AppConfig {
@@ -424,7 +447,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     async fetchAndUpdateAppConfig(
     ): Promise<void> {
       try {
-        const apiUrl = this.getApiUrlFetch
+        const apiUrl = this.getApiUrl
         if (!apiUrl) { return }
 
         const path = apiUrl + '/api/app-config'

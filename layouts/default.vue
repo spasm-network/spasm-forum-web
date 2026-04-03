@@ -54,9 +54,6 @@ const {
   isWeb3ModalShown, isQrCodeModalShown,
   setConnectedAddress, isFollowModalShown
 } = useWeb3()
-const {
-  logExecution
-} = useUtils()
 
 // Always use the latest app config from database
 await useAppConfigStore()?.fetchAndUpdateAppConfig()

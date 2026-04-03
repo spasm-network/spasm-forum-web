@@ -3,10 +3,12 @@
     <div class="mt-4">
       <!-- TODO Refactor or delete after testing -->
       <div class="my-4">
-        <div
-          :class="[isResponseError ? 'text-colorRed-light dark:text-colorRed-dark' : 'text-colorGreen-light dark:text-colorGreen-dark']"
-        >
-          {{ responseMessage }}
+        <div>
+          Connected address:
+          <nuxt-link :to="`/authors/${connectedAddress}`"
+            class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline">
+            {{connectedAddress}}
+          </nuxt-link>
         </div>
         <div
           class="mb-6"
@@ -14,13 +16,6 @@
            typeof(connectedAddress) === 'string' &&
            isInList(connectedAddress, appConfig?.admins)"
         >
-          <div>
-            Address:
-            <nuxt-link :to="`/authors/${connectedAddress}`"
-              class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline">
-              {{connectedAddress}}
-            </nuxt-link>
-          </div>
           <div>
             You're an admin on this instance.
           </div>
@@ -34,23 +29,93 @@
             Save app config
           </button>
         </div>
+        <div
+          v-else-if="connectedAddress &&
+           typeof(connectedAddress) === 'string' &&
+           !isInList(connectedAddress, appConfig?.admins)"
+        >
+          <div>
+            You're not an admin on this instance.
+          </div>
+          <div class="mb-4">
+            You can play around with theme, favicons, etc., but only admins can save config.
+          </div>
+        </div>
+        <div v-else>
+          <div>
+            Connect your extension with admin keys to save config changes.
+          </div>
+          <div>
+            <div>
+              Below are a few Ethereum and Nostr examples, but there are many more apps.
+            </div>
+            <div>
+              <div>
+                <span class="text-colorNotImportant-light dark:colorNotImportant-dark">
+                  Firefox:
+                </span>
+                <span>
+                  nos2x-fox, MetaMask
+                </span>
+              </div>
+              <div>
+                <span class="text-colorNotImportant-light dark:colorNotImportant-dark">
+                  Chrome/Brave:
+                </span>
+                <span>
+                  Rabby, MetaMask, nos2x, Flamingo
+                </span>
+              </div>
+              <div>
+                <span class="text-colorNotImportant-light dark:colorNotImportant-dark">
+                  Tor Browser:
+                </span>
+                <span>
+                  nos2-fox
+                </span>
+              </div>
+              <div>
+                <span class="text-colorNotImportant-light dark:colorNotImportant-dark">
+                  Desktop:
+                </span>
+                <span>
+                  Status app
+                </span>
+              </div>
+              <div>
+                <span class="text-colorNotImportant-light dark:colorNotImportant-dark">
+                  Mobile:
+                </span>
+                <span>
+                  MetaMask
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          :class="[isResponseError ? 'text-colorRed-light dark:text-colorRed-dark' : 'text-colorGreen-light dark:text-colorGreen-dark']"
+        >
+          {{ responseMessage }}
+        </div>
       </div>
 
+      <!-- Theme -->
       <div>
-        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleHomePage" >
-        Home page
-        <IconsTriangle :rotateIf="showHomePage" />
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleTheme">
+        Theme
+        <IconsTriangle :rotateIf="showTheme" />
         </span>
       </div>
 
-      <div v-if="showHomePage" class="pl-4">
+      <div v-if="showTheme" class="pl-4 pt-4 custom-admin-web-panel-section">
         <!-- Favicons -->
-        <div class="pl-0 mt-4">
+        <div class="mt-0 mb-4">
           <!-- Favicons dropdown toggle button -->
           <div class="mt-2">
             <span
               @click="toggleFaviconDropDown()"
-              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
+              class="cursor-pointer"
             >
               Favicon: 
               <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">
@@ -65,21 +130,6 @@
             v-show="faviconDropDownShown"
             class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
           >
-
-          <!--
-            <span v-if="favicons">
-              <span v-if="favicons[0]" class="">
-                <div
-                  v-for="favicon in favicons"
-                  class="py-1 font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-                  @click="selectFavicon(favicon)"
-                >
-                  {{ favicon }}
-                </div>
-              </span>
-            </span>
-          -->
-
             <span v-if="favicons">
               <span v-if="favicons[0]">
                 <ExtraFaviconsMenuItem
@@ -101,6 +151,150 @@
           </div>
         </div>
 
+        <div>
+          <!-- Themes dropdown toggle button -->
+          <div class="mt-3 mb-0">
+            <span class="mr-2">Colors:</span>
+            <span
+              @click="toggleThemeDropDown()"
+              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
+            >
+              <span class="font-bold text-colorPrimary-light dark:text-colorPrimary-dark">
+                {{ theme }}
+              </span>
+              <IconsTriangle :rotateIf="themeDropDownShown" />
+            </span>
+          </div>
+
+          <!-- Themes dropdown menu -->
+          <div
+            v-show="themeDropDownShown"
+            class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
+          >
+            <span v-if="themes">
+              <span v-if="themes[0]" class="">
+                <div
+                  v-for="theme in themes"
+                  class="py-1 font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
+                  @click="selectTheme(theme)"
+                >
+                  {{ theme }}
+                </div>
+              </span>
+            </span>
+          </div>
+
+          <div class="mt-2 mb-2">
+            <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
+              <IconsReset class="custom-icons" />
+              Reset theme
+            </span>
+          </div>
+        </div>
+
+
+        <div>
+          <span class="hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleAdvancedColors">
+          Advanced colors
+          <IconsTriangle :rotateIf="showAdvancedColors" />
+          </span>
+        </div>
+
+        <div v-if="showAdvancedColors" class="pl-4">
+          <div class="mt-2 ml-5">
+            <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+              For each color you can specify values for dark and light themes
+            </div>
+            <div class="mt-2 mb-2">
+              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="setColorsToNull" >
+                <IconsReset class="custom-icons" />
+                Click to delete all custom colors
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  (don't forget to save config)
+                </span>
+              </span>
+            </div>
+            <!-- Primary Colors -->
+            <div>Primary color (light): <input v-model="colorPrimaryLight" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryLight}}</div>
+            <div>Primary color (dark): <input v-model="colorPrimaryDark" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryDark}}</div>
+
+            <!-- Base Colors -->
+            <div>Base color (light): <input v-model="colorBaseLight" type="color" class="custom-color-picker"> {{colorBaseLight}}</div>
+            <div>Base color (dark): <input v-model="colorBaseDark" type="color" class="custom-color-picker"> {{colorBaseDark}}</div>
+
+            <!-- Secondary Colors -->
+            <div>Secondary color (light): <input v-model="colorSecondaryLight" type="color" class="custom-color-picker"> {{colorSecondaryLight}}</div>
+            <div>Secondary color (dark): <input v-model="colorSecondaryDark" type="color" class="custom-color-picker"> {{colorSecondaryDark}}</div>
+
+            <!-- Hover Colors -->
+            <div>Hover color (light): <input v-model="colorHoverLight" type="color" class="custom-color-picker"> {{colorHoverLight}}</div>
+            <div>Hover color (dark): <input v-model="colorHoverDark" type="color" class="custom-color-picker"> {{colorHoverDark}}</div>
+
+            <!-- Not Important Colors -->
+            <div>Not important color (light): <input v-model="colorNotImportantLight" type="color" class="custom-color-picker"> {{colorNotImportantLight}}</div>
+            <div>Not important color (dark): <input v-model="colorNotImportantDark" type="color" class="custom-color-picker"> {{colorNotImportantDark}}</div>
+
+            <!-- Green Colors -->
+            <div>Green color (light): <input v-model="colorGreenLight" type="color" class="custom-color-picker"> {{colorGreenLight}}</div>
+            <div>Green color (dark): <input v-model="colorGreenDark" type="color" class="custom-color-picker">{{colorGreenDark}}</div>
+
+            <!-- Red Colors -->
+            <div>Red color (light): <input v-model="colorRedLight" type="color" class="custom-color-picker"> {{colorRedLight}}</div>
+            <div>Red color (dark): <input v-model="colorRedDark" type="color" class="custom-color-picker"> {{colorRedDark}}</div>
+
+            <!-- Orange Colors -->
+            <div>Orange color (light): <input v-model="colorOrangeLight" type="color" class="custom-color-picker"> {{colorOrangeLight}}</div>
+            <div>Orange color (dark): <input v-model="colorOrangeDark" type="color" class="custom-color-picker"> {{colorOrangeDark}}</div>
+
+            <!-- Blue Colors -->
+            <div>Blue color (light): <input v-model="colorBlueLight" type="color" class="custom-color-picker"> {{colorBlueLight}}</div>
+            <div>Blue color (dark): <input v-model="colorBlueDark" type="color" class="custom-color-picker"> {{colorBlueDark}}</div>
+
+            <!-- Background Colors -->
+            <div>Background Base (light): <input v-model="bgBaseLight" type="color" class="custom-color-picker"> {{bgBaseLight}}</div>
+            <div>Background Base (dark): <input v-model="bgBaseDark" type="color" class="custom-color-picker"> {{bgBaseDark}}</div>
+
+            <div>Background Secondary (light): <input v-model="bgSecondaryLight" type="color" class="custom-color-picker"> {{bgSecondaryLight}}</div>
+            <div>Background Secondary (dark): <input v-model="bgSecondaryDark" type="color" class="custom-color-picker"> {{bgSecondaryDark}}</div>
+
+            <div>Background Hover (light): <input v-model="bgHoverLight" type="color" class="custom-color-picker"> {{bgHoverLight}}</div>
+            <div>Background Hover (dark): <input v-model="bgHoverDark" type="color" class="custom-color-picker"> {{bgHoverDark}}</div>
+
+            <div>Background Dark (light): <input v-model="bgDarkLight" type="color" class="custom-color-picker"> {{bgDarkLight}}</div>
+            <div>Background Dark (dark): <input v-model="bgDarkDark" type="color" class="custom-color-picker"> {{bgDarkDark}}</div>
+
+            <!-- Border Colors -->
+            <div>Border color (light): <input v-model="borderColorLight" type="color" class="custom-color-picker"> {{borderColorLight}}</div>
+            <div>Border color (dark): <input v-model="borderColorDark" type="color" class="custom-color-picker"> {{borderColorDark}}</div>
+
+            <div class="mt-2 mb-2">
+              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
+                <IconsReset class="custom-icons" />
+                Reset colors
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="mt-2 mb-6">
+          <span class="ml-0 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleTheme" >
+          hide section
+          <IconsTriangle :rotateIf="showTheme" />
+          </span>
+        </div>
+      </div>
+
+
+      <!-- Home page -->
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleHomePage" >
+        Home page
+        <IconsTriangle :rotateIf="showHomePage" />
+        </span>
+      </div>
+
+      <div v-if="showHomePage" class="pl-4 custom-admin-web-panel-section">
         <div class="pl-0 mt-4">
           <div class="pl-0 mt-2">
             <input v-model="enableDefaultHeaderImage" type="checkbox" >
@@ -208,151 +402,8 @@
         </div>
       </div>
 
-      <div>
-        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleTheme">
-        Theme
-        <IconsTriangle :rotateIf="showTheme" />
-        </span>
-      </div>
 
-      <div v-if="showTheme" class="pl-4">
-
-        <!-- Themes -->
-        <div>
-          <!-- Themes dropdown toggle button -->
-          <div class="mt-1">
-            <span class="mr-2 text-xl">Colors:</span>
-            <span
-              @click="toggleThemeDropDown()"
-              class="text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer"
-            >
-              <span class="text-xl font-bold text-colorPrimary-light dark:text-colorPrimary-dark">
-                {{ theme }}
-              </span>
-              <IconsTriangle :rotateIf="themeDropDownShown" />
-            </span>
-          </div>
-
-          <!-- Themes dropdown menu -->
-          <div
-            v-show="themeDropDownShown"
-            class="ml-16 pl-1 py-1 bg-bgSecondary-light dark:bg-bgSecondary-dark rounded-md shadow-md w-28"
-          >
-            <span v-if="themes">
-              <span v-if="themes[0]" class="">
-                <div
-                  v-for="theme in themes"
-                  class="py-1 text-xl font-bold text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer"
-                  @click="selectTheme(theme)"
-                >
-                  {{ theme }}
-                </div>
-              </span>
-            </span>
-          </div>
-
-          <div class="mt-2 mb-2">
-            <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
-              <IconsReset class="custom-icons" />
-              Reset theme
-            </span>
-          </div>
-        </div>
-
-
-        <div>
-          <span class="text-2xl hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleAdvancedColors">
-          Advanced colors
-          <IconsTriangle :rotateIf="showAdvancedColors" />
-          </span>
-        </div>
-
-        <div v-if="showAdvancedColors" class="pl-4">
-          <div class="mt-2 ml-5">
-            <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-              For each color you can specify values for dark and light themes
-            </div>
-            <div class="mt-2 mb-2">
-              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="setColorsToNull" >
-                <IconsReset class="custom-icons" />
-                Click to delete all custom colors
-                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-                  (don't forget to save config)
-                </span>
-              </span>
-            </div>
-            <!-- Primary Colors -->
-            <div>Primary color (light): <input v-model="colorPrimaryLight" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryLight}}</div>
-            <div>Primary color (dark): <input v-model="colorPrimaryDark" type="color" placeholder="enter value (e.g., #f420af)" class="custom-color-picker"> {{colorPrimaryDark}}</div>
-
-            <!-- Base Colors -->
-            <div>Base color (light): <input v-model="colorBaseLight" type="color" class="custom-color-picker"> {{colorBaseLight}}</div>
-            <div>Base color (dark): <input v-model="colorBaseDark" type="color" class="custom-color-picker"> {{colorBaseDark}}</div>
-
-            <!-- Secondary Colors -->
-            <div>Secondary color (light): <input v-model="colorSecondaryLight" type="color" class="custom-color-picker"> {{colorSecondaryLight}}</div>
-            <div>Secondary color (dark): <input v-model="colorSecondaryDark" type="color" class="custom-color-picker"> {{colorSecondaryDark}}</div>
-
-            <!-- Hover Colors -->
-            <div>Hover color (light): <input v-model="colorHoverLight" type="color" class="custom-color-picker"> {{colorHoverLight}}</div>
-            <div>Hover color (dark): <input v-model="colorHoverDark" type="color" class="custom-color-picker"> {{colorHoverDark}}</div>
-
-            <!-- Not Important Colors -->
-            <div>Not important color (light): <input v-model="colorNotImportantLight" type="color" class="custom-color-picker"> {{colorNotImportantLight}}</div>
-            <div>Not important color (dark): <input v-model="colorNotImportantDark" type="color" class="custom-color-picker"> {{colorNotImportantDark}}</div>
-
-            <!-- Green Colors -->
-            <div>Green color (light): <input v-model="colorGreenLight" type="color" class="custom-color-picker"> {{colorGreenLight}}</div>
-            <div>Green color (dark): <input v-model="colorGreenDark" type="color" class="custom-color-picker">{{colorGreenDark}}</div>
-
-            <!-- Red Colors -->
-            <div>Red color (light): <input v-model="colorRedLight" type="color" class="custom-color-picker"> {{colorRedLight}}</div>
-            <div>Red color (dark): <input v-model="colorRedDark" type="color" class="custom-color-picker"> {{colorRedDark}}</div>
-
-            <!-- Orange Colors -->
-            <div>Orange color (light): <input v-model="colorOrangeLight" type="color" class="custom-color-picker"> {{colorOrangeLight}}</div>
-            <div>Orange color (dark): <input v-model="colorOrangeDark" type="color" class="custom-color-picker"> {{colorOrangeDark}}</div>
-
-            <!-- Blue Colors -->
-            <div>Blue color (light): <input v-model="colorBlueLight" type="color" class="custom-color-picker"> {{colorBlueLight}}</div>
-            <div>Blue color (dark): <input v-model="colorBlueDark" type="color" class="custom-color-picker"> {{colorBlueDark}}</div>
-
-            <!-- Background Colors -->
-            <div>Background Base (light): <input v-model="bgBaseLight" type="color" class="custom-color-picker"> {{bgBaseLight}}</div>
-            <div>Background Base (dark): <input v-model="bgBaseDark" type="color" class="custom-color-picker"> {{bgBaseDark}}</div>
-
-            <div>Background Secondary (light): <input v-model="bgSecondaryLight" type="color" class="custom-color-picker"> {{bgSecondaryLight}}</div>
-            <div>Background Secondary (dark): <input v-model="bgSecondaryDark" type="color" class="custom-color-picker"> {{bgSecondaryDark}}</div>
-
-            <div>Background Hover (light): <input v-model="bgHoverLight" type="color" class="custom-color-picker"> {{bgHoverLight}}</div>
-            <div>Background Hover (dark): <input v-model="bgHoverDark" type="color" class="custom-color-picker"> {{bgHoverDark}}</div>
-
-            <div>Background Dark (light): <input v-model="bgDarkLight" type="color" class="custom-color-picker"> {{bgDarkLight}}</div>
-            <div>Background Dark (dark): <input v-model="bgDarkDark" type="color" class="custom-color-picker"> {{bgDarkDark}}</div>
-
-            <!-- Border Colors -->
-            <div>Border color (light): <input v-model="borderColorLight" type="color" class="custom-color-picker"> {{borderColorLight}}</div>
-            <div>Border color (dark): <input v-model="borderColorDark" type="color" class="custom-color-picker"> {{borderColorDark}}</div>
-
-            <div class="mt-2 mb-2">
-              <span class="ml-0 text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="resetColorsToSavedTheme" >
-                <IconsReset class="custom-icons" />
-                Reset colors
-              </span>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="mt-2 mb-6">
-          <span class="ml-0 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleTheme" >
-          hide section
-          <IconsTriangle :rotateIf="showTheme" />
-          </span>
-        </div>
-      </div>
-
-
+      <!-- Social media links -->
       <div>
         <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleSocialMediaLinks">
         Social media links
@@ -360,7 +411,7 @@
         </span>
       </div>
 
-      <div v-if="showSocialMediaLinks" class="pl-4">
+      <div v-if="showSocialMediaLinks" class="pl-4 pt-4 custom-admin-web-panel-section">
         <div>Another website: <input v-model="anotherWebsiteLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>IPFS: <input v-model="ipfsLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Tor: <input v-model="torLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
@@ -403,7 +454,7 @@
         </span>
       </div>
 
-      <div v-if="showSocialMediaNames" class="pl-4">
+      <div v-if="showSocialMediaNames" class="pl-4 pt-4 custom-admin-web-panel-section">
         <div>Nostr npub: <input v-model="nostrNpub" type="text" placeholder="enter npub" class="custom-admin-input-socials"></div>
         <div>Session: <input v-model="sessionName" type="text" placeholder="enter username" class="custom-admin-input-socials"></div>
         <div>Matrix: <input v-model="matrixName" type="text" placeholder="enter username" class="custom-admin-input-socials"></div>
@@ -437,7 +488,7 @@
         </span>
       </div>
 
-      <div v-if="showBlockchainLinks" class="pl-4">
+      <div v-if="showBlockchainLinks" class="pl-4 pt-4 custom-admin-web-panel-section">
         <div>Uniswap: <input v-model="uniswapLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Sushiswap: <input v-model="sushiswapLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Etherscan: <input v-model="etherscanLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
@@ -463,7 +514,7 @@
         </span>
       </div>
 
-      <div v-if="showFeedSettings" class="ml-5">
+      <div v-if="showFeedSettings" class="pl-5 custom-admin-web-panel-section">
         <h5 class="mt-4">Feed activity filters</h5>
         <div class="ml-5">
           <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
@@ -488,7 +539,7 @@
           <textarea
             v-model="envCategories"
             placeholder="defi,privacy,tech,memes"
-            class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-30 lg:h-36 focus:outline-none rounded-b-lg border-2"
+            class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-24 lg:h-24 focus:outline-none rounded-b-lg border-2"
           />
         </div>
 
@@ -508,7 +559,7 @@
         </span>
       </div>
 
-      <div v-if="showOther" class="mt-2 ml-5">
+      <div v-if="showOther" class="pt-4 pl-5 custom-admin-web-panel-section">
         <div>
           <input
             v-model="enableShortUrlsForWeb3Actions"
@@ -547,7 +598,7 @@
         </span>
       </div>
 
-      <div v-if="showNewContent">
+      <div v-if="showNewContent" class="custom-admin-web-panel-section">
         <div class="hidden mt-4 pl-4">
           RSS module:
           <div class="pl-4">
