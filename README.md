@@ -1,14 +1,17 @@
+## Deploy Spasm
+
+- Launch Spasm under three minutes with [docker/podman](https://github.com/spasm-network/spasm-docker).
+- Or set up a new server from scratch with [one script](https://github.com/spasm-network/spasm-ansible).
+
+---
+
 # Spasm Forum web client
 
 spasm-forum-web is a frontend for a [Spasm](https://github.com/spasm-network/spasm.js) forum.
 
 spasm-forum-server repository can be found [here](https://github.com/spasm-network/spasm-forum-server).
 
-## Server setup
-
-If you don't have any experience at setting up a server, then there is a beginner-friendly guide with scripts for an automated [initial server setup](https://github.com/spasm-network/spasm-forum-scripts).
-
----
+This repo is for development. If you want to deploy Spasm, then check [docker/podman](https://github.com/spasm-network/spasm-docker) or [ansible](https://github.com/spasm-network/spasm-ansible).
 
 ## Install npm
 
