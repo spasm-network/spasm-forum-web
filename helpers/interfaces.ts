@@ -1477,7 +1477,22 @@ export interface AppConfig {
   enableNewWeb3ActionsPost?: boolean
   enableNewWeb3ActionsReply?: boolean
   enableNewWeb3ActionsReact?: boolean
+  enableNewWeb3ActionsOther?: boolean
   enableNewWeb3ActionsModerate?: boolean
+  enableMarkdownInPosts?: boolean
+  enableMarkdownInComments?: boolean
+  enableEmbedImageTagsForAllUsers?: boolean
+  enableEmbedImageTagsForFullLineImageLinks?: boolean
+  enableEmbedImageTagsInPosts?: boolean
+  enableEmbedImageTagsInComments?: boolean
+  enableEmbedVideoTagsForAllUsers?: boolean
+  enableEmbedVideoTagsForFullLineVideoLinks?: boolean
+  enableEmbedVideoTagsInPosts?: boolean
+  enableEmbedVideoTagsInComments?: boolean
+  enableEmbedAudioTagsForAllUsers?: boolean
+  enableEmbedAudioTagsForFullLineAudioLinks?: boolean
+  enableEmbedAudioTagsInPosts?: boolean
+  enableEmbedAudioTagsInComments?: boolean
   ifShowCategoriesFilter?: boolean
   ifAllowGuestLogin?: boolean
   enableNewNostrActionsAll?: boolean
@@ -1487,18 +1502,29 @@ export interface AppConfig {
   enableWhitelistForActionPost?: boolean
   enableWhitelistForActionReply?: boolean
   enableWhitelistForActionReact?: boolean
+  enableWhitelistForActionOther?: boolean
   enableSpasmModule?: boolean
   enableSpasmSourcesUpdates?: boolean
+  enableFederationDefaultLists?: boolean
+  enableFederationDefaultListOfficial?: boolean
+  enableFederationDefaultListCrypto?: boolean
+  enableFederationDefaultListPrivacy?: boolean
+  enableFederationDefaultListTech?: boolean
+  enableFederationDefaultListPolitics?: boolean
   enableRssModule?: boolean
   enableRssSourcesUpdates?: boolean
   ignoreWhitelistForActionPostInSpasmModule?: boolean
   ignoreWhitelistForActionReactInSpasmModule?: boolean
   ignoreWhitelistForActionReplyInSpasmModule?: boolean
+  ignoreWhitelistForActionOtherInSpasmModule?: boolean
+  // RSS feed channel
+  enableRssFeedChannel?: boolean
   // Arrays
   moderators?: string[]
   whitelistedForActionPost?: string[]
   whitelistedForActionReply?: string[]
   whitelistedForActionReact?: string[]
+  whitelistedForActionOther?: string[]
   pinnedIds?: string[]
   envCategories?: string[]
   // Numbers
@@ -1601,6 +1627,10 @@ export interface AppConfig {
   birdeyeLink?: string
   geckoterminalLink?: string
   extraContactInfo?: string
+  rssFeedChannelTitle?: string
+  rssFeedChannelLink?: string
+  rssFeedChannelDescription?: string
+  rssFeedChannelImageLink?: string
 }
 
 export type AppConfigKeyString =
@@ -1698,6 +1728,10 @@ export type AppConfigKeyString =
   | "birdeyeLink"
   | "geckoterminalLink"
   | "extraContactInfo"
+  | "rssFeedChannelTitle"
+  | "rssFeedChannelLink"
+  | "rssFeedChannelDescription"
+  | "rssFeedChannelImageLink"
 
 export type AppConfigKeyBoolean =
   | "enableAppConfigChanges"
@@ -1720,12 +1754,22 @@ export type AppConfigKeyBoolean =
   | "enableNewWeb3ActionsPost"
   | "enableNewWeb3ActionsReply"
   | "enableNewWeb3ActionsReact"
+  | "enableNewWeb3ActionsOther"
   | "enableNewWeb3ActionsModerate"
-  | "enableNewWeb3ActionsAll"
-  | "enableNewWeb3ActionsPost"
-  | "enableNewWeb3ActionsReact"
-  | "enableNewWeb3ActionsReply"
-  | "enableNewWeb3ActionsModerate"
+  | "enableMarkdownInPosts"
+  | "enableMarkdownInComments"
+  | "enableEmbedImageTagsForAllUsers"
+  | "enableEmbedImageTagsForFullLineImageLinks"
+  | "enableEmbedImageTagsInPosts"
+  | "enableEmbedImageTagsInComments"
+  | "enableEmbedVideoTagsForAllUsers"
+  | "enableEmbedVideoTagsForFullLineVideoLinks"
+  | "enableEmbedVideoTagsInPosts"
+  | "enableEmbedVideoTagsInComments"
+  | "enableEmbedAudioTagsForAllUsers"
+  | "enableEmbedAudioTagsForFullLineAudioLinks"
+  | "enableEmbedAudioTagsInPosts"
+  | "enableEmbedAudioTagsInComments"
   | "ifShowCategoriesFilter"
   | "ifAllowGuestLogin"
   | "enableNewNostrActionsAll"
@@ -1736,21 +1780,31 @@ export type AppConfigKeyBoolean =
   | "enableWhitelistForActionPost"
   | "enableWhitelistForActionReply"
   | "enableWhitelistForActionReact"
+  | "enableWhitelistForActionOther"
   | "feedFiltersActivityHot"
   | "feedFiltersActivityRising"
   | "enableSpasmModule"
   | "enableSpasmSourcesUpdates"
+  | "enableFederationDefaultLists"
+  | "enableFederationDefaultListOfficial"
+  | "enableFederationDefaultListCrypto"
+  | "enableFederationDefaultListPrivacy"
+  | "enableFederationDefaultListTech"
+  | "enableFederationDefaultListPolitics"
   | "enableRssModule"
   | "enableRssSourcesUpdates"
   | "ignoreWhitelistForActionPostInSpasmModule"
   | "ignoreWhitelistForActionReactInSpasmModule"
-  | "ignoreWhitelistForActionReplyInSpasmModul"
+  | "ignoreWhitelistForActionReplyInSpasmModule"
+  | "ignoreWhitelistForActionOtherInSpasmModule"
+  | "enableRssFeedChannel"
 
 export type AppConfigKeyArray =
   | "moderators"
   | "whitelistedForActionPost"
   | "whitelistedForActionReply"
   | "whitelistedForActionReact"
+  | "whitelistedForActionOther"
   | "pinnedIds"
   | "envCategories"
 

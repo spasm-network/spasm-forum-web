@@ -332,22 +332,24 @@ const {
   getNostrRelays,
   sendEventToNostrNetwork
 } = useNostr()
-const env = useRuntimeConfig()?.public
-const enableMarkdownInPosts: boolean = env?.enableMarkdownInPosts === 'true'? true : false
-const enableEmbedIframeTagsInPosts: boolean = env?.enableEmbedIframeTagsInPosts === 'true'? true : false
+const enableMarkdownInPosts: boolean = appConfig?.enableMarkdownInPosts
 const enableShortUrlsForWeb3Actions: boolean = appConfig?.enableShortUrlsForWeb3Actions
 const shortUrlsLengthOfWeb3Ids: number = appConfig?.shortUrlsLengthOfWeb3Ids
 const admins: string[] = appConfig?.admins
+const env = useRuntimeConfig()?.public
+const enableEmbedIframeTagsInPosts: boolean = env?.enableEmbedIframeTagsInPosts === 'true'? true : false
 const {checkIfSignerAllowedIframe, getArrayOfArraysOfTextAndTagsV2} = useHtmlTags()
 const {
   sliceId,
   randomNumber,
   toBeDate,
   isArrayWithValues,
-  extractTextForDisplay,
-  standardizeTextForDisplay,
   isValidUrl
 } = useUtils()
+const {
+  extractTextForDisplay,
+  standardizeTextForDisplay,
+} = useUtilsEnv()
 
 const props = defineProps<{
   event?: SpasmEventV2
@@ -424,7 +426,6 @@ const sendEventToAnotherInstance = async () => {
   }
   sendToAnotherInstanceResponse.value = "pending"
   const res = await sendEventV2ToSpasm(props.event, customApiUrl.value)
-  console.log("res:", res)
   if (!res) {
     sendToAnotherInstanceResponse.value = "something went wrong"
   } else {

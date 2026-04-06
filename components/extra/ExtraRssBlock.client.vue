@@ -6,7 +6,7 @@
     deployment often doesn't include API URL in env variables.
     But on a client-side we can get URL from window origin.
   -->
-  <div class="overflow-auto overflow-wrap break-words" >
+  <div v-if="enableRssFeedChannel" class="overflow-auto overflow-wrap break-words" >
     <client-only>
       <div
         class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark"
@@ -182,6 +182,9 @@ const {
   copyToClipboard,
   isArrayWithValues
 } = useUtils()
+const appConfig = useAppConfigStore()?.getAppConfig
+const enableRssFeedChannel =
+  appConfig?.enableRssFeedChannel
 
 const props = withDefaults(
   defineProps<{

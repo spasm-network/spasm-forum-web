@@ -139,7 +139,11 @@
   }
 
   .custom-admin-input-socials {
-    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[50%] max-w-[700px] focus:outline-none border-2
+    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[70%] lg:w-[60%] max-w-[700px] focus:outline-none border-2
+  }
+
+  .custom-admin-input-socials-tiny {
+    @apply my-1 p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[20%] lg:w-[20%] max-w-[100px] focus:outline-none border-2
   }
 
   .custom-color-picker {
@@ -147,7 +151,7 @@
   }
 
   .custom-admin-web-panel-section {
-    @apply border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark 
+    @apply my-2 py-4 border-2 rounded-lg border-borderColor-light dark:border-borderColor-dark 
   }
 }
 

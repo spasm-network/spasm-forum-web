@@ -218,16 +218,19 @@ const {
   randomNumber,
   toBeDate,
   isValidSpasmEventV2,
+} = useUtils()
+const {
   extractTextForDisplay,
   standardizeTextForDisplay
-} = useUtils()
-const env = useRuntimeConfig()?.public
-const enableMarkdownInComments = env?.enableMarkdownInComments === 'true'? true : false
-const enableEmbedIframeTagsInComments = env?.enableEmbedIframeTagsInComments === 'true'? true : false
+} = useUtilsEnv()
+const enableMarkdownInComments =
+  appConfig?.enableMarkdownInComments
 const enableNewWeb3ActionsAll: boolean =
   appConfig?.enableNewWeb3ActionsAll
 const enableNewWeb3ActionsReply: boolean =
   appConfig?.enableNewWeb3ActionsReply
+const env = useRuntimeConfig()?.public
+const enableEmbedIframeTagsInComments = env?.enableEmbedIframeTagsInComments === 'true'? true : false
 const {
   checkIfSignerAllowedIframe,
   getArrayOfArraysOfTextAndTagsV2

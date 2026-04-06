@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <button class="block lg:hidden mt-4 border-2 py-2 px-3 text-colorPrimary-light dark:text-colorPrimary-dark rounded-md border-colorPrimary-light dark:border-colorPrimary-dark" @click="showFeed()">
+    <button class="block lg:hidden mt-4 mb-4 border-2 py-2 px-3 text-colorPrimary-light dark:text-colorPrimary-dark rounded-md border-colorPrimary-light dark:border-colorPrimary-dark" @click="showFeed()">
       SHOW FEED
     </button>
 

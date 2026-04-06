@@ -139,6 +139,8 @@ export default defineNuxtConfig({
       whitelistedForActionReply: process.env.WHITELISTED_FOR_ACTION_REPLY || process.env.NUXT_PUBLIC_WHITELISTED_FOR_ACTION_REPLY,
       enableWhitelistForActionReact: process.env.ENABLE_WHITELIST_FOR_ACTION_REACT || process.env.NUXT_PUBLIC_ENABLE_WHITELIST_FOR_ACTION_REACT,
       whitelistedForActionReact: process.env.WHITELISTED_FOR_ACTION_REACT || process.env.NUXT_PUBLIC_WHITELISTED_FOR_ACTION_REACT,
+      enableWhitelistForActionOther: process.env.ENABLE_WHITELIST_FOR_ACTION_OTHER || process.env.NUXT_PUBLIC_ENABLE_WHITELIST_FOR_ACTION_OTHER,
+      whitelistedForActionOther: process.env.WHITELISTED_FOR_ACTION_OTHER || process.env.NUXT_PUBLIC_WHITELISTED_FOR_ACTION_OTHER,
 
       // Nostr network
       enableNostrNetwork: process.env.ENABLE_NOSTR_NETWORK || process.env.NUXT_PUBLIC_ENABLE_NOSTR_NETWORK,

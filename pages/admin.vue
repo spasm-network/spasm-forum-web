@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div class="overflow-auto overflow-wrap break-words">
     <div class="mt-4">
-      <!-- TODO Refactor or delete after testing -->
       <div class="my-4">
         <div>
           Connected address:
@@ -9,6 +8,14 @@
             class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline">
             {{connectedAddress}}
           </nuxt-link>
+          <ExtraAddressIcons
+            v-if="connectedAddress"
+            :key="connectedAddress"
+            :value="connectedAddress"
+            :showCopyToClipboard="true"
+            :showQrCode="true"
+            :showExternalWebsite="true"
+          />
         </div>
         <div
           class="mb-6"
@@ -47,7 +54,7 @@
           </div>
           <div>
             <div>
-              Below are a few Ethereum and Nostr examples, but there are many more apps.
+              There are many Ethereum and Nostr apps, here are a few examples:
             </div>
             <div>
               <div>
@@ -63,7 +70,7 @@
                   Chrome/Brave:
                 </span>
                 <span>
-                  Rabby, MetaMask, nos2x, Flamingo
+                  Rabby, MetaMask, nos2x
                 </span>
               </div>
               <div>
@@ -295,7 +302,7 @@
       </div>
 
       <div v-if="showHomePage" class="pl-4 custom-admin-web-panel-section">
-        <div class="pl-0 mt-4">
+        <div class="pl-0 mt-2">
           <div class="pl-0 mt-2">
             <input v-model="enableDefaultHeaderImage" type="checkbox" >
             Enable header image
@@ -515,7 +522,7 @@
       </div>
 
       <div v-if="showFeedSettings" class="pl-5 custom-admin-web-panel-section">
-        <h5 class="mt-4">Feed activity filters</h5>
+        <h5 class="mt-2">Feed activity filters</h5>
         <div class="ml-5">
           <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
             Hot/rising activity filter is based on reaction volume (upvote, downvote, etc.).
@@ -523,8 +530,8 @@
           <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
             Consider increasing thresholds if your instance has many users eligible to submit reactions.
           </div>
-          <div>The amount of reactions for "Hot" filter: <input v-model="feedFiltersActivityHot" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
-          <div>The amount of reactions for "Rising" filter: <input v-model="feedFiltersActivityRising" type="number" placeholder="choose a number" class="custom-admin-input-socials"></div>
+          <div>The amount of reactions for "Hot" filter: <input v-model="feedFiltersActivityHot" type="number" placeholder="choose a number" class="custom-admin-input-socials-tiny"></div>
+          <div>The amount of reactions for "Rising" filter: <input v-model="feedFiltersActivityRising" type="number" placeholder="choose a number" class="custom-admin-input-socials-tiny"></div>
         </div>
         <h5 class="mt-2">Feed categories filters</h5>
         <div class="mt-2 ml-5">
@@ -552,6 +559,7 @@
       </div>
 
 
+      <!-- OTHER -->
       <div>
         <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleOther">
         Other
@@ -591,6 +599,7 @@
       </div>
 
 
+      <!-- NEW CONTENT -->
       <div>
         <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleNewContent">
         New Content
@@ -599,7 +608,7 @@
       </div>
 
       <div v-if="showNewContent" class="custom-admin-web-panel-section">
-        <div class="hidden mt-4 pl-4">
+        <div class="hidden mt-2 pl-4">
           RSS module:
           <div class="pl-4">
             <input
@@ -696,6 +705,16 @@
             </div>
             <div>
               <input
+                v-model="enableNewWeb3ActionsOther"
+                type="checkbox"
+              >
+              other
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (any non-standard event)
+              </span>
+            </div>
+            <div>
+              <input
                 v-model="enableNewWeb3ActionsModerate"
                 type="checkbox"
               >
@@ -767,6 +786,22 @@
                 class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
               />
             </div>
+            <div class="mt-4">
+              <input
+                v-model="enableWhitelistForActionOther"
+                type="checkbox"
+              >
+              enable whitelist for new other actions
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                (any non-standard event)
+              </span>
+              ({{ count(whitelistedForActionOther) }})
+              <textarea
+                v-model="whitelistedForActionOther"
+                placeholder="0x123456789,npub123456789"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+            </div>
           </div>
         </div>
         <div class="mt-2 mb-6">
@@ -776,6 +811,292 @@
           </span>
         </div>
       </div>
+
+
+      <!-- MEDIA CONTENT -->
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleMediaContent">
+        Media content
+        <IconsTriangle :rotateIf="showMediaContent" />
+        </span>
+      </div>
+
+      <div v-if="showMediaContent" class="custom-admin-web-panel-section">
+        <div class="mt-2 pl-4">
+          <div class="mt-2 pl-0">
+
+            <!-- Markdown -->
+            <div class="mt-2 pl-0">
+              <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                Markdown must be allowed to auto-embed images, videos, and audios
+              </span>
+              <div class="mt-2 pl-0">
+                <input
+                  v-model="enableMarkdownInPosts"
+                  type="checkbox"
+                >
+                allow markdown in posts
+              </div>
+              <div class="mt-2 pl-0">
+                <input
+                  v-model="enableMarkdownInComments"
+                  type="checkbox"
+                >
+                allow markdown in comments
+              </div>
+            </div>
+
+            <!-- Images -->
+            <div v-if="enableMarkdownInPosts || enableMarkdownInComments" class="mt-2 pl-5">
+              <div class="mt-2 pl-0">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  Images
+                </span>
+                <div class="mt-2 pl-0">
+                  <input
+                    v-model="enableEmbedImageTagsForAllUsers"
+                    type="checkbox"
+                  >
+                  auto-embed images
+                </div>
+                <div v-if="enableEmbedImageTagsForAllUsers" class="mt-0 pl-5">
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedImageTagsInPosts"
+                      type="checkbox"
+                    >
+                    in posts
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedImageTagsInComments"
+                      type="checkbox"
+                    >
+                    in comments
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedImageTagsForFullLineImageLinks"
+                      type="checkbox"
+                    >
+                    full-line links
+                  </div>
+                </div>
+              </div>
+
+              <!-- Videos -->
+              <div class="mt-2 pl-0">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  Videos
+                </span>
+                <div class="mt-2 pl-0">
+                  <input
+                    v-model="enableEmbedVideoTagsForAllUsers"
+                    type="checkbox"
+                  >
+                  auto-embed videos
+                </div>
+                <div v-if="enableEmbedVideoTagsForAllUsers" class="mt-2 pl-5">
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedVideoTagsInPosts"
+                      type="checkbox"
+                    >
+                    in posts
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedVideoTagsInComments"
+                      type="checkbox"
+                    >
+                    in comments
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedVideoTagsForFullLineVideoLinks"
+                      type="checkbox"
+                    >
+                    full-line links
+                  </div>
+                </div>
+              </div>
+
+              <!-- Audios -->
+              <div class="mt-2 pl-0">
+                <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                  Audios
+                </span>
+                <div class="mt-2 pl-0">
+                  <input
+                    v-model="enableEmbedAudioTagsForAllUsers"
+                    type="checkbox"
+                  >
+                  auto-embed audios
+                </div>
+                <div v-if="enableEmbedAudioTagsForAllUsers" class="mt-2 pl-5">
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedAudioTagsInPosts"
+                      type="checkbox"
+                    >
+                    in posts
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedAudioTagsInComments"
+                      type="checkbox"
+                    >
+                    in comments
+                  </div>
+                  <div class="mt-2 pl-0">
+                    <input
+                      v-model="enableEmbedAudioTagsForFullLineAudioLinks"
+                      type="checkbox"
+                    >
+                    full-line links
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleMediaContent" >
+          hide section
+          <IconsTriangle :rotateIf="showMediaContent" />
+          </span>
+        </div>
+      </div>
+
+
+      <!-- RSS FEED CHANNEL -->
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleRssFeedChannel">
+        RSS Channel
+        <IconsTriangle :rotateIf="showRssFeedChannel" />
+        </span>
+      </div>
+
+      <div v-if="showRssFeedChannel" class="custom-admin-web-panel-section">
+        <div class="mt-2 pl-4">
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            Configure your RSS channel so users can follow your instance with legacy tech
+          </span>
+          <div class="mt-2 pl-0">
+            <input
+              v-model="enableRssFeedChannel"
+              type="checkbox"
+            >
+            enable RSS channel
+
+            <div v-if="enableRssFeedChannel" class="pl-4 mt-2">
+              <div>
+                channel title:
+                <input v-model="rssFeedChannelTitle" type="text" placeholder="Spasm forum" class="custom-admin-input-socials">
+              </div>
+              <div>
+                forum link:
+                <input v-model="rssFeedChannelLink" type="text" placeholder="https://forum.spasm.network" class="custom-admin-input-socials">
+              </div>
+              <div>
+                description:
+                <input v-model="rssFeedChannelDescription" type="text" placeholder="Unplug from slave tech!" class="custom-admin-input-socials">
+              </div>
+              <div>
+                image link:
+                <input v-model="rssFeedChannelImageLink" type="text" placeholder="https://spasm.network/image.jpeg" class="custom-admin-input-socials">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleRssFeedChannel" >
+          hide section
+          <IconsTriangle :rotateIf="showRssFeedChannel" />
+          </span>
+        </div>
+      </div>
+
+
+      <!-- FEDERATION -->
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleFederation">
+        Federation
+        <IconsTriangle :rotateIf="showFederation" />
+        </span>
+      </div>
+
+      <div v-if="showFederation" class="custom-admin-web-panel-section">
+        <div class="mt-2 pl-4">
+          <span class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+            You can enable federation to automatically fetch events (posts, comments) from other instances.
+          </span>
+          <div class="mt-2 pl-0">
+            <input
+              v-model="enableSpasmModule"
+              type="checkbox"
+            >
+            enable federation
+
+            <div v-if="enableSpasmModule" class="pl-4 mt-2">
+              <input
+                v-model="enableFederationDefaultLists"
+                type="checkbox"
+              >
+              enable default federation lists:
+
+              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                <input
+                  v-model="enableFederationDefaultListOfficial"
+                  type="checkbox"
+                >
+                spasm
+              </div>
+              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                <input
+                  v-model="enableFederationDefaultListCrypto"
+                  type="checkbox"
+                >
+                crypto
+              </div>
+              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                <input
+                  v-model="enableFederationDefaultListPrivacy"
+                  type="checkbox"
+                >
+                privacy
+              </div>
+              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                <input
+                  v-model="enableFederationDefaultListTech"
+                  type="checkbox"
+                >
+                tech
+              </div>
+              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                <input
+                  v-model="enableFederationDefaultListPolitics"
+                  type="checkbox"
+                >
+                politics
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleFederation" >
+          hide section
+          <IconsTriangle :rotateIf="showFederation" />
+          </span>
+        </div>
+      </div>
+
+
+      <!-- RESPONSE -->
       <div class="my-4">
         <div
           :class="[isResponseError ? 'text-colorRed-light dark:text-colorRed-dark' : 'text-colorGreen-light dark:text-colorGreen-dark']"
@@ -849,6 +1170,9 @@ const showBlockchainLinks = ref<boolean>(false)
 const showFeedSettings = ref<boolean>(false)
 const showOther = ref<boolean>(false)
 const showNewContent = ref<boolean>(false)
+const showMediaContent = ref<boolean>(false)
+const showRssFeedChannel = ref<boolean>(false)
+const showFederation = ref<boolean>(false)
 const toggleHomePage = () => {
   showHomePage.value = !showHomePage.value
 }
@@ -875,6 +1199,15 @@ const toggleOther = () => {
 }
 const toggleNewContent = () => {
   showNewContent.value = !showNewContent.value
+}
+const toggleMediaContent = () => {
+  showMediaContent.value = !showMediaContent.value
+}
+const toggleRssFeedChannel = () => {
+  showRssFeedChannel.value = !showRssFeedChannel.value
+}
+const toggleFederation = () => {
+  showFederation.value = !showFederation.value
 }
 
 const favicons = [
@@ -1218,16 +1551,70 @@ const enableNewWeb3ActionsReply =
   ref<boolean>(appConfig?.enableNewWeb3ActionsReply)
 const enableNewWeb3ActionsReact =
   ref<boolean>(appConfig?.enableNewWeb3ActionsReact)
+const enableNewWeb3ActionsOther =
+  ref<boolean>(appConfig?.enableNewWeb3ActionsOther)
 const enableNewWeb3ActionsModerate =
   ref<boolean>(appConfig?.enableNewWeb3ActionsModerate)
 const enableModeration =
   ref<boolean>(appConfig?.enableModeration)
+const enableMarkdownInPosts =
+  ref<boolean>(appConfig?.enableMarkdownInPosts)
+const enableMarkdownInComments =
+  ref<boolean>(appConfig?.enableMarkdownInComments)
+const enableEmbedImageTagsForAllUsers =
+  ref<boolean>(appConfig?.enableEmbedImageTagsForAllUsers)
+const enableEmbedImageTagsForFullLineImageLinks =
+  ref<boolean>(appConfig?.enableEmbedImageTagsForFullLineImageLinks)
+const enableEmbedImageTagsInPosts =
+  ref<boolean>(appConfig?.enableEmbedImageTagsInPosts)
+const enableEmbedImageTagsInComments =
+  ref<boolean>(appConfig?.enableEmbedImageTagsInComments)
+const enableEmbedVideoTagsForAllUsers =
+  ref<boolean>(appConfig?.enableEmbedVideoTagsForAllUsers)
+const enableEmbedVideoTagsForFullLineVideoLinks =
+  ref<boolean>(appConfig?.enableEmbedVideoTagsForFullLineVideoLinks)
+const enableEmbedVideoTagsInPosts =
+  ref<boolean>(appConfig?.enableEmbedVideoTagsInPosts)
+const enableEmbedVideoTagsInComments =
+  ref<boolean>(appConfig?.enableEmbedVideoTagsInComments)
+const enableEmbedAudioTagsForAllUsers =
+  ref<boolean>(appConfig?.enableEmbedAudioTagsForAllUsers)
+const enableEmbedAudioTagsForFullLineAudioLinks =
+  ref<boolean>(appConfig?.enableEmbedAudioTagsForFullLineAudioLinks)
+const enableEmbedAudioTagsInPosts =
+  ref<boolean>(appConfig?.enableEmbedAudioTagsInPosts)
+const enableEmbedAudioTagsInComments =
+  ref<boolean>(appConfig?.enableEmbedAudioTagsInComments)
 const enableWhitelistForActionPost =
   ref<boolean>(appConfig?.enableWhitelistForActionPost)
 const enableWhitelistForActionReply =
   ref<boolean>(appConfig?.enableWhitelistForActionReply)
 const enableWhitelistForActionReact =
   ref<boolean>(appConfig?.enableWhitelistForActionReact)
+const enableWhitelistForActionOther =
+  ref<boolean>(appConfig?.enableWhitelistForActionOther)
+
+// Federation
+const enableSpasmModule =
+  ref<boolean>(appConfig?.enableSpasmModule)
+const enableSpasmSourcesUpdates =
+  ref<boolean>(appConfig?.enableSpasmSourcesUpdates)
+const enableFederationDefaultLists =
+  ref<boolean>(appConfig?.enableFederationDefaultLists)
+const enableFederationDefaultListOfficial =
+  ref<boolean>(appConfig?.enableFederationDefaultListOfficial)
+const enableFederationDefaultListCrypto =
+  ref<boolean>(appConfig?.enableFederationDefaultListCrypto)
+const enableFederationDefaultListPrivacy =
+  ref<boolean>(appConfig?.enableFederationDefaultListPrivacy)
+const enableFederationDefaultListTech =
+  ref<boolean>(appConfig?.enableFederationDefaultListTech)
+const enableFederationDefaultListPolitics =
+  ref<boolean>(appConfig?.enableFederationDefaultListPolitics)
+
+// Federation
+const enableRssFeedChannel =
+  ref<boolean>(appConfig?.enableRssFeedChannel)
 
 // Arrays
 const moderators =
@@ -1238,6 +1625,8 @@ const whitelistedForActionReply =
   ref<string[]>(appConfig?.whitelistedForActionReply)
 const whitelistedForActionReact =
   ref<string[]>(appConfig?.whitelistedForActionReact)
+const whitelistedForActionOther =
+  ref<string[]>(appConfig?.whitelistedForActionOther)
 const pinnedIds =
   ref<string[]>(appConfig?.pinnedIds)
 const envCategories =
@@ -1381,6 +1770,11 @@ const dexscreenerLink = ref<string>(appConfig?.dexscreenerLink)
 const birdeyeLink = ref<string>(appConfig?.birdeyeLink)
 const geckoterminalLink = ref<string>(appConfig?.geckoterminalLink)
 const extraContactInfo = ref<string>(appConfig?.extraContactInfo)
+// RSS feed channel
+const rssFeedChannelTitle = ref<string>(appConfig?.rssFeedChannelTitle)
+const rssFeedChannelLink = ref<string>(appConfig?.rssFeedChannelLink)
+const rssFeedChannelDescription = ref<string>(appConfig?.rssFeedChannelDescription)
+const rssFeedChannelImageLink = ref<string>(appConfig?.rssFeedChannelImageLink)
 
 // Numbers
 const shortUrlsLengthOfWeb3Ids = ref<number>(appConfig?.shortUrlsLengthOfWeb3Ids)
@@ -1462,16 +1856,70 @@ const saveAppConfig = async () => {
       enableNewWeb3ActionsReply.value
     newAppConfig.enableNewWeb3ActionsReact =
       enableNewWeb3ActionsReact.value
+    newAppConfig.enableNewWeb3ActionsOther =
+      enableNewWeb3ActionsOther.value
     newAppConfig.enableNewWeb3ActionsModerate =
       enableNewWeb3ActionsModerate.value
     newAppConfig.enableModeration =
       enableModeration.value
+    newAppConfig.enableMarkdownInPosts =
+      enableMarkdownInPosts.value
+    newAppConfig.enableMarkdownInComments =
+      enableMarkdownInComments.value
+    newAppConfig.enableEmbedImageTagsForAllUsers =
+      enableEmbedImageTagsForAllUsers.value
+    newAppConfig.enableEmbedImageTagsForFullLineImageLinks =
+      enableEmbedImageTagsForFullLineImageLinks.value
+    newAppConfig.enableEmbedImageTagsInPosts =
+      enableEmbedImageTagsInPosts.value
+    newAppConfig.enableEmbedImageTagsInComments =
+      enableEmbedImageTagsInComments.value
+    newAppConfig.enableEmbedVideoTagsForAllUsers =
+      enableEmbedVideoTagsForAllUsers.value
+    newAppConfig.enableEmbedVideoTagsForFullLineVideoLinks =
+      enableEmbedVideoTagsForFullLineVideoLinks.value
+    newAppConfig.enableEmbedVideoTagsInPosts =
+      enableEmbedVideoTagsInPosts.value
+    newAppConfig.enableEmbedVideoTagsInComments =
+      enableEmbedVideoTagsInComments.value
+    newAppConfig.enableEmbedAudioTagsForAllUsers =
+      enableEmbedAudioTagsForAllUsers.value
+    newAppConfig.enableEmbedAudioTagsForFullLineAudioLinks =
+      enableEmbedAudioTagsForFullLineAudioLinks.value
+    newAppConfig.enableEmbedAudioTagsInPosts =
+      enableEmbedAudioTagsInPosts.value
+    newAppConfig.enableEmbedAudioTagsInComments =
+      enableEmbedAudioTagsInComments.value
     newAppConfig.enableWhitelistForActionPost =
       enableWhitelistForActionPost.value
     newAppConfig.enableWhitelistForActionReply =
       enableWhitelistForActionReply.value
     newAppConfig.enableWhitelistForActionReact =
       enableWhitelistForActionReact.value
+    newAppConfig.enableWhitelistForActionOther =
+      enableWhitelistForActionOther.value
+
+    // Federation
+    newAppConfig.enableSpasmModule =
+      enableSpasmModule.value
+    newAppConfig.enableSpasmSourcesUpdates =
+      enableSpasmSourcesUpdates.value
+    newAppConfig.enableFederationDefaultLists =
+      enableFederationDefaultLists.value
+    newAppConfig.enableFederationDefaultListOfficial =
+      enableFederationDefaultListOfficial.value
+    newAppConfig.enableFederationDefaultListCrypto =
+      enableFederationDefaultListCrypto.value
+    newAppConfig.enableFederationDefaultListPrivacy =
+      enableFederationDefaultListPrivacy.value
+    newAppConfig.enableFederationDefaultListTech =
+      enableFederationDefaultListTech.value
+    newAppConfig.enableFederationDefaultListPolitics =
+      enableFederationDefaultListPolitics.value
+
+    // RSS feed channel
+    newAppConfig.enableRssFeedChannel =
+      enableRssFeedChannel.value
 
     // Arrays
     if (typeof(moderators.value) === "string") {
@@ -1501,6 +1949,13 @@ const saveAppConfig = async () => {
       newAppConfig.whitelistedForActionReact =
         whitelistedForActionReact.value
     }
+    if (typeof(whitelistedForActionOther.value) === "string") {
+      newAppConfig.whitelistedForActionOther =
+        splitIntoArray(whitelistedForActionOther.value)
+    } else if (Array.isArray(whitelistedForActionOther.value)) {
+      newAppConfig.whitelistedForActionOther =
+        whitelistedForActionOther.value
+    }
     if (typeof(pinnedIds.value) === "string") {
       newAppConfig.pinnedIds =
         splitIntoArray(pinnedIds.value)
@@ -1517,307 +1972,135 @@ const saveAppConfig = async () => {
     }
 
     // Strings
-    // Strings-intro-home
-    if (typeof(faviconTheme.value) === "string") {
-      newAppConfig.faviconTheme = faviconTheme.value
-    }
-    if (typeof(faviconLink.value) === "string") {
-      newAppConfig.faviconLink = faviconLink.value
-    }
-    if (typeof(defaultHeaderImageLink.value) === "string") {
-      newAppConfig.defaultHeaderImageLink = defaultHeaderImageLink.value
-    }
-    if (typeof(introTitle.value) === "string") {
-      newAppConfig.introTitle = introTitle.value
-    }
-    if (typeof(introTitleExtra.value) === "string") {
-      newAppConfig.introTitleExtra = introTitleExtra.value
-    }
-    if (typeof(introAbout.value) === "string") {
-      newAppConfig.introAbout = introAbout.value
-    }
-    if (typeof(postPlaceholder.value) === "string") {
-      newAppConfig.postPlaceholder = postPlaceholder.value
-    }
-    if (typeof(commentPlaceholder.value) === "string") {
-      newAppConfig.commentPlaceholder = commentPlaceholder.value
-    }
-    if (typeof(defaultButtonPrimaryText.value) === "string") {
-      newAppConfig.defaultButtonPrimaryText = defaultButtonPrimaryText.value
-    }
-    if (typeof(defaultButtonPrimaryLink.value) === "string") {
-      newAppConfig.defaultButtonPrimaryLink = defaultButtonPrimaryLink.value
-    }
-    if (typeof(defaultButtonSecondaryText.value) === "string") {
-      newAppConfig.defaultButtonSecondaryText = defaultButtonSecondaryText.value
-    }
-    if (typeof(defaultButtonSecondaryLink.value) === "string") {
-      newAppConfig.defaultButtonSecondaryLink = defaultButtonSecondaryLink.value
-    }
-    // Colors
-    if (typeof(colorPrimaryDark.value) === "string") {
-      newAppConfig.colorPrimaryDark = colorPrimaryDark.value
-    }
-    if (typeof(colorPrimaryLight.value) === "string") {
-      newAppConfig.colorPrimaryLight = colorPrimaryLight.value
-    }
-    if (typeof(colorBaseDark.value) === "string") {
-      newAppConfig.colorBaseDark = colorBaseDark.value
-    }
-    if (typeof(colorBaseLight.value) === "string") {
-      newAppConfig.colorBaseLight = colorBaseLight.value
-    }
-    if (typeof(colorSecondaryDark.value) === "string") {
-      newAppConfig.colorSecondaryDark = colorSecondaryDark.value
-    }
-    if (typeof(colorSecondaryLight.value) === "string") {
-      newAppConfig.colorSecondaryLight = colorSecondaryLight.value
-    }
-    if (typeof(colorHoverDark.value) === "string") {
-      newAppConfig.colorHoverDark = colorHoverDark.value
-    }
-    if (typeof(colorHoverLight.value) === "string") {
-      newAppConfig.colorHoverLight = colorHoverLight.value
-    }
-    if (typeof(colorNotImportantDark.value) === "string") {
-      newAppConfig.colorNotImportantDark = colorNotImportantDark.value
-    }
-    if (typeof(colorNotImportantLight.value) === "string") {
-      newAppConfig.colorNotImportantLight = colorNotImportantLight.value
-    }
-    if (typeof(colorGreenDark.value) === "string") {
-      newAppConfig.colorGreenDark = colorGreenDark.value
-    }
-    if (typeof(colorGreenLight.value) === "string") {
-      newAppConfig.colorGreenLight = colorGreenLight.value
-    }
-    if (typeof(colorRedDark.value) === "string") {
-      newAppConfig.colorRedDark = colorRedDark.value
-    }
-    if (typeof(colorRedLight.value) === "string") {
-      newAppConfig.colorRedLight = colorRedLight.value
-    }
-    if (typeof(colorOrangeDark.value) === "string") {
-      newAppConfig.colorOrangeDark = colorOrangeDark.value
-    }
-    if (typeof(colorOrangeLight.value) === "string") {
-      newAppConfig.colorOrangeLight = colorOrangeLight.value
-    }
-    if (typeof(colorBlueDark.value) === "string") {
-      newAppConfig.colorBlueDark = colorBlueDark.value
-    }
-    if (typeof(colorBlueLight.value) === "string") {
-      newAppConfig.colorBlueLight = colorBlueLight.value
-    }
-    if (typeof(bgBaseDark.value) === "string") {
-      newAppConfig.bgBaseDark = bgBaseDark.value
-    }
-    if (typeof(bgBaseLight.value) === "string") {
-      newAppConfig.bgBaseLight = bgBaseLight.value
-    }
-    if (typeof(bgSecondaryDark.value) === "string") {
-      newAppConfig.bgSecondaryDark = bgSecondaryDark.value
-    }
-    if (typeof(bgSecondaryLight.value) === "string") {
-      newAppConfig.bgSecondaryLight = bgSecondaryLight.value
-    }
-    if (typeof(bgHoverDark.value) === "string") {
-      newAppConfig.bgHoverDark = bgHoverDark.value
-    }
-    if (typeof(bgHoverLight.value) === "string") {
-      newAppConfig.bgHoverLight = bgHoverLight.value
-    }
-    if (typeof(bgDarkDark.value) === "string") {
-      newAppConfig.bgDarkDark = bgDarkDark.value
-    }
-    if (typeof(bgDarkLight.value) === "string") {
-      newAppConfig.bgDarkLight = bgDarkLight.value
-    }
-    if (typeof(borderColorDark.value) === "string") {
-      newAppConfig.borderColorDark = borderColorDark.value
-    }
-    if (typeof(borderColorLight.value) === "string") {
-      newAppConfig.borderColorLight = borderColorLight.value
-    }
-    // Strings-socials
-    if (typeof(anotherWebsiteLink.value) === "string") {
-      newAppConfig.anotherWebsiteLink = anotherWebsiteLink.value
-    }
-    if (typeof(ipfsLink.value) === "string") {
-      newAppConfig.ipfsLink = ipfsLink.value
-    }
-    if (typeof(torLink.value) === "string") {
-      newAppConfig.torLink = torLink.value
-    }
-    if (typeof(ipfsHttpGatewayLink.value) === "string") {
-      newAppConfig.ipfsHttpGatewayLink = ipfsHttpGatewayLink.value
-    }
-    if (typeof(nostrLink.value) === "string") {
-      newAppConfig.nostrLink = nostrLink.value
-    }
-    if (typeof(sessionLink.value) === "string") {
-      newAppConfig.sessionLink = sessionLink.value
-    }
-    if (typeof(simplexLink.value) === "string") {
-      newAppConfig.simplexLink = simplexLink.value
-    }
-    if (typeof(statusLink.value) === "string") {
-      newAppConfig.statusLink = statusLink.value
-    }
-    if (typeof(lensLink.value) === "string") {
-      newAppConfig.lensLink = lensLink.value
-    }
-    if (typeof(farcasterLink.value) === "string") {
-      newAppConfig.farcasterLink = farcasterLink.value
-    }
-    if (typeof(blueskyLink.value) === "string") {
-      newAppConfig.blueskyLink = blueskyLink.value
-    }
-    if (typeof(hiveLink.value) === "string") {
-      newAppConfig.hiveLink = hiveLink.value
-    }
-    if (typeof(pushLink.value) === "string") {
-      newAppConfig.pushLink = pushLink.value
-    }
-    if (typeof(mirrorLink.value) === "string") {
-      newAppConfig.mirrorLink = mirrorLink.value
-    }
-    if (typeof(mastodonLink.value) === "string") {
-      newAppConfig.mastodonLink = mastodonLink.value
-    }
-    if (typeof(matrixLink.value) === "string") {
-      newAppConfig.matrixLink = matrixLink.value
-    }
-    if (typeof(discordLink.value) === "string") {
-      newAppConfig.discordLink = discordLink.value
-    }
-    if (typeof(telegramLink.value) === "string") {
-      newAppConfig.telegramLink = telegramLink.value
-    }
-    if (typeof(twitterLink.value) === "string") {
-      newAppConfig.twitterLink = twitterLink.value
-    }
-    if (typeof(redditLink.value) === "string") {
-      newAppConfig.redditLink = redditLink.value
-    }
-    if (typeof(youtubeLink.value) === "string") {
-      newAppConfig.youtubeLink = youtubeLink.value
-    }
-    if (typeof(instagramLink.value) === "string") {
-      newAppConfig.instagramLink = instagramLink.value
-    }
-    if (typeof(facebookLink.value) === "string") {
-      newAppConfig.facebookLink = facebookLink.value
-    }
-    if (typeof(linkedinLink.value) === "string") {
-      newAppConfig.linkedinLink = linkedinLink.value
-    }
-    if (typeof(wikipediaLink.value) === "string") {
-      newAppConfig.wikipediaLink = wikipediaLink.value
-    }
-    if (typeof(githubLink.value) === "string") {
-      newAppConfig.githubLink = githubLink.value
-    }
-    if (typeof(nostrNpub.value) === "string") {
-      newAppConfig.nostrNpub = nostrNpub.value
-    }
-    if (typeof(sessionName.value) === "string") {
-      newAppConfig.sessionName = sessionName.value
-    }
-    if (typeof(matrixName.value) === "string") {
-      newAppConfig.matrixName = matrixName.value
-    }
-    if (typeof(lensName.value) === "string") {
-      newAppConfig.lensName = lensName.value
-    }
-    if (typeof(farcasterName.value) === "string") {
-      newAppConfig.farcasterName = farcasterName.value
-    }
-    if (typeof(blueskyName.value) === "string") {
-      newAppConfig.blueskyName = blueskyName.value
-    }
-    if (typeof(hiveName.value) === "string") {
-      newAppConfig.hiveName = hiveName.value
-    }
-    if (typeof(pushName.value) === "string") {
-      newAppConfig.pushName = pushName.value
-    }
-    if (typeof(mirrorName.value) === "string") {
-      newAppConfig.mirrorName = mirrorName.value
-    }
-    if (typeof(telegramName.value) === "string") {
-      newAppConfig.telegramName = telegramName.value
-    }
-    if (typeof(twitterName.value) === "string") {
-      newAppConfig.twitterName = twitterName.value
-    }
-    if (typeof(redditName.value) === "string") {
-      newAppConfig.redditName = redditName.value
-    }
-    if (typeof(signalNumber.value) === "string") {
-      newAppConfig.signalNumber = signalNumber.value
-    }
-    if (typeof(whatsappNumber.value) === "string") {
-      newAppConfig.whatsappNumber = whatsappNumber.value
-    }
-    if (typeof(xmppName.value) === "string") {
-      newAppConfig.xmppName = xmppName.value
-    }
-    if (typeof(uniswapLink.value) === "string") {
-      newAppConfig.uniswapLink = uniswapLink.value
-    }
-    if (typeof(sushiswapLink.value) === "string") {
-      newAppConfig.sushiswapLink = sushiswapLink.value
-    }
-    if (typeof(etherscanLink.value) === "string") {
-      newAppConfig.etherscanLink = etherscanLink.value
-    }
-    if (typeof(ethvmLink.value) === "string") {
-      newAppConfig.ethvmLink = ethvmLink.value
-    }
-    if (typeof(coingeckoLink.value) === "string") {
-      newAppConfig.coingeckoLink = coingeckoLink.value
-    }
-    if (typeof(coinmarketcapLink.value) === "string") {
-      newAppConfig.coinmarketcapLink = coinmarketcapLink.value
-    }
-    if (typeof(dextoolsLink.value) === "string") {
-      newAppConfig.dextoolsLink = dextoolsLink.value
-    }
-    if (typeof(dexscreenerLink.value) === "string") {
-      newAppConfig.dexscreenerLink = dexscreenerLink.value
-    }
-    if (typeof(birdeyeLink.value) === "string") {
-      newAppConfig.birdeyeLink = birdeyeLink.value
-    }
-    if (typeof(geckoterminalLink.value) === "string") {
-      newAppConfig.geckoterminalLink = geckoterminalLink.value
-    }
-    if (typeof(extraContactInfo.value) === "string") {
-      newAppConfig.extraContactInfo = extraContactInfo.value
+    type KeyString = typeof fields[number]
+
+    const fields = [
+      // Strings - intro - home
+      "faviconTheme", "faviconLink",
+      "defaultHeaderImageLink",
+      "introTitle", "introTitleExtra", "introAbout",
+      "postPlaceholder", "commentPlaceholder",
+      "defaultButtonPrimaryText", "defaultButtonPrimaryLink",
+      "defaultButtonSecondaryText", "defaultButtonSecondaryLink",
+      // Colors
+      "colorPrimaryDark", "colorPrimaryLight",
+      "colorBaseDark", "colorBaseLight",
+      "colorSecondaryDark", "colorSecondaryLight",
+      "colorHoverDark", "colorHoverLight",
+      "colorNotImportantDark", "colorNotImportantLight",
+      "colorGreenDark", "colorGreenLight",
+      "colorRedDark", "colorRedLight",
+      "colorOrangeDark", "colorOrangeLight",
+      "colorBlueDark", "colorBlueLight",
+      "bgBaseDark", "bgBaseLight",
+      "bgSecondaryDark", "bgSecondaryLight",
+      "bgHoverDark", "bgHoverLight",
+      "bgDarkDark", "bgDarkLight",
+      "borderColorDark", "borderColorLight",
+      // Strings - socials
+      "anotherWebsiteLink", "ipfsLink", "torLink",
+      "ipfsHttpGatewayLink", "nostrLink", "sessionLink",
+      "simplexLink", "statusLink", "lensLink", "farcasterLink",
+      "blueskyLink", "hiveLink", "pushLink", "mirrorLink",
+      "mastodonLink", "matrixLink", "discordLink", "telegramLink",
+      "twitterLink", "redditLink", "youtubeLink", "instagramLink",
+      "facebookLink", "linkedinLink", "wikipediaLink",
+      "githubLink", "nostrNpub", "sessionName", "matrixName",
+      "lensName", "farcasterName", "blueskyName", "hiveName",
+      "pushName", "mirrorName", "telegramName", "twitterName",
+      "redditName", "signalNumber", "whatsappNumber", "xmppName",
+      "uniswapLink", "sushiswapLink",
+      "etherscanLink", "ethvmLink",
+      "coingeckoLink", "coinmarketcapLink", "dextoolsLink",
+      "dexscreenerLink", "birdeyeLink", "geckoterminalLink",
+      "extraContactInfo",
+      // RSS feed channel
+      "rssFeedChannelTitle",
+      "rssFeedChannelLink",
+      "rssFeedChannelDescription",
+      "rssFeedChannelImageLink"
+    ] as const
+
+    const refMap: Record<KeyString, { value: unknown }> = {
+      // Strings - intro - home
+      faviconTheme, faviconLink,
+      defaultHeaderImageLink,
+      introTitle, introTitleExtra, introAbout,
+      postPlaceholder, commentPlaceholder,
+      defaultButtonPrimaryText, defaultButtonPrimaryLink,
+      defaultButtonSecondaryText, defaultButtonSecondaryLink,
+      // Colors
+      colorPrimaryDark, colorPrimaryLight,
+      colorBaseDark, colorBaseLight,
+      colorSecondaryDark, colorSecondaryLight,
+      colorHoverDark, colorHoverLight,
+      colorNotImportantDark, colorNotImportantLight,
+      colorGreenDark, colorGreenLight,
+      colorRedDark, colorRedLight,
+      colorOrangeDark, colorOrangeLight,
+      colorBlueDark, colorBlueLight,
+      bgBaseDark, bgBaseLight,
+      bgSecondaryDark, bgSecondaryLight,
+      bgHoverDark, bgHoverLight,
+      bgDarkDark, bgDarkLight,
+      borderColorDark, borderColorLight,
+      // Strings - socials
+      anotherWebsiteLink, ipfsLink, torLink, ipfsHttpGatewayLink,
+      nostrLink, sessionLink, simplexLink, statusLink,
+      lensLink, farcasterLink, blueskyLink, hiveLink,
+      pushLink, mirrorLink, mastodonLink, matrixLink,
+      discordLink, telegramLink, twitterLink, redditLink,
+      youtubeLink, instagramLink, facebookLink, linkedinLink,
+      wikipediaLink, githubLink, nostrNpub, sessionName,
+      matrixName, lensName, farcasterName, blueskyName,
+      hiveName, pushName, mirrorName, telegramName, twitterName,
+      redditName, signalNumber, whatsappNumber,
+      xmppName, uniswapLink, sushiswapLink,
+      etherscanLink, ethvmLink,
+      coingeckoLink, coinmarketcapLink, dextoolsLink,
+      dexscreenerLink, birdeyeLink, geckoterminalLink,
+      extraContactInfo,
+      // RSS feed channel
+      rssFeedChannelTitle,
+      rssFeedChannelLink,
+      rssFeedChannelDescription,
+      rssFeedChannelImageLink
+    }
+
+    for (const key of fields) {
+      const v = refMap[key].value
+      if (typeof v === "string") {
+        newAppConfig[key] = v as any
+      }
     }
 
     // Numbers
-    if (typeof(shortUrlsLengthOfWeb3Ids.value) === "number") {
-      newAppConfig.shortUrlsLengthOfWeb3Ids =
-        shortUrlsLengthOfWeb3Ids.value
-    } else if (Number(shortUrlsLengthOfWeb3Ids.value)) {
-      newAppConfig.shortUrlsLengthOfWeb3Ids =
-        Number(shortUrlsLengthOfWeb3Ids.value)
+    const numberFields = [
+      "shortUrlsLengthOfWeb3Ids",
+      "feedFiltersActivityHot",
+      "feedFiltersActivityRising"
+    ] as const
+
+    type NumKey = typeof numberFields[number]
+
+    // Map field names to their ref objects
+    // (each ref has a .value)
+    const numRefMap: Record<NumKey, { value: unknown }> = {
+      shortUrlsLengthOfWeb3Ids,
+      feedFiltersActivityHot,
+      feedFiltersActivityRising
     }
-    if (typeof(feedFiltersActivityHot.value) === "number") {
-      newAppConfig.feedFiltersActivityHot =
-        feedFiltersActivityHot.value
-    } else if (Number(feedFiltersActivityHot.value)) {
-      newAppConfig.feedFiltersActivityHot =
-        Number(feedFiltersActivityHot.value)
-    }
-    if (typeof(feedFiltersActivityRising.value) === "number") {
-      newAppConfig.feedFiltersActivityRising =
-        feedFiltersActivityRising.value
-    } else if (Number(feedFiltersActivityRising.value)) {
-      newAppConfig.feedFiltersActivityRising =
-        Number(feedFiltersActivityRising.value)
+
+    // Copy only defined, finite numbers (accept numeric
+    // strings but do NOT convert null/undefined)
+    for (const key of numberFields) {
+      const raw = numRefMap[key].value
+      if (raw == null) continue
+
+      const num = typeof raw === "number" ? raw : Number(raw)
+      if (Number.isFinite(num)) {
+        newAppConfig[key] = num
+      }
     }
 
     if (!hasValue(newAppConfig)) { return }
@@ -1847,7 +2130,9 @@ const saveAppConfig = async () => {
         return
       } else if (res.toLowerCase().startsWith("success")) {
         await useAppConfigStore()?.fetchAndUpdateAppConfig()
-        notificationStore.showNotification('Success: config is saved', 'success', 8000)
+        notificationStore.showNotification(
+          'Success: config is saved', 'success', 8000
+        )
         return
       }
     }

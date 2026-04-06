@@ -72,6 +72,7 @@ const enableNewWeb3ActionsAll: boolean =
   appConfig?.enableNewWeb3ActionsAll
 const enableNewWeb3ActionsPost: boolean =
   appConfig?.enableNewWeb3ActionsPost
+// TODO move env vars to admin panel
 const showNewPostButtonInMenu: boolean = env?.showNewPostButtonInMenu === 'false'? false : true
 </script>
 

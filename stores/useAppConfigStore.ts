@@ -123,6 +123,11 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     birdeyeLink: useRuntimeConfig()?.public?.birdeyeLink,
     geckoterminalLink: useRuntimeConfig()?.public?.geckoterminalLink,
     extraContactInfo: useRuntimeConfig()?.public?.extraContactInfo,
+    // RSS feed channel
+    rssFeedChannelTitle: useRuntimeConfig()?.public?.rssFeedChannelTitle,
+    rssFeedChannelLink: useRuntimeConfig()?.public?.rssFeedChannelLink,
+    rssFeedChannelDescription: useRuntimeConfig()?.public?.rssFeedChannelDescription,
+    rssFeedChannelImageLink: useRuntimeConfig()?.public?.rssFeedChannelImageLink,
 
     // Booleans
     // Boolean-default-intro
@@ -140,12 +145,40 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     ifShowHomeLatestComments: parseEnvBool(useRuntimeConfig()?.public?.ifShowHomeLatestComments, true),
 
     // Boolean-others
-    // enableNewWeb3ActionsAll: useRuntimeConfig()?.public?.enableNewWeb3ActionsAll,
     enableNewWeb3ActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsAll, true),
     enableNewWeb3ActionsPost: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsPost, true),
     enableNewWeb3ActionsReply: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsReply, true),
     enableNewWeb3ActionsReact: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsReact, true),
+    enableNewWeb3ActionsOther: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsOther, true),
     enableNewWeb3ActionsModerate: parseEnvBool(useRuntimeConfig()?.public?.enableNewWeb3ActionsModerate, true),
+    enableMarkdownInPosts:
+      parseEnvBool(useRuntimeConfig()?.public?.enableMarkdownInPosts, true),
+    enableMarkdownInComments:
+      parseEnvBool(useRuntimeConfig()?.public?.enableMarkdownInComments, true),
+    enableEmbedImageTagsForAllUsers:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedImageTagsForAllUsers, true),
+    enableEmbedImageTagsForFullLineImageLinks:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedImageTagsForFullLineImageLinks, true),
+    enableEmbedImageTagsInPosts:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedImageTagsInPosts, true),
+    enableEmbedImageTagsInComments:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedImageTagsInComments, true),
+    enableEmbedVideoTagsForAllUsers:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedVideoTagsForAllUsers, true),
+    enableEmbedVideoTagsForFullLineVideoLinks:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedVideoTagsForFullLineVideoLinks, true),
+    enableEmbedVideoTagsInPosts:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedVideoTagsInPosts, true),
+    enableEmbedVideoTagsInComments:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedVideoTagsInComments, true),
+    enableEmbedAudioTagsForAllUsers:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedAudioTagsForAllUsers, true),
+    enableEmbedAudioTagsForFullLineAudioLinks:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedAudioTagsForFullLineAudioLinks, true),
+    enableEmbedAudioTagsInPosts:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedAudioTagsInPosts, true),
+    enableEmbedAudioTagsInComments:
+      parseEnvBool(useRuntimeConfig()?.public?.enableEmbedAudioTagsInComments, true),
     ifShowCategoriesFilter: parseEnvBool(useRuntimeConfig()?.public?.ifShowCategoriesFilter, true),
     ifAllowGuestLogin: parseEnvBool(useRuntimeConfig()?.public?.ifAllowGuestLogin, true),
     enableNewNostrActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewNostrActionsAll, true),
@@ -159,14 +192,38 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionReply, false),
     enableWhitelistForActionReact:
       parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionReact, false),
+    enableWhitelistForActionOther:
+      parseEnvBool(useRuntimeConfig()?.public?.enableWhitelistForActionOther, false),
+    enableSpasmModule:
+      parseEnvBool(useRuntimeConfig()?.public?.enableSpasmModule, true),
+    enableSpasmSourcesUpdates:
+      parseEnvBool(useRuntimeConfig()?.public?.enableSpasmSourcesUpdates, true),
+    enableFederationDefaultLists:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultLists, true),
+    enableFederationDefaultListOfficial:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListOfficial, true),
+    enableFederationDefaultListCrypto:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListCrypto, true),
+    enableFederationDefaultListPrivacy:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListPrivacy, true),
+    enableFederationDefaultListTech:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListTech, true),
+    enableFederationDefaultListPolitics:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListPolitics, true),
+
     // TODO backend env vars
-    enableSpasmModule: undefined,
-    enableSpasmSourcesUpdates: undefined,
-    enableRssModule: undefined,
-    enableRssSourcesUpdates: undefined,
     ignoreWhitelistForActionPostInSpasmModule: undefined,
     ignoreWhitelistForActionReplyInSpasmModule: undefined,
     ignoreWhitelistForActionReactInSpasmModule: undefined,
+    ignoreWhitelistForActionOtherInSpasmModule: undefined,
+
+    // RSS feed channel
+    enableRssFeedChannel:
+      parseEnvBool(useRuntimeConfig()?.public?.enableRssFeedChannel, true),
+
+    // Deprecated
+    enableRssModule: undefined,
+    enableRssSourcesUpdates: undefined,
 
     // Arrays
     moderators: splitIntoArray(useRuntimeConfig()?.public?.moderators),
@@ -280,8 +337,38 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableNewWeb3ActionsReact,
         enableNewWeb3ActionsReply:
           this.enableNewWeb3ActionsReply,
+        enableNewWeb3ActionsOther:
+          this.enableNewWeb3ActionsOther,
         enableNewWeb3ActionsModerate:
           this.enableNewWeb3ActionsModerate,
+        enableMarkdownInPosts:
+          this.enableMarkdownInPosts,
+        enableMarkdownInComments:
+          this.enableMarkdownInComments,
+        enableEmbedImageTagsForAllUsers:
+          this.enableEmbedImageTagsForAllUsers,
+        enableEmbedImageTagsForFullLineImageLinks:
+          this.enableEmbedImageTagsForFullLineImageLinks,
+        enableEmbedImageTagsInPosts:
+          this.enableEmbedImageTagsInPosts,
+        enableEmbedImageTagsInComments:
+          this.enableEmbedImageTagsInComments,
+        enableEmbedVideoTagsForAllUsers:
+          this.enableEmbedVideoTagsForAllUsers,
+        enableEmbedVideoTagsForFullLineVideoLinks:
+          this.enableEmbedVideoTagsForFullLineVideoLinks,
+        enableEmbedVideoTagsInPosts:
+          this.enableEmbedVideoTagsInPosts,
+        enableEmbedVideoTagsInComments:
+          this.enableEmbedVideoTagsInComments,
+        enableEmbedAudioTagsForAllUsers:
+          this.enableEmbedAudioTagsForAllUsers,
+        enableEmbedAudioTagsForFullLineAudioLinks:
+          this.enableEmbedAudioTagsForFullLineAudioLinks,
+        enableEmbedAudioTagsInPosts:
+          this.enableEmbedAudioTagsInPosts,
+        enableEmbedAudioTagsInComments:
+          this.enableEmbedAudioTagsInComments,
         ifShowCategoriesFilter:
           this.ifShowCategoriesFilter,
         ifAllowGuestLogin:
@@ -300,20 +387,38 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableWhitelistForActionReply,
         enableWhitelistForActionReact:
           this.enableWhitelistForActionReact,
+        enableWhitelistForActionOther:
+          this.enableWhitelistForActionOther,
         enableSpasmModule:
           this.enableSpasmModule,
         enableSpasmSourcesUpdates:
           this.enableSpasmSourcesUpdates,
+        enableFederationDefaultLists:
+          this.enableFederationDefaultLists,
+        enableFederationDefaultListOfficial:
+          this.enableFederationDefaultListOfficial,
+        enableFederationDefaultListCrypto:
+          this.enableFederationDefaultListCrypto,
+        enableFederationDefaultListPrivacy:
+          this.enableFederationDefaultListPrivacy,
+        enableFederationDefaultListTech:
+          this.enableFederationDefaultListTech,
+        enableFederationDefaultListPolitics:
+          this.enableFederationDefaultListPolitics,
         enableRssModule:
           this.enableRssModule,
         enableRssSourcesUpdates:
           this.enableRssSourcesUpdates,
         ignoreWhitelistForActionPostInSpasmModule:
           this.ignoreWhitelistForActionPostInSpasmModule,
-        ignoreWhitelistForActionReplyInSpasmModul:
-          this.ignoreWhitelistForActionReplyInSpasmModul,
+        ignoreWhitelistForActionReplyInSpasmModule:
+          this.ignoreWhitelistForActionReplyInSpasmModule,
         ignoreWhitelistForActionReactInSpasmModule:
           this.ignoreWhitelistForActionReactInSpasmModule,
+        ignoreWhitelistForActionOtherInSpasmModule:
+          this.ignoreWhitelistForActionOtherInSpasmModule,
+        enableRssFeedChannel:
+          this.enableRssFeedChannel,
         // Arrays
         admins:
           this.admins,
@@ -439,6 +544,11 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         birdeyeLink: this.birdeyeLink,
         geckoterminalLink: this.geckoterminalLink,
         extraContactInfo: this.extraContactInfo,
+        // RSS feed channel
+        rssFeedChannelTitle: this.rssFeedChannelTitle,
+        rssFeedChannelLink: this.rssFeedChannelLink,
+        rssFeedChannelDescription: this.rssFeedChannelDescription,
+        rssFeedChannelImageLink: this.rssFeedChannelImageLink,
       }
       return appConfig
     }
@@ -498,7 +608,22 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateBoolean("enableNewWeb3ActionsPost")
       updateBoolean("enableNewWeb3ActionsReact")
       updateBoolean("enableNewWeb3ActionsReply")
+      updateBoolean("enableNewWeb3ActionsOther")
       updateBoolean("enableNewWeb3ActionsModerate")
+      updateBoolean("enableMarkdownInPosts")
+      updateBoolean("enableMarkdownInComments")
+      updateBoolean("enableEmbedImageTagsForAllUsers")
+      updateBoolean("enableEmbedImageTagsForFullLineImageLinks")
+      updateBoolean("enableEmbedImageTagsInPosts")
+      updateBoolean("enableEmbedImageTagsInComments")
+      updateBoolean("enableEmbedVideoTagsForAllUsers")
+      updateBoolean("enableEmbedVideoTagsForFullLineVideoLinks")
+      updateBoolean("enableEmbedVideoTagsInPosts")
+      updateBoolean("enableEmbedVideoTagsInComments")
+      updateBoolean("enableEmbedAudioTagsForAllUsers")
+      updateBoolean("enableEmbedAudioTagsForFullLineAudioLinks")
+      updateBoolean("enableEmbedAudioTagsInPosts")
+      updateBoolean("enableEmbedAudioTagsInComments")
       updateBoolean("ifShowCategoriesFilter")
       updateBoolean("ifAllowGuestLogin")
       updateBoolean("enableNewNostrActionsAll")
@@ -508,13 +633,22 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateBoolean("enableWhitelistForActionPost")
       updateBoolean("enableWhitelistForActionReply")
       updateBoolean("enableWhitelistForActionReact")
+      updateBoolean("enableWhitelistForActionOther")
       updateBoolean("enableSpasmModule")
+      updateBoolean("enableFederationDefaultLists")
+      updateBoolean("enableFederationDefaultListOfficial")
+      updateBoolean("enableFederationDefaultListCrypto")
+      updateBoolean("enableFederationDefaultListPrivacy")
+      updateBoolean("enableFederationDefaultListTech")
+      updateBoolean("enableFederationDefaultListPolitics")
       updateBoolean("enableSpasmSourcesUpdates")
       updateBoolean("enableRssModule")
       updateBoolean("enableRssSourcesUpdates")
       updateBoolean("ignoreWhitelistForActionPostInSpasmModule")
       updateBoolean("ignoreWhitelistForActionReactInSpasmModule")
-      updateBoolean("ignoreWhitelistForActionReplyInSpasmModul")
+      updateBoolean("ignoreWhitelistForActionReplyInSpasmModule")
+      updateBoolean("ignoreWhitelistForActionOtherInSpasmModule")
+      updateBoolean("enableRssFeedChannel")
 
       // Arrays
       const updateArray = (key: AppConfigKeyArray) => {
@@ -648,6 +782,10 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateString("birdeyeLink")
       updateString("geckoterminalLink")
       updateString("extraContactInfo")
+      updateString("rssFeedChannelTitle")
+      updateString("rssFeedChannelLink")
+      updateString("rssFeedChannelDescription")
+      updateString("rssFeedChannelImageLink")
     }
   }
 })
