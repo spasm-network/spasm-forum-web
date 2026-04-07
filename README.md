@@ -107,13 +107,11 @@ The full list of settings can be found in `./.env.example`.
 
 #### Admin panel
 
-Some settings (social media links, lists of moderators, short URLs,
-different whitelists) can be changed via a web page without
-restarting a server.
+Instances can be customized via GUI through the admin panel.
 
-An admin panel can be accessed at `https://example.com/admin`
-or by clicking on an 'admin' button at the bottom menu bar after
-connecting an admin public key (address).
+The admin page can be accessed by clicking an 'admin' button at the
+bottom menu bar after connecting an admin public key (address),
+or directly via url, e.g. `https://forum.spasm.network/admin`.
 
 Make sure that an admin panel and app config changes are enabled
 and admin addresses are listed in `.env` files in **both** frontend
