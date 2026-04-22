@@ -28,9 +28,9 @@
         </div>
       </div>
       <div v-show="!eventsStore.getPosts || !eventsStore.getPosts[0]">
-          <p class="animate-pulse text-colorNotImportant dark:text-colorNotImportant-dark">
+          <span class="animate-pulse text-colorNotImportant dark:text-colorNotImportant-dark">
             Loading...
-          </p>
+          </span>
         <ExtraSpinner />
       </div>
       <ExtraLoadMoreButton :what-to-load="'feed-posts'" class="mb-16 ml-1"/>
