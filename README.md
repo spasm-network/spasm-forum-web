@@ -7,6 +7,8 @@
 
 # Spasm Forum web client
 
+Mirrors: [Forgejo](https://git.spasm.network/spasm-network/spasm-forum-web) [Codeberg](https://codeberg.org/spasm-network/spasm-forum-web) [Github](https://github.com/spasm-network/spasm-forum-web)
+
 spasm-forum-web is a frontend for a [Spasm](https://github.com/spasm-network/spasm.js) forum.
 
 spasm-forum-server repository can be found [here](https://github.com/spasm-network/spasm-forum-server).
