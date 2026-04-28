@@ -199,7 +199,7 @@
       </span>
     </div>
 
-    <div v-if="nostrLink || sessionLink || simplexLink || statusLink || lensLink || farcasterLink || blueskyLink || hiveLink || pushLink || mirrorLink || mastodonLink || matrixLink || discordLink || telegramLink || twitterLink || redditLink || youtubeLink || instagramLink || facebookLink || linkedinLink || wikipediaLink || githubLink">
+    <div v-if="nostrLink || sessionLink || simplexLink || statusLink || lensLink || farcasterLink || blueskyLink || hiveLink || pushLink || mirrorLink || mastodonLink || matrixLink || discordLink || telegramLink || twitterLink || redditLink || youtubeLink || instagramLink || facebookLink || linkedinLink || wikipediaLink">
       Follow:
       <span v-if="nostrLink">
         <a :href="nostrLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
@@ -306,6 +306,44 @@
           Wikipedia
         </a>
       </span>
+    </div>
+    <div v-if="gitLink || forgejoLink || giteaLink || radicleLink || gitlabLink || codebergLink || bitbucketLink || githubLink">
+      Code:
+      <span v-if="gitLink">
+        <a :href="gitLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Git
+        </a>
+      </span>
+      <span v-if="forgejoLink">
+        <a :href="forgejoLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Forgejo
+        </a>
+      </span>
+      <span v-if="giteaLink">
+        <a :href="giteaLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Gitea
+        </a>
+      </span>
+      <span v-if="radicleLink">
+        <a :href="radicleLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Radicle
+        </a>
+      </span>
+      <span v-if="gitlabLink">
+        <a :href="gitlabLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          GitLab
+        </a>
+      </span>
+      <span v-if="codebergLink">
+        <a :href="codebergLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Codeberg
+        </a>
+      </span>
+      <span v-if="bitbucketLink">
+        <a :href="bitbucketLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
+          Bitbucket
+        </a>
+      </span>
       <span v-if="githubLink">
         <a :href="githubLink" target="_blank" class="text-colorPrimary-light dark:text-colorPrimary-dark">
           Github
@@ -350,6 +388,13 @@ const instagramLink = appConfig?.instagramLink
 const facebookLink = appConfig?.facebookLink
 const linkedinLink = appConfig?.linkedinLink
 const wikipediaLink = appConfig?.wikipediaLink
+const gitLink = appConfig?.gitLink
+const forgejoLink = appConfig?.forgejoLink
+const giteaLink = appConfig?.giteaLink
+const radicleLink = appConfig?.radicleLink
+const gitlabLink = appConfig?.gitlabLink
+const codebergLink = appConfig?.codebergLink
+const bitbucketLink = appConfig?.bitbucketLink
 const githubLink = appConfig?.githubLink
 
 const nostrNpub = appConfig?.nostrNpub

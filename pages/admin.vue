@@ -444,7 +444,14 @@
         <div>Facebook: <input v-model="facebookLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>LinkedIn: <input v-model="linkedinLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div>Wikipedia: <input v-model="wikipediaLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
-        <div>Github: <input v-model="githubLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Git: <input v-model="gitLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Forgejo: <input v-model="forgejoLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Gitea: <input v-model="giteaLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Radicle: <input v-model="radicleLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>GitLab: <input v-model="gitlabLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Codeberg: <input v-model="codebergLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>Bitbucket: <input v-model="bitbucketLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
+        <div>GitHub: <input v-model="githubLink" type="text" placeholder="enter full link with https://" class="custom-admin-input-socials"></div>
         <div class="mt-2 mb-6">
           <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleSocialMediaLinks" >
           hide section
@@ -1743,6 +1750,13 @@ const instagramLink = ref<string>(appConfig?.instagramLink)
 const facebookLink = ref<string>(appConfig?.facebookLink)
 const linkedinLink = ref<string>(appConfig?.linkedinLink)
 const wikipediaLink = ref<string>(appConfig?.wikipediaLink)
+const gitLink = ref<string>(appConfig?.gitLink)
+const forgejoLink = ref<string>(appConfig?.forgejoLink)
+const giteaLink = ref<string>(appConfig?.giteaLink)
+const radicleLink = ref<string>(appConfig?.radicleLink)
+const gitlabLink = ref<string>(appConfig?.gitlabLink)
+const codebergLink = ref<string>(appConfig?.codebergLink)
+const bitbucketLink = ref<string>(appConfig?.bitbucketLink)
 const githubLink = ref<string>(appConfig?.githubLink)
 const nostrNpub = ref<string>(appConfig?.nostrNpub)
 const sessionName = ref<string>(appConfig?.sessionName)
@@ -2005,7 +2019,9 @@ const saveAppConfig = async () => {
       "mastodonLink", "matrixLink", "discordLink", "telegramLink",
       "twitterLink", "redditLink", "youtubeLink", "instagramLink",
       "facebookLink", "linkedinLink", "wikipediaLink",
-      "githubLink", "nostrNpub", "sessionName", "matrixName",
+      "gitLink", "forgejoLink", "giteaLink", "radicleLink",
+      "gitlabLink", "codebergLink", "bitbucketLink", "githubLink",
+      "nostrNpub", "sessionName", "matrixName",
       "lensName", "farcasterName", "blueskyName", "hiveName",
       "pushName", "mirrorName", "telegramName", "twitterName",
       "redditName", "signalNumber", "whatsappNumber", "xmppName",
@@ -2051,7 +2067,10 @@ const saveAppConfig = async () => {
       pushLink, mirrorLink, mastodonLink, matrixLink,
       discordLink, telegramLink, twitterLink, redditLink,
       youtubeLink, instagramLink, facebookLink, linkedinLink,
-      wikipediaLink, githubLink, nostrNpub, sessionName,
+      wikipediaLink,
+      gitLink, forgejoLink, giteaLink, radicleLink, gitlabLink,
+      codebergLink, bitbucketLink, githubLink,
+      nostrNpub, sessionName,
       matrixName, lensName, farcasterName, blueskyName,
       hiveName, pushName, mirrorName, telegramName, twitterName,
       redditName, signalNumber, whatsappNumber,

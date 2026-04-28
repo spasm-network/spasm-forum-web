@@ -225,6 +225,13 @@ export default defineNuxtConfig({
       facebookLink: process.env.FACEBOOK_LINK || process.env.NUXT_PUBLIC_FACEBOOK_LINK,
       linkedinLink: process.env.LINKEDIN_LINK || process.env.NUXT_PUBLIC_LINKEDIN_LINK,
       wikipediaLink: process.env.WIKIPEDIA_LINK || process.env.NUXT_PUBLIC_WIKIPEDIA_LINK,
+      gitLink: process.env.GIT_LINK || process.env.NUXT_PUBLIC_GIT_LINK,
+      forgejoLink: process.env.FORGEJO_LINK || process.env.NUXT_PUBLIC_FORGEJO_LINK,
+      giteaLink: process.env.GITEA_LINK || process.env.NUXT_PUBLIC_GITEA_LINK,
+      radicleLink: process.env.RADICLE_LINK || process.env.NUXT_PUBLIC_RADICLE_LINK,
+      gitlabLink: process.env.GITLAB_LINK || process.env.NUXT_PUBLIC_GITLAB_LINK,
+      codebergLink: process.env.CODEBERG_LINK || process.env.NUXT_PUBLIC_CODEBERG_LINK,
+      bitbucketLink: process.env.BITBUCKET_LINK || process.env.NUXT_PUBLIC_BITBUCKET_LINK,
       githubLink: process.env.GITHUB_LINK || process.env.NUXT_PUBLIC_GITHUB_LINK,
 
       // Messengers

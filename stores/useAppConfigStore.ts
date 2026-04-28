@@ -96,6 +96,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     facebookLink: useRuntimeConfig()?.public?.facebookLink,
     linkedinLink: useRuntimeConfig()?.public?.linkedinLink,
     wikipediaLink: useRuntimeConfig()?.public?.wikipediaLink,
+    gitLink: useRuntimeConfig()?.public?.gitLink,
+    forgejoLink: useRuntimeConfig()?.public?.forgejoLink,
+    giteaLink: useRuntimeConfig()?.public?.giteaLink,
+    radicleLink: useRuntimeConfig()?.public?.radicleLink,
+    gitlabLink: useRuntimeConfig()?.public?.gitlabLink,
+    codebergLink: useRuntimeConfig()?.public?.codebergLink,
+    bitbucketLink: useRuntimeConfig()?.public?.bitbucketLink,
     githubLink: useRuntimeConfig()?.public?.githubLink,
     nostrNpub: useRuntimeConfig()?.public?.nostrNpub,
     sessionName: useRuntimeConfig()?.public?.sessionName,
@@ -517,6 +524,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         facebookLink: this.facebookLink,
         linkedinLink: this.linkedinLink,
         wikipediaLink: this.wikipediaLink,
+        gitLink: this.gitLink,
+        forgejoLink: this.forgejoLink,
+        giteaLink: this.giteaLink,
+        radicleLink: this.radicleLink,
+        gitlabLink: this.gitlabLink,
+        codebergLink: this.codebergLink,
+        bitbucketLink: this.bitbucketLink,
         githubLink: this.githubLink,
         nostrNpub: this.nostrNpub,
         sessionName: this.sessionName,
@@ -755,6 +769,13 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateString("facebookLink")
       updateString("linkedinLink")
       updateString("wikipediaLink")
+      updateString("gitLink")
+      updateString("forgejoLink")
+      updateString("giteaLink")
+      updateString("radicleLink")
+      updateString("gitlabLink")
+      updateString("codebergLink")
+      updateString("bitbucketLink")
       updateString("githubLink")
       updateString("nostrNpub")
       updateString("sessionName")
