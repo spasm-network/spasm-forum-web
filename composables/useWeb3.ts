@@ -1137,6 +1137,69 @@ export const useWeb3 = () => {
     return encodedId
   }
 
+  const extractSourceNameForDisplay = (
+    event: SpasmEventV2
+  ): string => {
+    if (!event) return ''
+    let url = ''
+    const urlId = spasm.extractIdByFormat(event, {
+      name: "url"
+    })
+    if (urlId && typeof(urlId) === "string") { url = urlId }
+
+    const guidId = spasm.extractIdByFormat(event, {
+      name: "guid"
+    })
+    if (guidId && typeof(guidId) === "string") { url = guidId }
+    if (url && typeof(url) === "string") {
+      const host = extractHostnameFromUrl(url)
+      if (host && typeof(host) === "string") return host
+    }
+
+    let source = {}
+    if ("source" in event && event.source) {
+      if (
+        Array.isArray(event.source) && event.source[0] &&
+        isObjectWithValues(event.source[0])
+      ) {
+        source = event.source[0]
+      }
+      else if (isObjectWithValues(event.source)) {
+        source = event.source
+      }
+    }
+
+    if (
+      source && "name" in source && source.name &&
+      typeof(source?.name) === "string"
+    ) {
+      return source?.name
+    }
+
+    return ""
+  }
+
+  const extractHostnameFromUrl = (
+    url: string
+  ): string => {
+    if (!url || typeof(url) !== "string") return ""
+    const urlObj = new URL(url)
+    let hostname = ""
+    if (
+      urlObj.hostname && typeof(urlObj.hostname) === "string"
+    ) {
+      hostname = urlObj.hostname
+    } else if (
+      urlObj.host && typeof(urlObj.host) === "string"
+    ) { 
+      hostname = urlObj.host
+    }
+    if (hostname.startsWith("www.")) {
+      hostname = hostname.slice(4)
+    }
+    return hostname
+  }
+
   return {
     isWeb3ModalShown: readonly(isWeb3ModalShown),
     isQrCodeModalShown: readonly(isQrCodeModalShown),
@@ -1196,6 +1259,8 @@ export const useWeb3 = () => {
     extractOneAuthorAddressForDisplay,
     extractIdForDisplay,
     extractParentIdForDisplay,
-    extractParentIdForLink
+    extractParentIdForLink,
+    extractSourceNameForDisplay,
+    extractHostnameFromUrl
   }
 }

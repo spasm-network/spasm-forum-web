@@ -50,8 +50,8 @@
 
     <!-- source -->
     <div class="text-base text-colorNotImportant-light dark:text-colorNotImportant-dark">
-      <span v-if="event.source?.name" class="mr-1">
-        Source: {{event.source.name}}
+      <span v-if="extractSourceNameForDisplay(event)" class="mr-1">
+        Source: {{extractSourceNameForDisplay(event)}}
       </span>
       <span v-if="event.links?.[0]?.value" class="text-colorPrimary-light dark:text-colorPrimary-dark hover:underline">
         <a :href="event.links?.[0]?.value" target="_blank">
@@ -323,6 +323,7 @@ const {
   connectedAddressEthereum,
   extractParentIdForDisplay,
   extractParentIdForLink,
+  extractSourceNameForDisplay,
   sendEventV2ToSpasm
 } = useWeb3()
 const {

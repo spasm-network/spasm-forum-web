@@ -11,9 +11,6 @@
         class="mr-1 text-colorNotImportant-light dark:text-colorNotImportant-dark">
         {{timeAgoEvent}}
       </span>
-      <span v-if="post.source?.name" class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
-        {{post.source?.name}}
-      </span>
       <!--
       <span v-if="post.authors?.[0].addresses?.[0].value && post.authors?.[0].addresses?.[0].verified" >
       -->
@@ -46,6 +43,15 @@
           </client-only>
         </nuxt-link>
       </span>
+      <!--
+      <span v-else-if="post.source?.name" class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+        {{post.source?.name}}
+      </span>
+      -->
+      <span v-else-if="extractSourceNameForDisplay(post)" class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+        {{extractSourceNameForDisplay(post)}}
+      </span>
+
     </div>
     <!-- clr restores the next line to default behaviour after float:right -->
     <div class="clr" />
@@ -118,7 +124,8 @@ const shortUrlsLengthOfWeb3Ids: boolean = appConfig?.shortUrlsLengthOfWeb3Ids
 
 const {
   extractIdForDisplay,
-  extractOneAuthorAddressForDisplay
+  extractOneAuthorAddressForDisplay,
+  extractSourceNameForDisplay
 } = useWeb3()
 const {
   standardizeId
