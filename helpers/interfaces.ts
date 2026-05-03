@@ -407,37 +407,6 @@ export interface SpasmSource {
   showSource?: boolean
 }
 
-// export class IgnoreWhitelistFor {
-//   action: {
-//     post: boolean
-//     reply: boolean
-//     react: boolean
-//     moderate: boolean
-//   }
-//
-//   constructor() {
-//     this.action = {
-//       post: false,
-//       reply: false,
-//       react: false,
-//       moderate: false
-//     }
-//   }
-// }
-
-// export type EventType =
-//   "DmpEvent" |
-//   "DmpEventSignedClosed" |
-//   "DmpEventSignedOpened" |
-//   "NostrEvent" |
-//   "NostrEventSignedOpened" |
-//   "NostrSpasmEvent" |
-//   "NostrSpasmEventSignedOpened" |
-//   "SpasmEvent" |
-//   "unknown"
-
-// export type EventInfoType = EventType | "Post"
-
 export interface EventInfo {
   type: EventInfoType | false
   hasSignature: boolean
@@ -448,14 +417,6 @@ export interface EventInfo {
   license: string | false
   // originalEvent: UnknownEvent
 }
-
-// export type WebType = "web2" | "web3"
-
-// export type EventIsSealedUnderKeyName = "signed_message" | "signedObject"
-
-// interface Web3Post extends Post {
-//   signed_message: string
-// }
 
 export interface KnownPostOrEventInfo {
   webType: WebType | false
@@ -708,24 +669,6 @@ export interface SpasmEventSource {
   apiUrl?: string
   query?: string
   showSource?: boolean
-}
-
-export class IgnoreWhitelistFor {
-  action: {
-    post: boolean
-    reply: boolean
-    react: boolean
-    moderate: boolean
-  }
-
-  constructor() {
-    this.action = {
-      post: false,
-      reply: false,
-      react: false,
-      moderate: false
-    }
-  }
 }
 
 export type EventType =
