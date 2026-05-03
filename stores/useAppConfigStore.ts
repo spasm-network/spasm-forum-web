@@ -217,6 +217,10 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListTech, true),
     enableFederationDefaultListPolitics:
       parseEnvBool(useRuntimeConfig()?.public?.enableFederationDefaultListPolitics, true),
+    enableFederationCustomLinks:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationCustomLinks, true),
+    enableFederationCustomSources:
+      parseEnvBool(useRuntimeConfig()?.public?.enableFederationCustomSources, true),
 
     // TODO backend env vars
     ignoreWhitelistForActionPostInSpasmModule: undefined,
@@ -239,6 +243,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     whitelistedForActionReact: splitIntoArray(useRuntimeConfig()?.public?.whitelistedForActionReact),
     pinnedIds: splitIntoArray(useRuntimeConfig()?.public?.pinnedIds),
     envCategories: splitIntoArray(useRuntimeConfig()?.public?.envCategories),
+    federationCustomLinks: splitIntoArray(useRuntimeConfig()?.public?.federationCustomLinks),
 
     // Numbers
     shortUrlsLengthOfWeb3Ids: Number(useRuntimeConfig()?.public?.shortUrlsLengthOfWeb3Ids) || 30,
@@ -412,6 +417,10 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableFederationDefaultListTech,
         enableFederationDefaultListPolitics:
           this.enableFederationDefaultListPolitics,
+        enableFederationCustomLinks:
+          this.enableFederationCustomLinks,
+        enableFederationCustomSources:
+          this.enableFederationCustomSources,
         enableRssModule:
           this.enableRssModule,
         enableRssSourcesUpdates:
@@ -441,6 +450,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.pinnedIds,
         envCategories:
           this.envCategories,
+        federationCustomLinks:
+          this.federationCustomLinks,
         // Numbers
         shortUrlsLengthOfWeb3Ids:
           this.shortUrlsLengthOfWeb3Ids,
@@ -655,6 +666,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateBoolean("enableFederationDefaultListPrivacy")
       updateBoolean("enableFederationDefaultListTech")
       updateBoolean("enableFederationDefaultListPolitics")
+      updateBoolean("enableFederationCustomLinks")
+      updateBoolean("enableFederationCustomSources")
       updateBoolean("enableSpasmSourcesUpdates")
       updateBoolean("enableRssModule")
       updateBoolean("enableRssSourcesUpdates")
@@ -678,6 +691,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateArray("whitelistedForActionReact")
       updateArray("pinnedIds")
       updateArray("envCategories")
+      updateArray("federationCustomLinks")
 
       // Numbers
       const updateNumber = (key: AppConfigKeyNumber) => {

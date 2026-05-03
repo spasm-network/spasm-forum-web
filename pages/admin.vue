@@ -1048,49 +1048,93 @@
             enable federation
 
             <div v-if="enableSpasmModule" class="pl-4 mt-2">
-              <input
-                v-model="enableFederationDefaultLists"
-                type="checkbox"
-              >
-              enable default federation lists:
+              <div class="mb-2">
+                <input
+                  v-model="enableFederationDefaultLists"
+                  type="checkbox"
+                >
+                enable default federation lists:
 
-              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
-                <input
-                  v-model="enableFederationDefaultListOfficial"
-                  type="checkbox"
-                >
-                spasm
-              </div>
-              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
-                <input
-                  v-model="enableFederationDefaultListCrypto"
-                  type="checkbox"
-                >
-                crypto
-              </div>
-              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
-                <input
-                  v-model="enableFederationDefaultListPrivacy"
-                  type="checkbox"
-                >
-                privacy
-              </div>
-              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
-                <input
-                  v-model="enableFederationDefaultListTech"
-                  type="checkbox"
-                >
-                tech
-              </div>
-              <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
-                <input
-                  v-model="enableFederationDefaultListPolitics"
-                  type="checkbox"
-                >
-                politics
+                <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                  <input
+                    v-model="enableFederationDefaultListOfficial"
+                    type="checkbox"
+                  >
+                  spasm
+                </div>
+                <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                  <input
+                    v-model="enableFederationDefaultListCrypto"
+                    type="checkbox"
+                  >
+                  crypto
+                </div>
+                <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                  <input
+                    v-model="enableFederationDefaultListPrivacy"
+                    type="checkbox"
+                  >
+                  privacy
+                </div>
+                <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                  <input
+                    v-model="enableFederationDefaultListTech"
+                    type="checkbox"
+                  >
+                  tech
+                </div>
+                <div v-if="enableFederationDefaultLists" class="pl-4 mt-2">
+                  <input
+                    v-model="enableFederationDefaultListPolitics"
+                    type="checkbox"
+                  >
+                  politics
+                </div>
               </div>
 
+              <div class="mb-2">
+                <input
+                  v-model="enableFederationCustomLinks"
+                  type="checkbox"
+                >
+                enable custom federation links:
+                <div v-if="enableFederationCustomLinks" class="mt-4 pl-4">
+                    List of custom links
+                    ({{ count(federationCustomLinks) }})
+                    <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                      Accepts Spasm and RSS feeds.
+                    </div>
+                    <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                      Simple template:
+                    </div>
+                    <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                      url1,url2,url3,url4,url5
+                    </div>
+                    <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                      Advanced template:
+                    </div>
+                    <div class="text-colorNotImportant-light dark:text-colorNotImportant-dark">
+                      url1|category|frequency|network|name|showSource,url2|category,url3||||name,url4
+                    </div>
+                      <textarea
+                        v-model="federationCustomLinks"
+                        placeholder="https://degenrocket.space/api/events?activity=rising,https://thedefiant.io/api/feed|defi"
+                        class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+                      />
+                </div>
+
+              </div>
+
+              <div class="mb-2 hidden">
+                <input
+                  v-model="enableFederationCustomSources"
+                  type="checkbox"
+                >
+                enable custom federation sources:
+
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -1618,6 +1662,10 @@ const enableFederationDefaultListTech =
   ref<boolean>(appConfig?.enableFederationDefaultListTech)
 const enableFederationDefaultListPolitics =
   ref<boolean>(appConfig?.enableFederationDefaultListPolitics)
+const enableFederationCustomLinks =
+  ref<boolean>(appConfig?.enableFederationCustomLinks)
+const enableFederationCustomSources =
+  ref<boolean>(appConfig?.enableFederationCustomSources)
 
 // Federation
 const enableRssFeedChannel =
@@ -1638,6 +1686,8 @@ const pinnedIds =
   ref<string[]>(appConfig?.pinnedIds)
 const envCategories =
   ref<string[]>(appConfig?.envCategories)
+const federationCustomLinks =
+  ref<string[]>(appConfig?.federationCustomLinks)
 
 // Strings
 // Strings-default-intro
@@ -1930,6 +1980,10 @@ const saveAppConfig = async () => {
       enableFederationDefaultListTech.value
     newAppConfig.enableFederationDefaultListPolitics =
       enableFederationDefaultListPolitics.value
+    newAppConfig.enableFederationCustomLinks =
+      enableFederationCustomLinks.value
+    newAppConfig.enableFederationCustomSources =
+      enableFederationCustomSources.value
 
     // RSS feed channel
     newAppConfig.enableRssFeedChannel =
@@ -1983,6 +2037,13 @@ const saveAppConfig = async () => {
     } else if (Array.isArray(envCategories.value)) {
       newAppConfig.envCategories =
         envCategories.value
+    }
+    if (typeof(federationCustomLinks.value) === "string") {
+      newAppConfig.federationCustomLinks =
+        splitIntoArray(federationCustomLinks.value)
+    } else if (Array.isArray(federationCustomLinks.value)) {
+      newAppConfig.federationCustomLinks =
+        federationCustomLinks.value
     }
 
     // Strings
