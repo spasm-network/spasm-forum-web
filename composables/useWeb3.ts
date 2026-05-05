@@ -1141,63 +1141,77 @@ export const useWeb3 = () => {
     event: SpasmEventV2
   ): string => {
     if (!event) return ''
-    let url = ''
-    const urlId = spasm.extractIdByFormat(event, {
-      name: "url"
-    })
-    if (urlId && typeof(urlId) === "string") { url = urlId }
 
-    const guidId = spasm.extractIdByFormat(event, {
-      name: "guid"
-    })
-    if (guidId && typeof(guidId) === "string") { url = guidId }
-    if (url && typeof(url) === "string") {
-      const host = extractHostnameFromUrl(url)
-      if (host && typeof(host) === "string") return host
-    }
+    try {
+      let url = ''
+      const urlId = spasm.extractIdByFormat(event, {
+        name: "url"
+      })
+      const guidId = spasm.extractIdByFormat(event, {
+        name: "guid"
+      })
 
-    let source = {}
-    if ("source" in event && event.source) {
+      if (urlId && typeof(urlId) === "string") {
+        url = urlId
+      } else if (guidId && typeof(guidId) === "string") {
+        url = guidId
+      }
+
+      if (url && typeof(url) === "string") {
+        const host = extractHostnameFromUrl(url)
+        if (host && typeof(host) === "string") return host
+      }
+
+      let source = {}
+      if ("source" in event && event.source) {
+        if (
+          Array.isArray(event.source) && event.source[0] &&
+          isObjectWithValues(event.source[0])
+        ) {
+          source = event.source[0]
+        }
+        else if (isObjectWithValues(event.source)) {
+          source = event.source
+        }
+      }
+
       if (
-        Array.isArray(event.source) && event.source[0] &&
-        isObjectWithValues(event.source[0])
+        source && "name" in source && source.name &&
+        typeof(source?.name) === "string"
       ) {
-        source = event.source[0]
+        return source?.name
       }
-      else if (isObjectWithValues(event.source)) {
-        source = event.source
-      }
-    }
 
-    if (
-      source && "name" in source && source.name &&
-      typeof(source?.name) === "string"
-    ) {
-      return source?.name
+      return ""
+    } catch (err) {
+      console.error(err);
+      return ""
     }
-
-    return ""
   }
 
   const extractHostnameFromUrl = (
     url: string
   ): string => {
-    if (!url || typeof(url) !== "string") return ""
-    const urlObj = new URL(url)
-    let hostname = ""
-    if (
-      urlObj.hostname && typeof(urlObj.hostname) === "string"
-    ) {
-      hostname = urlObj.hostname
-    } else if (
-      urlObj.host && typeof(urlObj.host) === "string"
-    ) { 
-      hostname = urlObj.host
+    try {
+      if (!url || typeof(url) !== "string") return ""
+      const urlObj = new URL(url)
+      let hostname = ""
+      if (
+        urlObj.hostname && typeof(urlObj.hostname) === "string"
+      ) {
+        hostname = urlObj.hostname
+      } else if (
+        urlObj.host && typeof(urlObj.host) === "string"
+      ) { 
+        hostname = urlObj.host
+      }
+      if (hostname.startsWith("www.")) {
+        hostname = hostname.slice(4)
+      }
+      return hostname
+    } catch (err) {
+      return ""
     }
-    if (hostname.startsWith("www.")) {
-      hostname = hostname.slice(4)
-    }
-    return hostname
   }
 
   return {
