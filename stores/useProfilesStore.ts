@@ -197,7 +197,8 @@ const {
   deleteMatchingValuesFromObject,
   pushToArrayIfValueIsUnique,
   deepCopyOfObject,
-  sanitizeObjectValuesWithDompurify
+  // sanitizeObjectValuesWithDompurify,
+  parseEnvBool
 } = useUtils()
 
 const {
@@ -266,29 +267,29 @@ export const useProfilesStore = defineStore('profilesStore', {
 state: (): ProfilesState => ({
   // Environment settings:
   // Nostr network
-  enableNostrNetwork: useRuntimeConfig()?.public
-    ?.enableNostrNetwork === "true" ? true : false,
+  enableNostrNetwork:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetwork, true),
   // Fetch data from Nostr relays:
-  enableNostrNetworkFetchProfiles: useRuntimeConfig()?.public
-    ?.enableNostrNetworkFetchProfiles === "true" ? true : false,
-  enableNostrNetworkFetchPreferredRelays: useRuntimeConfig()?.public
-    ?.enableNostrNetworkFetchPreferredRelays === "true" ? true : false,
-  enableNostrNetworkFetchMessages: useRuntimeConfig()?.public
-    ?.enableNostrNetworkFetchMessages === "true" ? true : false,
+  enableNostrNetworkFetchProfiles:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetworkFetchProfiles, true),
+  enableNostrNetworkFetchPreferredRelays:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetworkFetchPreferredRelays, true),
+  enableNostrNetworkFetchMessages:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetworkFetchMessages, true),
   // Use Nostr network:
-  enableNostrNetworkUsePreferredRelays: useRuntimeConfig()?.public
-    ?.enableNostrNetworkUsePreferredRelays === "true" ? true : false,
+  enableNostrNetworkUsePreferredRelays:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetworkUsePreferredRelays, true),
   // Display data from Nostr relays:
-  enableNostrDisplayProfilesUsernames: useRuntimeConfig()?.public
-    ?.enableNostrDisplayProfilesUsernames === "true" ? true : false,
-  enableNostrDisplayProfilesAbouts: useRuntimeConfig()?.public
-    ?.enableNostrDisplayProfilesAbouts === "true" ? true : false,
-  enableNostrDisplayProfilesWebsites: useRuntimeConfig()?.public
-    ?.enableNostrDisplayProfilesWebsites === "true" ? true : false,
-  enableNostrDisplayProfilesPictures: useRuntimeConfig()?.public
-    ?.enableNostrDisplayProfilesPictures === "true" ? true : false,
-  enableNostrDisplayProfilesMessages: useRuntimeConfig()?.public
-    ?.enableNostrDisplayProfilesMessages === "true" ? true : false,
+  enableNostrDisplayProfilesUsernames:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrDisplayProfilesUsernames, true),
+  enableNostrDisplayProfilesAbouts:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrDisplayProfilesAbouts, true),
+  enableNostrDisplayProfilesWebsites:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrDisplayProfilesWebsites, true),
+  enableNostrDisplayProfilesPictures:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrDisplayProfilesPictures, true),
+  enableNostrDisplayProfilesMessages:
+    parseEnvBool(useRuntimeConfig()?.public?.enableNostrDisplayProfilesMessages, true),
   // Actual state:
   isUpdatingProfiles: false,
   isUpdatingProfilesNostr: false,

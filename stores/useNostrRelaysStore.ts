@@ -11,6 +11,7 @@ const {
   sanitizeObjectValuesWithDompurify,
   isValidUrl,
   mergeSubscribeToNostrRelayConfigs,
+  parseEnvBool
 } = useUtils()
 
 export interface NostrRelayStoreState {
@@ -29,8 +30,8 @@ export const useNostrRelaysStore = defineStore('nostrRelayStore', {
   state: (): NostrRelayStoreState => ({
     // Environment settings:
     // enableNostrNetwork: useRuntimeConfig()?.public?.enableNostrNetwork,
-    enableNostrNetwork: useRuntimeConfig()?.public
-      ?.enableNostrNetwork === "true" ? true : false,
+    enableNostrNetwork:
+      parseEnvBool(useRuntimeConfig()?.public?.enableNostrNetwork, true),
     allRelays: [],
     allErroredRelayUrls: []
   }),
