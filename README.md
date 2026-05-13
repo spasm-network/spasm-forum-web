@@ -1,7 +1,7 @@
 ## Deploy Spasm
 
 - Launch Spasm under three minutes with [docker/podman](https://github.com/spasm-network/spasm-docker).
-- Or set up a new server from scratch with [one script](https://github.com/spasm-network/spasm-ansible).
+- Or set up a new server from scratch with [one script](https://github.com/spasm-network/spasm-ansible) ([video](https://media.spasm.network/spasmvi01e2729a96813336a92a2f511c4770c7935c95ab44e8cbb94b1d38912c0f1db14f.mp4)).
 
 ---
 
