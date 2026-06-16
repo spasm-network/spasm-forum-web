@@ -191,6 +191,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     enableNewNostrActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewNostrActionsAll, true),
     enableNewEthereumActionsAll: parseEnvBool(useRuntimeConfig()?.public?.enableNewEthereumActionsAll, true),
     enableModeration: parseEnvBool(useRuntimeConfig()?.public?.enableModeration, true),
+    enableBlacklistedKeywords: parseEnvBool(useRuntimeConfig()?.public?.enableBlacklistedKeywords, true),
     enableShortUrlsForWeb3Actions:
       parseEnvBool(useRuntimeConfig()?.public?.enableShortUrlsForWeb3Actions, true),
     enableWhitelistForActionPost:
@@ -244,6 +245,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
     pinnedIds: splitIntoArray(useRuntimeConfig()?.public?.pinnedIds),
     envCategories: splitIntoArray(useRuntimeConfig()?.public?.envCategories),
     federationCustomLinks: splitIntoArray(useRuntimeConfig()?.public?.federationCustomLinks),
+    blacklistedKeywords: splitIntoArray(useRuntimeConfig()?.public?.blacklistedKeywords),
 
     // Numbers
     shortUrlsLengthOfWeb3Ids: Number(useRuntimeConfig()?.public?.shortUrlsLengthOfWeb3Ids) || 30,
@@ -391,6 +393,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.enableNewEthereumActionsAll,
         enableModeration:
           this.enableModeration,
+        enableBlacklistedKeywords:
+          this.enableBlacklistedKeywords,
         enableShortUrlsForWeb3Actions:
           this.enableShortUrlsForWeb3Actions,
         enableWhitelistForActionPost:
@@ -452,6 +456,8 @@ export const useAppConfigStore = defineStore('appConfigStore', {
           this.envCategories,
         federationCustomLinks:
           this.federationCustomLinks,
+        blacklistedKeywords:
+          this.blacklistedKeywords,
         // Numbers
         shortUrlsLengthOfWeb3Ids:
           this.shortUrlsLengthOfWeb3Ids,
@@ -654,6 +660,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateBoolean("enableNewNostrActionsAll")
       updateBoolean("enableNewEthereumActionsAll")
       updateBoolean("enableModeration")
+      updateBoolean("enableBlacklistedKeywords")
       updateBoolean("enableShortUrlsForWeb3Actions")
       updateBoolean("enableWhitelistForActionPost")
       updateBoolean("enableWhitelistForActionReply")
@@ -692,6 +699,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
       updateArray("pinnedIds")
       updateArray("envCategories")
       updateArray("federationCustomLinks")
+      updateArray("blacklistedKeywords")
 
       // Numbers
       const updateNumber = (key: AppConfigKeyNumber) => {

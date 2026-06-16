@@ -85,6 +85,10 @@ export default defineNuxtConfig({
       enableModeration: process.env.ENABLE_MODERATION || process.env.NUXT_PUBLIC_ENABLE_MODERATION,
       moderators: process.env.MODERATORS || process.env.NUXT_PUBLIC_MODERATORS,
 
+      // Blacklists
+      enableBlacklistedKeywords: process.env.ENABLE_BLACKLISTED_KEYWORDS || process.env.NUXT_PUBLIC_ENABLE_BLACKLISTED_KEYWORDS,
+      blacklistedKeywords: process.env.BLACKLISTED_KEYWORDS || process.env.NUXT_BLACKLISTED_KEYWORDS,
+
       // Default intro, contacts, images, buttons
       enableDefaultIntro: process.env.ENABLE_DEFAULT_INTRO || process.env.NUXT_PUBLIC_ENABLE_DEFAULT_INTRO,
       enableDefaultContacts: process.env.ENABLE_DEFAULT_CONTACTS || process.env.NUXT_PUBLIC_ENABLE_DEFAULT_CONTACTS,

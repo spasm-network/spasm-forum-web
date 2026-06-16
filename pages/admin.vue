@@ -820,6 +820,41 @@
       </div>
 
 
+      <!-- BLACKLISTS -->
+      <div>
+        <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleBlacklists">
+        Blacklists
+        <IconsTriangle :rotateIf="showBlacklists" />
+        </span>
+      </div>
+
+      <div v-if="showBlacklists" class="custom-admin-web-panel-section">
+        <div class="mt-4 pl-4">
+          <input
+            v-model="enableBlacklistedKeywords"
+            type="checkbox"
+          >
+          Enable blacklisted keywords
+          <div>
+            List of blacklisted keywords
+            ({{ count(blacklistedKeywords) }})
+              <textarea
+                v-model="blacklistedKeywords"
+                placeholder="hello world,compliance"
+                class="block p-1 bg-bgBase-light dark:bg-bgBase-dark border-bgSecondary-light dark:border-bgSecondary-dark w-[90%] max-w-[700px] h-60 lg:h-36 focus:outline-none rounded-b-lg border-2"
+              />
+          </div>
+        </div>
+
+        <div class="mt-2 mb-6">
+          <span class="ml-4 text-xl text-colorNotImportant-light dark:text-colorNotImportant-dark cursor-pointer hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark" @click="toggleBlacklists" >
+          hide section
+          <IconsTriangle :rotateIf="showBlacklists" />
+          </span>
+        </div>
+      </div>
+
+
       <!-- MEDIA CONTENT -->
       <div>
         <span class="text-2xl text-colorNotImportant-light dark:text-colorNotImportant-dark hover:text-colorPrimary-light dark:hover:text-colorPrimary-dark cursor-pointer" @click="toggleMediaContent">
@@ -1221,6 +1256,7 @@ const showBlockchainLinks = ref<boolean>(false)
 const showFeedSettings = ref<boolean>(false)
 const showOther = ref<boolean>(false)
 const showNewContent = ref<boolean>(false)
+const showBlacklists = ref<boolean>(false)
 const showMediaContent = ref<boolean>(false)
 const showRssFeedChannel = ref<boolean>(false)
 const showFederation = ref<boolean>(false)
@@ -1250,6 +1286,9 @@ const toggleOther = () => {
 }
 const toggleNewContent = () => {
   showNewContent.value = !showNewContent.value
+}
+const toggleBlacklists = () => {
+  showBlacklists.value = !showBlacklists.value
 }
 const toggleMediaContent = () => {
   showMediaContent.value = !showMediaContent.value
@@ -1608,6 +1647,8 @@ const enableNewWeb3ActionsModerate =
   ref<boolean>(appConfig?.enableNewWeb3ActionsModerate)
 const enableModeration =
   ref<boolean>(appConfig?.enableModeration)
+const enableBlacklistedKeywords =
+  ref<boolean>(appConfig?.enableBlacklistedKeywords)
 const enableMarkdownInPosts =
   ref<boolean>(appConfig?.enableMarkdownInPosts)
 const enableMarkdownInComments =
@@ -1688,6 +1729,9 @@ const envCategories =
   ref<string[]>(appConfig?.envCategories)
 const federationCustomLinks =
   ref<string[]>(appConfig?.federationCustomLinks)
+// Arrays blacklists
+const blacklistedKeywords =
+  ref<string[]>(appConfig?.blacklistedKeywords)
 
 // Strings
 // Strings-default-intro
@@ -1926,6 +1970,8 @@ const saveAppConfig = async () => {
       enableNewWeb3ActionsModerate.value
     newAppConfig.enableModeration =
       enableModeration.value
+    newAppConfig.enableBlacklistedKeywords =
+      enableBlacklistedKeywords.value
     newAppConfig.enableMarkdownInPosts =
       enableMarkdownInPosts.value
     newAppConfig.enableMarkdownInComments =
@@ -2044,6 +2090,13 @@ const saveAppConfig = async () => {
     } else if (Array.isArray(federationCustomLinks.value)) {
       newAppConfig.federationCustomLinks =
         federationCustomLinks.value
+    }
+    // Arrays blacklists
+    if (typeof(blacklistedKeywords.value) === "string") {
+      newAppConfig.blacklistedKeywords =
+        splitIntoArray(blacklistedKeywords.value)
+    } else if (Array.isArray(blacklistedKeywords.value)) {
+      newAppConfig.blacklistedKeywords = blacklistedKeywords.value
     }
 
     // Strings
